@@ -1,0 +1,227 @@
+{
+  "Contributions-per-user": [
+    {
+      "👤 Contributor": "Cabral, Joel",
+      "📊 Stats": {
+        "📨 commits": 4,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into feature/conectar"
+      ]
+    },
+    {
+      "👤 Contributor": "Damian Penalver",
+      "📊 Stats": {
+        "📨 commits": 16,
+        "✅ added": 271,
+        "⛔ deleted": 224
+      },
+      "💬 Messages": [
+        "Test desvicular",
+        "merge con dev",
+        "fix espiritu conectar",
+        "Resuelvo Merge con dev",
+        "ModeloEspiritu: Agrego cardinalidad hacia Ubicacion",
+        "Fix ModeloEspiritu:  agrego ubicacion en espritu",
+        "merged dev, fix modelo Ubicacion para aputar a los id de los espiritus",
+        "Merge con dev",
+        "Fix:HibernateEspirituDaoTest: Activo el borrado del modelo en before each",
+        "agrego nuevos test",
+        "EspirituServiceTest: Test de null con id inexistestes",
+        "quito algunos comentarios",
+        "agrego test de actualizar y test de services de actualizar",
+        "Test mejoro de recuperar todos",
+        "agrego test e implementacion RecuperarTodos",
+        "OK - Test Dao Recuperar Espiritu"
+      ]
+    },
+    {
+      "👤 Contributor": "Damian penalver",
+      "📊 Stats": {
+        "📨 commits": 2,
+        "✅ added": 185,
+        "⛔ deleted": 64
+      },
+      "💬 Messages": [
+        "Merge: Resolucion de merge",
+        "Feature:EspirituService - Agrego Metodo Conectar y adapto test y modelo al metodo"
+      ]
+    },
+    {
+      "👤 Contributor": "Franco",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 178,
+        "⛔ deleted": 1
+      },
+      "💬 Messages": [
+        "enunciado-hibernate"
+      ]
+    },
+    {
+      "👤 Contributor": "Hector Joel",
+      "📊 Stats": {
+        "📨 commits": 22,
+        "✅ added": 1219,
+        "⛔ deleted": 805
+      },
+      "💬 Messages": [
+        "conflictos resueltos",
+        "se teminan test de exorcizar del service",
+        "fix de test y metodo exorcizar, falta random",
+        "terminados test del exorcizar del modelo y se agrega randomGenerator",
+        "se completa base del metodo exorcizar en modelo",
+        "Merge remote-tracking branch 'origin/dev' into feature/medium-exorcisar",
+        "fix conectar ahora no carga conexion si no es libre",
+        "se agregan tests para casos negativos",
+        "fix angel ahora guarda la id del medium",
+        "refactor metodo conectar",
+        "se establece test base para metodo conectar en service",
+        "planteo general del exorcizar en modelo y service",
+        "arreglo de conflictos",
+        "se modifica descanzar para que lance una exepcion al no encontrar la idMedium y su test relacionado",
+        "se crea metodo descansar con test en caso positivo",
+        "agregado metodo descansar en modelo y su test de modelo",
+        "set espiritu se transforma en lista y se separa en 2 para tener angeles y demonios",
+        "se agrega testService",
+        "metodos eliminar del CRUD y recuperarTodos",
+        "se modifica Medium para funcionar con hibernate",
+        "se crea clase MediumServiceImpl",
+        "se agregan clases para el funcionamiento de hibernate y se comentan tests temporalmente"
+      ]
+    },
+    {
+      "👤 Contributor": "Lucas Josué Coronel",
+      "📊 Stats": {
+        "📨 commits": 8,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "Merge branch 'feature/ubicacion-mediumsSinEspiritusEn' into dev",
+        "Merge branch 'feature/ubicacion-mediumsSinEspiritusEn' into dev"
+      ]
+    },
+    {
+      "👤 Contributor": "Matias-Francisco-Deo",
+      "📊 Stats": {
+        "📨 commits": 12,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+        "Merge branch 'dev' into feature/ubicacion-mediumsSinEspiritusEn"
+      ]
+    },
+    {
+      "👤 Contributor": "NicolasPloza",
+      "📊 Stats": {
+        "📨 commits": 12,
+        "✅ added": 409,
+        "⛔ deleted": 94
+      },
+      "💬 Messages": [
+        "se agrego la funcionalidad espiritus a medium  y sus test",
+        "merge con feature/medium-invocar",
+        "se implemento funcinalidad invocar y sus tests",
+        "merge con dev",
+        "se implemento la funcionalidad invocar y se agrego un espirituDao en en el service de medium",
+        "se agrego la funcionalidad espiritus",
+        "se realizaron correciones en la clase MediumTest",
+        "feature/medium-crud-+-recuperarTodos",
+        "se implementaron los metodos recuperar, actualizar y se testearon",
+        "se implemento el metodo crear en MediumService, se realizaron sus test y se actualizaron las firmas del metodo recuperar para que retorne un Optional",
+        "se actualizaron las firmas de las clases service y dao",
+        "se agregaron las clases MediumDAOTest y MediumServiceTest"
+      ]
+    },
+    {
+      "👤 Contributor": "Peñalver, Damian",
+      "📊 Stats": {
+        "📨 commits": 1,
+        "✅ added": 0,
+        "⛔ deleted": 0
+      },
+      "💬 Messages": [
+      ]
+    },
+    {
+      "👤 Contributor": "ljcoronel",
+      "📊 Stats": {
+        "📨 commits": 19,
+        "✅ added": 1338,
+        "⛔ deleted": 713
+      },
+      "💬 Messages": [
+        "Se agrego que los espiritus puedan cambiar de ubicacion si esta libre o cuando su medium conectado cambia de ubicacion",
+        "Se agrego que todos los mediums y espiritus tengan una ubicacion para no dar datos nulos",
+        "Se agrego el caso de que un medium se conecte a un demonio en los test",
+        "Merge branch 'feature/ubicacion-mediumsSinEspiritusEn' into dev",
+        "Se adapto la funcionalidad al nuevo modelo de Medium",
+        "Merge branch 'feature/ubicacion-mediumsSinEspiritusEn' into dev",
+        "Se agrego la funcionalidad de mediumsSinEspiritusEn en UbicacionServiceImpl",
+        "Se agrego la funcionalidad de espiritusEn en UbicacionServiceImpl",
+        "Se cambio el nombre a un test",
+        "Se agregaron clases y test eliminadas",
+        "Se cambio la firma del metodo eliminar y crear",
+        "Se cambio el uso del optional de dar exepciones a dar optional vacio",
+        "Se agrego CRUD de Ubicacion y recuperarTodos"
+      ]
+    },
+    {
+      "👤 Contributor": "matias-francisco-deo",
+      "📊 Stats": {
+        "📨 commits": 21,
+        "✅ added": 2434,
+        "⛔ deleted": 1784
+      },
+      "💬 Messages": [
+        "Crear booleanos generales para Espíritu",
+        "Fixes en tests",
+        "Retoques en espirituConectar y tests",
+        "Merge branch 'dev' into feature/return-espiritus",
+        "Arreglar throws en medium",
+        "Ubicación en cada test que faltaba",
+        "Cambiar Direccion por SortDirection",
+        "Merge branch 'dev' into feature/espiritusDemoniacos",
+        "Merge branch 'dev' into feature/espiritusDemoniacos",
+        "Paginación mediante Hibernate",
+        "Añadir tests para el service",
+        "Implementación de paginación",
+        "Merge branch 'dev' into feature/espiritusDemoniacos",
+        "Merge con dev",
+        "Optional ofNullable y arreglar crear para que devuelva el objeto",
+        "Actualizar a Optional<Espiritu>, arreglar borrar por id, adaptar tests",
+        "Correcciones",
+        "Fixes sobre Service (crear y actualizar separados)",
+        "Métodos iterativos de Create y Delete de CRUD. Cambios a interfaces.",
+        "Crear modelo Espiritu para funcionar junto a Hibernate",
+        "Declarar interfaces varias y una clase básica"
+      ]
+    }
+  ],
+  "❌ Commits directos a dev": [
+    {
+      "commit": "merge con feature/medium-invocar",
+      "author": "NicolasPloza"
+    },
+    {
+      "commit": "Merge branch 'feature/ubicacion-mediumsSinEspiritusEn' into dev",
+      "author": "Lucas Josué Coronel"
+    },
+    {
+      "commit": "Merge branch 'feature/ubicacion-mediumsSinEspiritusEn' into dev",
+      "author": "Lucas Josué Coronel"
+    },
+    {
+      "commit": "se realizaron correciones en la clase MediumTest",
+      "author": "NicolasPloza"
+    },
+    {
+      "commit": "feature/medium-crud-+-recuperarTodos",
+      "author": "NicolasPloza"
+    }
+  ]
+}
