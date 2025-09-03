@@ -2,8 +2,10 @@ package com.reservo.controller;
 
 import com.reservo.controller.dto.UsuarioRequestDTO;
 import com.reservo.controller.dto.UsuarioResponseDTO;
+import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
+import com.reservo.service.exception.EmailRepetido;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ public final class UsuarioControllerREST {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDTO> createUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+    public ResponseEntity<UsuarioResponseDTO> createUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) throws ParametroIncorrecto, EmailRepetido {
         Usuario user = this.usuarioService.create(usuarioRequestDTO.aModelo());
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioResponseDTO.desdeModelo(user));
     }

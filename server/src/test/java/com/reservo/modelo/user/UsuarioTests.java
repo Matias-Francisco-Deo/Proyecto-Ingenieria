@@ -10,7 +10,7 @@ public class UsuarioTests {
 
     @BeforeEach
     void setUp() {
-        jorge = new Usuario("jorge", "aa21");
+        jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
     }
 
     @Test
@@ -20,5 +20,9 @@ public class UsuarioTests {
     @Test
     void usuarioTienePassword() {
         assertEquals("aa21", jorge.getPassword());
+    }
+    @Test
+    void usuarioTieneEmail() {
+        assertEquals("jorge", jorge.getEmail());
     }
 }

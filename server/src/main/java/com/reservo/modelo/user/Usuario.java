@@ -1,6 +1,7 @@
 package com.reservo.modelo.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +12,9 @@ import lombok.ToString;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "email" }) })
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,8 +25,12 @@ public class Usuario {
     @Column(nullable = false)
     private final String name;
 
-    public Usuario(String name, String password) {
+    @Column(nullable = false)
+    private final String email;
+
+    public Usuario(String name, String password, String email) {
         this.name = name;
         this.password = password;
+        this.email = email;
     }
 }
