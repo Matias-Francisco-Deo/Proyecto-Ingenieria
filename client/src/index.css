@@ -1,68 +1,159 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+@import "tailwindcss";
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  height: 100dvh;
+  background-color: #111011;
+  color: #ffffff;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+img {
+  width: 100%;
+  max-width: 100%;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+textarea {
+  field-sizing: content;
+}
+
+.tag-input {
+  width: 22ch;
+}
+
+.tag-input:invalid {
+  border: 1px solid red;
+}
+
+.drag-and-drop {
+  position: relative;
+
+  border: 1px solid rgb(255, 255, 255, 0.5);
+  border-radius: 1rem;
+
+  outline: 3px dashed rgb(255, 255, 255);
+  outline-offset: -14px;
+
+  transition: outline 0.3s ease;
+
+  &:hover {
+    cursor: crosshair;
+    outline: 3px dashed #a855f7;
+  }
+}
+
+.drag-and-drop-text {
+  content: "DRAG HERE";
+  font-size: clamp(1rem, 3vw, 3rem);
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+:root {
+  --toastify-color-progress-success: #d8b4fe;
+  --toastify-color-progress-error: #d8b4fe;
+}
+
+:root {
+  --border-color: linear-gradient(
+    to right,
+    #00ccff /* Celeste */,
+    #9933ff /* Morado */,
+    #ff6666 /* Rojo */,
+    #fff35c /* Amarillo */,
+    #00ff99 /* Verde */,
+    #ff3399 /* Rosa */,
+    #ff9966 /* Naranja */,
+    #33ccff /* Azul Claro */,
+    #6699ff /* Azul */,
+    #66ffcc /* Verde Claro */
+  );
+}
+
+.text-gradient {
+  background: linear-gradient(
+    278deg,
+    #00ccff /* Celeste */,
+    #9933ff /* Morado */,
+    #ff6666 /* Rojo */,
+    #fff35c /* Amarillo */,
+    #00ff99 /* Verde */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.home-container {
+  background: var(--border-color);
+  border-radius: 16px;
+  padding: 8px;
+
+  @media (width > 768px) {
+    padding: 12px;
+  }
+
+  background-size: 1000% 100%;
+  animation: moveGradient 10s linear infinite;
+
+  .home-box {
+    background-color: #111011;
+    border-radius: 16px;
+    padding: 8px;
+
+    @media (width > 768px) {
+      padding: 24px;
+    }
+  }
+
+  /* @media (min-width: 768px) {
+		background: var(--border-color);
+		border-radius: 16px;
+		padding: 8px;
+		background-size: 1000% 100%;
+		animation: moveGradient 10s linear infinite;
+	} */
+}
+
+textarea {
+  field-sizing: content;
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}
+
+.button {
+  background-color: #111011;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: #ffffff;
+    color: #111011;
+  }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* ----------------------------------------------- */
+
+input {
+  &:user-valid {
+    border-color: #16a34a;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+
+  &:user-invalid {
+    border-color: #ef4444;
   }
 }

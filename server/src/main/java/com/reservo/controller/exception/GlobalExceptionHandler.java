@@ -2,6 +2,7 @@ package com.reservo.controller.exception;
 
 import com.reservo.service.exception.EmailRepetido;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,8 +17,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmailRepetido.class)
-    public DTOResponseError repeatedEmail(EmailRepetido ex) {
-        return new DTOResponseError(ex.getMessage());
+    public ResponseEntity<DTOResponseError> repeatedEmail(EmailRepetido ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 }
