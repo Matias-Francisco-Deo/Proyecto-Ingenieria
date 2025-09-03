@@ -1,0 +1,14 @@
+package com.reservo.service;
+
+import com.reservo.modelo.user.Usuario;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface UsuarioService {
+    Usuario create(Usuario usuario);
+    Optional<Usuario> findById(Long userId);
+    List<Usuario> findAll();
+    void update(Usuario usuario);
+    void delete(Usuario usuario);
+}
