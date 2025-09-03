@@ -1,4 +1,4 @@
-package com.reservo.reservo;
+package com.reservo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
