@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+.loginInput {
+  border: 4px solid;
+}
+
+.inputError {
+  border-color: #ef4444;
+}
+
 body {
   height: 100dvh;
   background-color: #111011;
@@ -52,41 +60,6 @@ textarea {
   transform: translate(-50%, -50%);
 }
 
-:root {
-  --toastify-color-progress-success: #d8b4fe;
-  --toastify-color-progress-error: #d8b4fe;
-}
-
-:root {
-  --border-color: linear-gradient(
-    to right,
-    #00ccff /* Celeste */,
-    #9933ff /* Morado */,
-    #ff6666 /* Rojo */,
-    #fff35c /* Amarillo */,
-    #00ff99 /* Verde */,
-    #ff3399 /* Rosa */,
-    #ff9966 /* Naranja */,
-    #33ccff /* Azul Claro */,
-    #6699ff /* Azul */,
-    #66ffcc /* Verde Claro */
-  );
-}
-
-.text-gradient {
-  background: linear-gradient(
-    278deg,
-    #00ccff /* Celeste */,
-    #9933ff /* Morado */,
-    #ff6666 /* Rojo */,
-    #fff35c /* Amarillo */,
-    #00ff99 /* Verde */
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-}
-
 .home-container {
   background: var(--border-color);
   border-radius: 16px;
@@ -108,14 +81,6 @@ textarea {
       padding: 24px;
     }
   }
-
-  /* @media (min-width: 768px) {
-		background: var(--border-color);
-		border-radius: 16px;
-		padding: 8px;
-		background-size: 1000% 100%;
-		animation: moveGradient 10s linear infinite;
-	} */
 }
 
 textarea {
@@ -128,32 +93,5 @@ textarea {
   }
   100% {
     background-position: 100% 0%;
-  }
-}
-
-.button {
-  background-color: #111011;
-  color: #ffffff;
-  border: 1px solid #ffffff;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-
-  &:hover {
-    background-color: #ffffff;
-    color: #111011;
-  }
-}
-
-/* ----------------------------------------------- */
-
-input {
-  &:user-valid {
-    border-color: #16a34a;
-  }
-
-  &:user-invalid {
-    border-color: #ef4444;
   }
 }
