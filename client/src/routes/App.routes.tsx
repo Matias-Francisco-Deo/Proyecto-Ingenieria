@@ -9,8 +9,8 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 // const SearchPage = lazy(() => import("../pages/SearchPage"));
 // const Page404 = lazy(() => import("../pages/Page404"));
 // const UploadPage = lazy(() => import("../pages/UploadPage"));
-const LoginPage = lazy(() => import("../pages/LoginPage"));
-// const UserGifsPage = lazy(() => import("../pages/UserGifsPage"));
+// const LoginPage = lazy(() => import("../pages/LoginPage"));
+const AuthPage = lazy(() => import("../pages/AuthPage"));
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
@@ -20,7 +20,7 @@ export function AppRoutes() {
         <Switch>
           <Route path="/" component={HomePage} />
           <Route path="/home" component={HomePage} />
-          <Route path="/signin" component={LoginPage} />
+          <Route path="/signin" component={AuthPage} />
 
           {/* Rutas protegidas */}
           {/* <Route path="/home" component={HomePage} />

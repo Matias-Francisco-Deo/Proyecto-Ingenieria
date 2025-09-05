@@ -9,6 +9,7 @@ export default function SignInPage() {
 
   /* Se usa para poner en rojo aquellos campos con errores */
   const [hasEmailError, setHasEmailError] = useState(false);
+  const [hasUsernameError, setHasUsernameError] = useState(false);
   const [hasPasswordError, setHasPasswordError] = useState(false);
 
   /* Se usa para poner el mensaje de error abajo del último input */
@@ -129,6 +130,24 @@ export default function SignInPage() {
                   autoComplete="username"
                   className={`${
                     hasEmailError ? "inputError" : ""
+                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="username" className="block font-medium text-sm/6">
+                Nombre de usuario
+              </label>
+              <div className="mt-2">
+                <input
+                  id="username"
+                  name="username"
+                  type="username"
+                  required
+                  autoComplete="username"
+                  className={`${
+                    hasUsernameError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
               </div>
