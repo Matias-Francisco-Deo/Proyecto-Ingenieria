@@ -1,0 +1,61 @@
+// CREAR CONTEXTO AUTH
+import type { UserInfo } from "../types/types";
+import { useUser } from "../hooks/useUser";
+import { createContext, useState } from "react";
+
+type AuthContextType = {
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextType | null>(null);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return JSON.parse(localStorage.getItem("isAuthenticated") || "false");
+  });
+  const { setUsername, setKey } = useUser();
+
+  const login = async (email: string, password: string) => {
+    // llamada a db
+    const userInfo = await getUserInfo(email, password);
+
+    console.log(userInfo);
+    if (!userInfo) return;
+
+    setKey(userInfo.key);
+    setUsername(userInfo.username);
+    setIsAuthenticated(true);
+
+    localStorage.setItem("isAuthenticated", JSON.stringify(true));
+
+    location.href = "/home";
+  };
+
+  const getUserInfo = async (
+    email: string,
+    password: string
+  ): Promise<UserInfo> => {
+    //   if (!key) return { user_name: "Guest", key: "" };
+    const resp = await fetch(
+      `http://localhost:8080/auth/login/?email=${email}&pass=${password}`
+    );
+    return resp.json();
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setKey("");
+    setUsername("");
+    localStorage.setItem("isAuthenticated", JSON.stringify(false));
+    location.href = "/signin";
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}

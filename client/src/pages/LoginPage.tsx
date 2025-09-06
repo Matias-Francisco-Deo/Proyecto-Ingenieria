@@ -1,7 +1,10 @@
+import { useAuth } from "../hooks/useAuth";
 import type { RegisterError } from "@/types/types";
 import { useState, type FormEvent } from "react";
 
 export default function SignInPage() {
+  const { login } = useAuth();
+
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
   */
@@ -80,15 +83,13 @@ export default function SignInPage() {
       return;
     }
 
-    login();
+    // si llega acá, loguea
+
+    login(email.value, password.value);
 
     function checkHasNoBlanks() {
       if (passwordIsBlank) {
         setHasPasswordError(true);
-      }
-
-      if (usernameIsBlank) {
-        setHasUsernameError(true);
       }
 
       if (emailIsBlank) {
@@ -176,15 +177,10 @@ export default function SignInPage() {
     </div>
   );
 
-  function login() {
-    location.href = "/home";
-  }
-
   function resetBlankError() {
     setTimeout(() => {
       setHasEmailError(false);
       setHasPasswordError(false);
-      setHasUsernameError(false);
       setGeneralErrorMessage("");
     }, 3000);
   }

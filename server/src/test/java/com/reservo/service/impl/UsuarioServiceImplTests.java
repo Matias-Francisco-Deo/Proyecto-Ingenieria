@@ -1,5 +1,7 @@
 package com.reservo.service.impl;
 
+import com.reservo.controller.dto.CredentialsRequestDTO;
+import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.EmailRepetido;
@@ -80,6 +82,15 @@ public class UsuarioServiceImplTests {
 
         assertThrows(EmailRepetido.class, () -> {usuarioService.create(new Usuario("enriqueElFurioso", "hate", "jorge@yahoo.com.ar"));});
     }
+
+    @Test
+    void seObtieneUnaKeyParaAccederAlSistemaAlLoguear() throws EmailRepetido {
+        usuarioService.create(jorge);
+        CredentialsRequestDTO credenciales = usuarioService.login(new Credentials("jorge@yahoo.com.ar", "aa21"));
+        assertEquals("jorge", credenciales.username());
+        assertFalse(credenciales.key().isEmpty());
+    }
+
 
 
     @AfterEach

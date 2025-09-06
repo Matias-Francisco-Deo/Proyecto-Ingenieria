@@ -1,5 +1,7 @@
 package com.reservo.service.impl;
 
+import com.reservo.controller.dto.CredentialsRequestDTO;
+import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.persistencia.DAO.UsuarioDAO;
 import com.reservo.service.UsuarioService;
@@ -44,5 +46,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void delete(Usuario usuario) {
 
+    }
+
+    @Override
+    public CredentialsRequestDTO login(Credentials credentials) {
+        return (new CredentialsRequestDTO("01015244556kasdk565", "jorge"));
     }
 }
