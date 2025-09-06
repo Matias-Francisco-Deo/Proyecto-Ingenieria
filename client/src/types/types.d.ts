@@ -1,4 +1,4 @@
-export interface RegisterError {
+export interface SignInError {
   error: string;
 }
 

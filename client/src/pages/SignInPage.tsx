@@ -1,9 +1,9 @@
 import { useAuth } from "../hooks/useAuth";
-import type { RegisterError } from "@/types/types";
+import type { SignInError as SignInError } from "@/types/types";
 import { useState, type FormEvent } from "react";
 
 export default function SignInPage() {
-  const { login } = useAuth();
+  const { login, setIsAuthenticated } = useAuth();
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
   */
@@ -72,7 +72,7 @@ export default function SignInPage() {
     */
 
     if (!response.ok) {
-      const { error } = (await response.json()) as RegisterError;
+      const { error } = (await response.json()) as SignInError;
 
       console.error(error);
 
@@ -129,7 +129,7 @@ export default function SignInPage() {
                   name="email"
                   type="email"
                   required
-                  autoComplete="username"
+                  autoComplete="email"
                   className={`${
                     hasEmailError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
@@ -183,14 +183,22 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <div>
+            <div className="flex flex-row gap-1">
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
               >
-                Sign in
+                Registrarse
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsAuthenticated(true)} // TODO cambiar
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
+              >
+                Iniciar Sesión
               </button>
             </div>
+            
           </form>
         </div>
       </div>

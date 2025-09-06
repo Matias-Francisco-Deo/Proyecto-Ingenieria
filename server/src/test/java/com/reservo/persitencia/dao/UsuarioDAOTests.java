@@ -1,9 +1,7 @@
 package com.reservo.persitencia.dao;
 
 import com.reservo.modelo.user.Usuario;
-import com.reservo.persistencia.DAO.UsuarioDAO;
-import com.reservo.service.UsuarioService;
-import com.reservo.service.exception.EmailRepetido;
+import com.reservo.persistencia.DAO.user.UsuarioDAO;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,9 +34,29 @@ public class UsuarioDAOTests {
     }
 
     @Test
-    void siSeCargoUnEmailEsteExisteEnLaDBParaOtroID() throws EmailRepetido {
+    void siSeCargoUnEmailEsteExisteEnLaDBParaOtroID() {
         usuarioDAO.save(jorge);
         assertTrue(usuarioDAO.existeEmail("jorge@yahoo.com.ar", 0L));
+    }
+
+    @Test
+    void usuarioConCredencialesValidasDaLosDatos() {
+        usuarioDAO.save(jorge);
+        Optional<Usuario> user = usuarioDAO.getUsuarioConCredenciales("jorge@yahoo.com.ar", "aa21");
+        assertEquals(user.get().getName(), jorge.getName());
+    }
+
+//    @Test
+//    void usuarioConCredencialesInvalidasTiraException() {
+//        usuarioDAO.save(jorge);
+//        assertThrows(CredencialesIncorrectas.class, () -> {usuarioDAO.getUsuarioConCredenciales("jorge@yahoo.com.ar", "contrasenia");});
+//    }
+
+    @Test
+    void usuarioConCredencialesInvalidasDevuelveVacio() {
+        usuarioDAO.save(jorge);
+        Optional<Usuario> user = usuarioDAO.getUsuarioConCredenciales("jorge@yahoo.com.ar", "contrasenia");
+        assertTrue(user.isEmpty());
     }
 
 //    @Test

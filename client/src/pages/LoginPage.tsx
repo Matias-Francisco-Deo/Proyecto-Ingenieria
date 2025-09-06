@@ -1,9 +1,8 @@
 import { useAuth } from "../hooks/useAuth";
-import type { RegisterError } from "@/types/types";
 import { useState, type FormEvent } from "react";
 
 export default function SignInPage() {
-  const { login } = useAuth();
+  const { login, setIsAuthenticated } = useAuth();
 
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
@@ -26,21 +25,19 @@ export default function SignInPage() {
     */
 
     const form = event.target as HTMLFormElement;
-    const username = form.elements.namedItem("username") as HTMLInputElement;
     const password = form.elements.namedItem("password") as HTMLInputElement;
     const email = form.elements.namedItem("email") as HTMLInputElement;
 
     const passwordIsBlank = password.value == "";
-    const usernameIsBlank = username.value == "";
     const emailIsBlank = email.value == "";
 
     /* Pone en rojo a los campos que falten  */
     checkHasNoBlanks();
 
     /* Si faltan campos, tira error */
-    if (passwordIsBlank || usernameIsBlank || emailIsBlank) {
+    if (passwordIsBlank || emailIsBlank) {
       setGeneralErrorMessage("Complete los campos faltantes.");
-      resetBlankError();
+      resetAllErrors();
       return;
     }
 
@@ -51,41 +48,22 @@ export default function SignInPage() {
     if (hasWrongEmailFormat) {
       setHasEmailError(true);
       setEmailErrorMessage("El mail debe ser del formato example@email.com");
-      resetEmailError();
+      resetAllErrors();
       return;
     }
 
-    const response = await fetch("http://localhost:8080/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: username.value,
-        password: password.value,
-        email: email.value,
-      }),
-    });
+    const errorMessage = await login(email.value, password.value);
 
-    /*
-    Manejo de error: Email se encuentra registrado
-    */
+    if (errorMessage !== null) {
+      console.error(errorMessage);
 
-    if (!response.ok) {
-      const { error } = (await response.json()) as RegisterError;
-
-      console.error(error);
-
-      setEmailErrorMessage(error);
+      setEmailErrorMessage(errorMessage.error);
+      setHasPasswordError(true);
       setHasEmailError(true);
-      resetEmailError();
+      resetAllErrors();
 
       return;
     }
-
-    // si llega acá, loguea
-
-    login(email.value, password.value);
 
     function checkHasNoBlanks() {
       if (passwordIsBlank) {
@@ -127,7 +105,7 @@ export default function SignInPage() {
                   name="email"
                   type="email"
                   required
-                  autoComplete="username"
+                  autoComplete="email"
                   className={`${
                     hasEmailError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
@@ -163,12 +141,19 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <div>
+            <div className="flex flex-row gap-1">
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
               >
-                Sign in
+                Iniciar Sesión
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsAuthenticated(false)} // TODO cambiar
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
+              >
+                Registrarse
               </button>
             </div>
           </form>
@@ -177,18 +162,11 @@ export default function SignInPage() {
     </div>
   );
 
-  function resetBlankError() {
+  function resetAllErrors() {
     setTimeout(() => {
       setHasEmailError(false);
       setHasPasswordError(false);
       setGeneralErrorMessage("");
     }, 3000);
-  }
-
-  function resetEmailError() {
-    setTimeout(() => {
-      setHasEmailError(false);
-      setEmailErrorMessage("");
-    }, 5000);
   }
 }

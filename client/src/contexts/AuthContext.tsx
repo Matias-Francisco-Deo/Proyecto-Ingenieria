@@ -1,11 +1,12 @@
 // CREAR CONTEXTO AUTH
-import type { UserInfo } from "../types/types";
+import type { SignInError, UserInfo } from "../types/types";
 import { useUser } from "../hooks/useUser";
 import { createContext, useState } from "react";
 
 type AuthContextType = {
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => void;
+  isAuthenticated: boolean; // TODO cambiar
+  setIsAuthenticated: unknown;
+  login: (email: string, password: string) => Promise<SignInError | null>;
   logout: () => void;
 };
 
@@ -23,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const userInfo = await getUserInfo(email, password);
 
     console.log(userInfo);
-    if (!userInfo) return;
+    if (!userInfo) return { error: "Credenciales incorrectas." };
 
     setKey(userInfo.key);
     setUsername(userInfo.username);
@@ -31,7 +32,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     localStorage.setItem("isAuthenticated", JSON.stringify(true));
 
-    location.href = "/home";
+    // location.href = "/home";
+    return null;
   };
 
   const getUserInfo = async (
@@ -54,7 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, logout, setIsAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

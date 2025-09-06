@@ -1,9 +1,10 @@
 package com.reservo.service.impl;
 
-import com.reservo.controller.dto.CredentialsRequestDTO;
+import com.reservo.controller.dto.CredentialsDTO;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
+import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -84,11 +85,17 @@ public class UsuarioServiceImplTests {
     }
 
     @Test
-    void seObtieneUnaKeyParaAccederAlSistemaAlLoguear() throws EmailRepetido {
+    void seObtieneUnaKeyParaAccederAlSistemaAlLoguear() throws EmailRepetido, CredencialesIncorrectas {
         usuarioService.create(jorge);
-        CredentialsRequestDTO credenciales = usuarioService.login(new Credentials("jorge@yahoo.com.ar", "aa21"));
+        CredentialsDTO credenciales = usuarioService.login(new Credentials("jorge@yahoo.com.ar", "aa21"));
         assertEquals("jorge", credenciales.username());
         assertFalse(credenciales.key().isEmpty());
+    }
+
+    @Test
+    void alLoguearConDatosIncorrectosTiraException() throws EmailRepetido {
+        usuarioService.create(jorge);
+        assertThrows(CredencialesIncorrectas.class, () -> {usuarioService.login(new Credentials("jorge@yahoo.com.ar", "contrasenia"));});
     }
 
 

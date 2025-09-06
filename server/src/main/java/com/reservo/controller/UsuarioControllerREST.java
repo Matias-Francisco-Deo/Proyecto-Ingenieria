@@ -1,12 +1,13 @@
 package com.reservo.controller;
 
-import com.reservo.controller.dto.CredentialsRequestDTO;
+import com.reservo.controller.dto.CredentialsDTO;
 import com.reservo.controller.dto.UsuarioRequestDTO;
 import com.reservo.controller.dto.UsuarioResponseDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
+import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +40,11 @@ public final class UsuarioControllerREST {
 //    }
 
     @GetMapping("/login/")
-    public ResponseEntity<CredentialsRequestDTO> getUsuarioById(@RequestParam String email, @RequestParam String pass) {
+    public ResponseEntity<CredentialsDTO> getUsuarioById(@RequestParam String email, @RequestParam String pass) throws CredencialesIncorrectas {
 
         Credentials userCredentials = new Credentials(email, pass);
 
-        CredentialsRequestDTO loginCredentials = usuarioService.login(userCredentials); // TODO chequear nombre de credentials
+        CredentialsDTO loginCredentials = usuarioService.login(userCredentials); // TODO chequear nombre de credentials
         if (loginCredentials == null) return ResponseEntity.status(404).body(null); // TODO
 //        Usuario user = this.usuarioService.findById(id).get();
         return ResponseEntity.ok(loginCredentials);
