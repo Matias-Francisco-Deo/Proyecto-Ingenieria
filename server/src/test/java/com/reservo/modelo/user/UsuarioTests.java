@@ -23,6 +23,6 @@ public class UsuarioTests {
     }
     @Test
     void usuarioTieneEmail() {
-        assertEquals("jorge", jorge.getEmail());
+        assertEquals("jorge@yahoo.com.ar", jorge.getEmail());
     }
 }
