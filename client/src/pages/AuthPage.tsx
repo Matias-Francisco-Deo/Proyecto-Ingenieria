@@ -23,15 +23,17 @@ export default function AuthPage() {
               {isLoggingIn ? (
                 <ChangeAuthButton
                   className=""
-                  onClickFunc={() => setIsLoggingIn(false)}
-                  message="Cambiar a Registrarse"
-                />
+                  onClick={() => setIsLoggingIn(false)}
+                >
+                  Cambiar a Registrarse
+                </ChangeAuthButton>
               ) : (
                 <ChangeAuthButton
                   className=""
-                  onClickFunc={() => setIsLoggingIn(true)}
-                  message="Cambiar a Iniciar Sesión"
-                />
+                  onClick={() => setIsLoggingIn(true)}
+                >
+                  Cambiar a Iniciar Sesión
+                </ChangeAuthButton>
               )}
             </div>
           </div>
