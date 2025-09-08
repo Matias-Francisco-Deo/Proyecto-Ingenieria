@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -47,16 +45,17 @@ public class Inmueble {
     @Column(nullable = false)
     private final LocalTime horaFin;
 
-//    @Column(nullable = false)
-//    private final List<RangoHorario> timeRanges;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private final PoliticasDeCancelacion cancellation;
+
 //    @Column(nullable = false)
 //    private final List<String> images = new ArrayList<>(); // en to' caso, la referencia al disco
-//    @Column(nullable = false)
-//    private final String cancellationPolicy; // object
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
-                    LocalTime horaInicio, LocalTime horaFinal) { // , Usuario owner
+                    LocalTime horaInicio, LocalTime horaFinal,
+                    PoliticasDeCancelacion cancellation) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -66,13 +65,15 @@ public class Inmueble {
         this.owner = null;
         this.horaInicio = horaInicio;
         this.horaFin = horaFinal;
-//        this.images.addAll(image);
-//        this.cancellationPolicy = cancellationPolicy;
+        this.cancellation = cancellation;
+
+//      this.images.addAll(image);
     }
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
-                    LocalTime horaInicio, LocalTime horaFinal, Usuario owner) { // , Usuario owner
+                    LocalTime horaInicio, LocalTime horaFinal, Usuario owner,
+                    PoliticasDeCancelacion cancellation) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -82,8 +83,8 @@ public class Inmueble {
         this.horaInicio = horaInicio;
         this.horaFin = horaFinal;
         this.owner = owner;
+        this.cancellation = cancellation;
 //        this.images.addAll(image);
-//        this.cancellationPolicy = cancellationPolicy;
     }
 
 }

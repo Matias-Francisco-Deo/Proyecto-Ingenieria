@@ -25,13 +25,6 @@ public class InmuebleServiceImpl implements InmuebleService {
         if (dao.existeInmueble(inmueble.getId())) throw new InmuebleRepetidoException("El inmueble ya está registrado.");
         return dao.save(inmueble);
     }
-    /*
-    @Override
-    public Usuario create(Usuario usuario) throws EmailRepetido {
-        if (usuarioDAO.existeEmail(usuario.getEmail(), usuario.getId())) throw new EmailRepetido("El email ya se encuentra registrado.");
-        return usuarioDAO.save(usuario);
-    }
-     */
 
     @Override
     public Inmueble update(Inmueble inmueble) {

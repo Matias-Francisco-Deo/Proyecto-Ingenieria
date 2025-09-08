@@ -1,6 +1,7 @@
 package com.reservo.service.impl;
 
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
@@ -33,6 +34,7 @@ public class InmuebleServiceImplTest {
 
     private Usuario jorge;
     private Usuario juan;
+    private PoliticasDeCancelacion cancellation;
     private Inmueble inmueble1;
     private Inmueble inmueble2;
 
@@ -44,11 +46,11 @@ public class InmuebleServiceImplTest {
 
         inmueble1 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
 
         inmueble2 = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), juan);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION);
     }
 
     @Test
@@ -61,6 +63,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seGuardaUnInmuebleEnlaDB() throws EmailRepetido {
         userService.create(jorge);
+
         inmuebleService.create(inmueble1);
         Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
 

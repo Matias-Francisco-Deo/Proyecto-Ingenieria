@@ -13,7 +13,6 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @ToString
 
-@Entity
 public class RangoHorario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
