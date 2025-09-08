@@ -197,7 +197,7 @@ export default function createPropertyPage() {
                   htmlFor="ubication"
                   className="block font-medium text-sm/6"
                 >
-                  Ubicación
+                  Localidad
                 </label>
               </div>
               <div className="mt-2">
@@ -383,7 +383,7 @@ export default function createPropertyPage() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
               >
-                Create
+                Dar de Alta
               </button>
             </div>
           </form>
