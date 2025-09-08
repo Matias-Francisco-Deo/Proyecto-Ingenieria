@@ -81,6 +81,8 @@ export default function LoginPage() {
       return;
     }
 
+    login();
+
     function checkHasNoBlanks() {
       if (passwordIsBlank) {
         setHasPasswordError(true);
@@ -192,6 +194,10 @@ export default function LoginPage() {
       </div>
     </div>
   );
+
+  function login() {
+    location.href = "/home";
+  }
 
   function resetBlankError() {
     setTimeout(() => {
