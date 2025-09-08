@@ -4,6 +4,7 @@ import com.reservo.modelo.user.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +41,22 @@ public class Inmueble {
     @ManyToOne
     private final Usuario owner;
 
+    @Column(nullable = false)
+    private final LocalTime horaInicio;
+
+    @Column(nullable = false)
+    private final LocalTime horaFin;
+
 //    @Column(nullable = false)
-//    @OneToMany
-//    private final List<RangoHorario> timeRanges = new ArrayList<>();
-
-    //    @Column(nullable = false)
+//    private final List<RangoHorario> timeRanges;
+//    @Column(nullable = false)
 //    private final List<String> images = new ArrayList<>(); // en to' caso, la referencia al disco
-
 //    @Column(nullable = false)
 //    private final String cancellationPolicy; // object
 
     public Inmueble(String name, String desc, Double price,
-                    String ubi, Integer capacity, String condition) { // , Usuario owner
+                    String ubi, Integer capacity, String condition,
+                    LocalTime horaInicio, LocalTime horaFinal) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -59,7 +64,24 @@ public class Inmueble {
         this.capacity = capacity;
         this.conditions = condition;
         this.owner = null;
-//        this.timeRanges = range;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFinal;
+//        this.images.addAll(image);
+//        this.cancellationPolicy = cancellationPolicy;
+    }
+
+    public Inmueble(String name, String desc, Double price,
+                    String ubi, Integer capacity, String condition,
+                    LocalTime horaInicio, LocalTime horaFinal, Usuario owner) { // , Usuario owner
+        this.name = name;
+        this.description = desc;
+        this.price = price;
+        this.ubication = ubi;
+        this.capacity = capacity;
+        this.conditions = condition;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFinal;
+        this.owner = owner;
 //        this.images.addAll(image);
 //        this.cancellationPolicy = cancellationPolicy;
     }

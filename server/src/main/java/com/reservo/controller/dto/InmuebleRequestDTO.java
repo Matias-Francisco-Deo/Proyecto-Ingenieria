@@ -11,13 +11,13 @@ import java.time.LocalTime;
 public record InmuebleRequestDTO(
         String name,
         String description,
-        String image,                   // este
-        Double price,
-        LocalTime start,                // este
-        LocalTime end,                  // este
         String ubication,
+        Double price,
         Integer capacity,
         String condition,
+        String start,                // este
+        String end,                  // este
+        String image,                   // este
         String policy,                  // este
         String key                      // este está NULL
 ) {
@@ -35,9 +35,13 @@ public record InmuebleRequestDTO(
 //        if (capacity.isBlank()) throw new ParametroIncorrecto("La capacidad no debe estar en blanco.");
 //        if (owner.isBlank()) throw new ParametroIncorrecto("El dueño------ no debe estar en blanco.");
 
-        RangoHorario rango = new RangoHorario(start, end);
+//        RangoHorario rango = new RangoHorario(start, end);
 
-        return new Inmueble(name, description, price, ubication, capacity, condition); // , new Usuario()
+        LocalTime horaInicio = LocalTime.parse(start);
+        LocalTime horaFin = LocalTime.parse(end);
+
+        return new Inmueble(name, description, price, ubication, capacity, condition,
+                horaInicio, horaFin); // , new Usuario()
         // revisar una forma de traer al owner, véase el usuario que creó el request
     }
 }

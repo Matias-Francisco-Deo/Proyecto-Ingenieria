@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,11 +42,13 @@ public class InmuebleServiceImplTest {
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         juan = new Usuario("juan", "aa22", "juan@yahoo.com.ar");
 
-        inmueble1 = new Inmueble("Plaza", "Es una plaza linda", 200d,"Berazategui", 100,
-                "No romper nada");
+        inmueble1 = new Inmueble(
+                "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge);
 
-        inmueble2 = new Inmueble("Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100,
-                "No romper nada");
+        inmueble2 = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
+                LocalTime.of(12, 30), LocalTime.of(14, 30), juan);
     }
 
     @Test

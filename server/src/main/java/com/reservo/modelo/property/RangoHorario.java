@@ -25,9 +25,6 @@ public class RangoHorario {
     @Column(nullable = false)
     private LocalTime horarioFin;
 
-    @ManyToOne
-    private Inmueble inmueble;
-
     public RangoHorario(LocalTime horarioInicio, LocalTime horarioFin) {
         this.horarioInicio = horarioInicio;
         this.horarioFin = horarioFin;

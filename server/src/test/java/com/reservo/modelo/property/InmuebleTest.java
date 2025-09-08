@@ -17,8 +17,9 @@ public class InmuebleTest {
     public void setUp() {
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
 
-        propiedad = new Inmueble("Plaza", "Es una plaza linda", 200d,"Berazategui", 100,
-                "No romper nada");
+        propiedad = new Inmueble(
+                "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge);
     }
 
     @Test
