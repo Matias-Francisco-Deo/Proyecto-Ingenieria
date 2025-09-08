@@ -15,9 +15,9 @@ public record InmuebleRequestDTO(
         String condition,
         String start,
         String end,
-        String image,                   // este
-        String cancellation,                  // este
-        String key                      // este está NULL
+        String image,        // este
+        String cancellation, // este
+        String key           // este está NULL
 ) {
     public Inmueble aModelo() throws ParametroIncorrecto {
         if (name == null || description == null || price == null ||

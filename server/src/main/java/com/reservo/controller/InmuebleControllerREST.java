@@ -28,6 +28,13 @@ public final class InmuebleControllerREST {
         return ResponseEntity.status(HttpStatus.CREATED).body(InmuebleResponseDTO.desdeModelo(inmueble));
     }
 
+    @GetMapping
+    public ResponseEntity<Set<InmuebleResponseDTO>> getAllUbicaciones() {
+        return ResponseEntity.ok(this.inmuebleService.findAll().stream()
+                .map(InmuebleResponseDTO::desdeModelo)
+                .collect(Collectors.toSet()));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<InmuebleResponseDTO> getInmuebleById(@PathVariable Long id) {
         if(this.inmuebleService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
@@ -35,10 +42,12 @@ public final class InmuebleControllerREST {
         return ResponseEntity.ok(InmuebleResponseDTO.desdeModelo(inmueble));
     }
 
-//    @GetMapping
-//    public ResponseEntity<Set<InmuebleResponseDTO>> getAllUbicaciones() {
-//        return ResponseEntity.ok(this.inmuebleService.findAll().stream()
-//                .map(InmuebleResponseDTO::desdeModelo)
-//                .collect(Collectors.toSet()));
-//    }
+    @GetMapping("/buscar/{name}")
+    public ResponseEntity<Set<InmuebleResponseDTO>> getInmuebleByName(@PathVariable String name) {
+        if(this.inmuebleService.findByName(name).isEmpty()) return ResponseEntity.status(404).body(null);
+
+        return ResponseEntity.ok(this.inmuebleService.findByName(name).stream()
+                .map(InmuebleResponseDTO::desdeModelo)
+                .collect(Collectors.toSet()));
+    }
 }

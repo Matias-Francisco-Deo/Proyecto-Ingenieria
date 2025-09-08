@@ -11,4 +11,5 @@ public interface InmuebleService {
     Inmueble delete(Inmueble inmueble);
     Optional<Inmueble> findById(Long inmuebleId);
     List<Inmueble> findAll();
+    List<Inmueble> findByName(String name);
 }

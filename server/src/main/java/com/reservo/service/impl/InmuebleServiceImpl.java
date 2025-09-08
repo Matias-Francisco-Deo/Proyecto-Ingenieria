@@ -45,4 +45,9 @@ public class InmuebleServiceImpl implements InmuebleService {
     public List<Inmueble> findAll() {
         return dao.findAll();
     }
+
+    @Override
+    public List<Inmueble> findByName(String name) {
+        return dao.findByNameContainingIgnoreCase(name);
+    }
 }
