@@ -4,6 +4,6 @@ export interface SignInError {
 
 export interface UserInfo {
   username: string;
-  // avatar: string;
   key: string;
+  error?: string;
 }

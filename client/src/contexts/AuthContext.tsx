@@ -1,12 +1,11 @@
-// CREAR CONTEXTO AUTH
-import type { SignInError, UserInfo } from "../types/types";
+import type { UserInfo } from "../types/types";
 import { useUser } from "../hooks/useUser";
 import { createContext, useState } from "react";
 
 type AuthContextType = {
   isAuthenticated: boolean;
   // setIsAuthenticated: unknown;
-  login: (email: string, password: string) => Promise<SignInError | null>;
+  login: (email: string, password: string) => Promise<UserInfo>;
   logout: () => void;
   signIn: (
     username: string,
@@ -25,10 +24,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { setUsername, setKey } = useUser();
 
   const login = async (email: string, password: string) => {
-    // llamada a db
     const userInfo = await getUserInfo(email, password);
 
-    if (!userInfo) return { error: "Credenciales incorrectas." };
+    if (userInfo.error) return userInfo;
 
     setKey(userInfo.key);
     setUsername(userInfo.username);
@@ -37,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("isAuthenticated", JSON.stringify(true));
 
     location.href = "/home";
-    return null;
+    return userInfo;
   };
 
   const getUserInfo = async (

@@ -54,10 +54,10 @@ export default function SignInPage() {
 
     const errorMessage = await login(email.value, password.value);
 
-    if (errorMessage !== null) {
+    if (errorMessage.error) {
       console.error(errorMessage);
 
-      setEmailErrorMessage(errorMessage.error);
+      setGeneralErrorMessage(errorMessage.error);
       setHasPasswordError(true);
       setHasEmailError(true);
       resetAllErrors();
