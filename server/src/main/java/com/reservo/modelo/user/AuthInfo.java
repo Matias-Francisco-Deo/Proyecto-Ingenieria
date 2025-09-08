@@ -10,8 +10,8 @@ import lombok.ToString;
 public class AuthInfo {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY) // usar UUID como id? // TODO
-    private Long id;
+    @GeneratedValue(strategy=GenerationType.UUID) // el UUID se genera acá
+    private String id;
 
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Usuario user;
@@ -19,12 +19,8 @@ public class AuthInfo {
     @Transient
     private String email;
 
-    @Column(nullable = false)
-    private String key;
-
-    public AuthInfo( String key, Usuario user) {
+    public AuthInfo(Usuario user) {
         this.email = user.getEmail();
-        this.key = key;
         this.user = user;
     }
 }

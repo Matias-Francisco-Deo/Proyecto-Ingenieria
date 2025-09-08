@@ -11,7 +11,7 @@ public class AuthInfoTests {
     @BeforeEach
     void setUp() {
         Usuario jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
-        jorgeInfo = new AuthInfo("7859df99-008e-45b3-8054-4db757470c8e", jorge);
+        jorgeInfo = new AuthInfo(jorge);
     }
 
     @Test
@@ -21,7 +21,8 @@ public class AuthInfoTests {
 
     @Test
     void laInfoContieneClave() {
-        assertEquals("7859df99-008e-45b3-8054-4db757470c8e", jorgeInfo.getKey());
+        jorgeInfo.setId("7859df99-008e-45b3-8054-4db757470c8e");
+        assertEquals("7859df99-008e-45b3-8054-4db757470c8e", jorgeInfo.getId());
     }
 
 

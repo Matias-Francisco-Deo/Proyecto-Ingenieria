@@ -46,24 +46,12 @@ public class UsuarioDAOTests {
         assertEquals(user.get().getName(), jorge.getName());
     }
 
-//    @Test
-//    void usuarioConCredencialesInvalidasTiraException() {
-//        usuarioDAO.save(jorge);
-//        assertThrows(CredencialesIncorrectas.class, () -> {usuarioDAO.getUsuarioConCredenciales("jorge@yahoo.com.ar", "contrasenia");});
-//    }
-
     @Test
     void usuarioConCredencialesInvalidasDevuelveVacio() {
         usuarioDAO.save(jorge);
         Optional<Usuario> user = usuarioDAO.getUsuarioConCredenciales("jorge@yahoo.com.ar", "contrasenia");
         assertTrue(user.isEmpty());
     }
-
-//    @Test
-//    void siSeCargoUnEmailEsteNoExisteParaElOwner() throws EmailRepetido {
-//        usuarioDAO.save(jorge);
-//        assertTrue(usuarioDAO.existeEmail("jorge@yahoo.com.ar", jorge.getId()));
-//    }
 
 
 

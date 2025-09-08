@@ -41,16 +41,26 @@ public class AuthInfoDAOTests {
     @Test
     void seCarganLosDatosDeAutenticacionYTieneUnaKey() {
         Usuario jorgeFromDb = usuarioDAO.findById(jorge.getId()).get();
-        AuthInfo authInfo = new AuthInfo(UUID.randomUUID().toString(), jorgeFromDb);
+        AuthInfo authInfo = new AuthInfo(jorgeFromDb);
         authInfoDAO.save(authInfo);
 
         Optional<AuthInfo> authInfoFromDb = authInfoDAO.findById(authInfo.getId());
 
-        assertFalse(authInfoFromDb.get().getKey().isEmpty());
+        assertFalse(authInfoFromDb.get().getId().isEmpty());
 
     }
 
+    @Test
+    void seObtienenLosDatosDeAutenticacionDeUnUsuario() {
+        Usuario jorgeFromDb = usuarioDAO.findById(jorge.getId()).get();
+        AuthInfo authInfo = new AuthInfo(jorgeFromDb);
+        authInfoDAO.save(authInfo);
 
+        Optional<AuthInfo> authInfoFromDb = authInfoDAO.getInfoDeUsuario(jorge.getId());
+
+        assertFalse(authInfoFromDb.get().getId().isEmpty());
+
+    }
 
 
 

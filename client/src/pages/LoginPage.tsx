@@ -2,7 +2,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useState, type FormEvent } from "react";
 
 export default function SignInPage() {
-  const { login, setIsAuthenticated } = useAuth();
+  const { login } = useAuth();
 
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
@@ -77,89 +77,64 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="text-white">
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="relative flex justify-center">
-            <title>RESERVO - Sign In</title>
-          </div>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form
-            method="POST"
-            className="space-y-6"
-            onSubmit={handleLogin}
-            noValidate
-          >
-            <div>
-              <label htmlFor="email" className="block font-medium text-sm/6">
-                Email
-              </label>
-              {hasEmailError && (
-                <p className="mt-2 text-sm text-red-600">{emailErrorMessage}</p>
-              )}
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  className={`${
-                    hasEmailError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block font-medium text-sm/6"
-                >
-                  Contraseña
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  className={`${
-                    hasPasswordError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-                {generalErrorMessage && (
-                  <p className="mt-2 text-sm text-red-600">
-                    {generalErrorMessage}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-row gap-1">
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
-              >
-                Iniciar Sesión
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsAuthenticated(false)} // TODO cambiar
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
-              >
-                Registrarse
-              </button>
-            </div>
-          </form>
+    <form method="POST" className="space-y-6" onSubmit={handleLogin} noValidate>
+      <p>
+        Utilice sus credenciales para iniciar sesión. ¿Todavía no tiene cuenta?
+        Regístrese.
+      </p>
+      <div>
+        <label htmlFor="email" className="block font-medium text-sm/6">
+          Email
+        </label>
+        {hasEmailError && (
+          <p className="mt-2 text-sm text-red-600">{emailErrorMessage}</p>
+        )}
+        <div className="mt-2">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            className={`${
+              hasEmailError ? "inputError" : ""
+            } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+          />
         </div>
       </div>
-    </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+          <label htmlFor="password" className="block font-medium text-sm/6">
+            Contraseña
+          </label>
+        </div>
+        <div className="mt-2">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autoComplete="current-password"
+            className={`${
+              hasPasswordError ? "inputError" : ""
+            } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+          />
+          {generalErrorMessage && (
+            <p className="mt-2 text-sm text-red-600">{generalErrorMessage}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-1">
+        <button
+          type="submit"
+          className="flex w-full justify-center rounded-md bg-amber-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-amber-500 focus-visible:outline-2 focus-visible:outline-amber-600 focus-visible:outline-offset-2"
+        >
+          Iniciar Sesión
+        </button>
+      </div>
+    </form>
   );
 
   function resetAllErrors() {

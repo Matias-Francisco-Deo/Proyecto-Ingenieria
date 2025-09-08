@@ -4,8 +4,8 @@ import { useUser } from "../hooks/useUser";
 import { createContext, useState } from "react";
 
 type AuthContextType = {
-  isAuthenticated: boolean; // TODO cambiar
-  setIsAuthenticated: unknown;
+  isAuthenticated: boolean;
+  // setIsAuthenticated: unknown;
   login: (email: string, password: string) => Promise<SignInError | null>;
   logout: () => void;
 };
@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     localStorage.setItem("isAuthenticated", JSON.stringify(true));
 
-    // location.href = "/home";
+    location.href = "/home";
     return null;
   };
 
@@ -56,9 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, setIsAuthenticated }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -58,11 +58,18 @@ public class UsuarioServiceImpl implements UsuarioService {
     public CredentialsDTO login(Credentials credentials) throws CredencialesIncorrectas {
         Usuario user = usuarioDAO.getUsuarioConCredenciales(credentials.email(), credentials.password()).orElseThrow(() -> new CredencialesIncorrectas("Las credenciales dadas son erróneas."));
 
-        String key = UUID.randomUUID().toString();
+        removePreviousKey(user);
+
         String username = user.getName();
 
-        authInfoDAO.save(new AuthInfo(key, user)); // guardo la key
+        AuthInfo authInfo = authInfoDAO.save(new AuthInfo(user)); // guardo la key
 
-        return (new CredentialsDTO(key, username));
+        return (new CredentialsDTO(authInfo.getId(), username));
+    }
+
+    private void removePreviousKey(Usuario user) {
+        Optional<AuthInfo> infoDeUsuario = authInfoDAO.getInfoDeUsuario(user.getId());
+        infoDeUsuario.ifPresent(authInfoDAO::delete);
+        authInfoDAO.flush(); // ESTE FLUSH es importante, sino sigue en la misma transacción y quiere borrar LUEGO de haber puesto la nueva entrada. Lo cual rompe todo.
     }
 }

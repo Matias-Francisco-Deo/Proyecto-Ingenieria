@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,6 +97,21 @@ public class UsuarioServiceImplTests {
     void alLoguearConDatosIncorrectosTiraException() throws EmailRepetido {
         usuarioService.create(jorge);
         assertThrows(CredencialesIncorrectas.class, () -> {usuarioService.login(new Credentials("jorge@yahoo.com.ar", "contrasenia"));});
+    }
+
+    @Test
+    void soLogueaUnUsuarioDeNuevoYTieneUnaKeyDistinta() throws EmailRepetido, CredencialesIncorrectas {
+        usuarioService.create(jorge);
+
+        /* Un login */
+        CredentialsDTO credenciales1 = usuarioService.login(new Credentials("jorge@yahoo.com.ar", "aa21"));
+
+        /* Otro login */
+        CredentialsDTO credenciales2 = usuarioService.login(new Credentials("jorge@yahoo.com.ar", "aa21"));
+
+        assertEquals("jorge", credenciales2.username());
+        assertFalse(credenciales2.key().isEmpty());
+        assertNotEquals(credenciales1.key(), credenciales2.key());
     }
 
 
