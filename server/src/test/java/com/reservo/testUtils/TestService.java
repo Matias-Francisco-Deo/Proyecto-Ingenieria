@@ -12,6 +12,7 @@ public class TestService {
     private EntityManager entityManager;
 
     public void eliminarUsuarios() {
+        entityManager.createNativeQuery("DELETE FROM auth_info").executeUpdate();
         entityManager.createNativeQuery("DELETE FROM usuario").executeUpdate();
     }
 

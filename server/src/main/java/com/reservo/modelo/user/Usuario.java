@@ -22,7 +22,7 @@ public class Usuario {
     @Column(nullable = false)
     private final String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private final String name;
 
     @Column(nullable = false)

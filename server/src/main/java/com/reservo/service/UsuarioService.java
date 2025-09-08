@@ -1,6 +1,9 @@
 package com.reservo.service;
 
+import com.reservo.controller.dto.CredentialsDTO;
+import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
+import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
 
 import java.util.List;
@@ -12,4 +15,5 @@ public interface UsuarioService {
     List<Usuario> findAll();
     void update(Usuario usuario);
     void delete(Usuario usuario);
+    CredentialsDTO login(Credentials credentials) throws CredencialesIncorrectas;
 }

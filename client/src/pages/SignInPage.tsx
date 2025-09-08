@@ -1,9 +1,9 @@
 import { useAuth } from "../hooks/useAuth";
+import type { SignInError as SignInError } from "@/types/types";
 import { useState, type FormEvent } from "react";
 
 export default function SignInPage() {
-  const { login } = useAuth();
-
+  const { login, signIn } = useAuth();
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
   */
@@ -11,6 +11,7 @@ export default function SignInPage() {
 
   /* Se usa para poner en rojo aquellos campos con errores */
   const [hasEmailError, setHasEmailError] = useState(false);
+  const [hasUsernameError, setHasUsernameError] = useState(false);
   const [hasPasswordError, setHasPasswordError] = useState(false);
 
   /* Se usa para poner el mensaje de error abajo del último input */
@@ -25,19 +26,21 @@ export default function SignInPage() {
     */
 
     const form = event.target as HTMLFormElement;
+    const username = form.elements.namedItem("username") as HTMLInputElement;
     const password = form.elements.namedItem("password") as HTMLInputElement;
     const email = form.elements.namedItem("email") as HTMLInputElement;
 
     const passwordIsBlank = password.value == "";
+    const usernameIsBlank = username.value == "";
     const emailIsBlank = email.value == "";
 
     /* Pone en rojo a los campos que falten  */
     checkHasNoBlanks();
 
     /* Si faltan campos, tira error */
-    if (passwordIsBlank || emailIsBlank) {
+    if (passwordIsBlank || usernameIsBlank || emailIsBlank) {
       setGeneralErrorMessage("Complete los campos faltantes.");
-      resetAllErrors();
+      resetBlankError();
       return;
     }
 
@@ -48,26 +51,37 @@ export default function SignInPage() {
     if (hasWrongEmailFormat) {
       setHasEmailError(true);
       setEmailErrorMessage("El mail debe ser del formato example@email.com");
-      resetAllErrors();
+      resetEmailError();
       return;
     }
 
-    const errorMessage = await login(email.value, password.value);
+    const response = await signIn(username.value, password.value, email.value);
 
-    if (errorMessage.error) {
-      console.error(errorMessage);
+    /*
+    Manejo de error: Email se encuentra registrado
+    */
 
-      setGeneralErrorMessage(errorMessage.error);
-      setHasPasswordError(true);
+    if (!response.ok) {
+      const { error } = (await response.json()) as SignInError;
+
+      console.error(error);
+
+      setEmailErrorMessage(error);
       setHasEmailError(true);
-      resetAllErrors();
+      resetEmailError();
 
       return;
     }
+
+    login(email.value, password.value);
 
     function checkHasNoBlanks() {
       if (passwordIsBlank) {
         setHasPasswordError(true);
+      }
+
+      if (usernameIsBlank) {
+        setHasUsernameError(true);
       }
 
       if (emailIsBlank) {
@@ -78,10 +92,7 @@ export default function SignInPage() {
 
   return (
     <form method="POST" className="space-y-6" onSubmit={handleLogin} noValidate>
-      <p>
-        Utilice sus credenciales para iniciar sesión. ¿Todavía no tiene cuenta?
-        Regístrese.
-      </p>
+      <p>¡Únase a nuestra comunidad!</p>
       <div>
         <label htmlFor="email" className="block font-medium text-sm/6">
           Email
@@ -98,6 +109,24 @@ export default function SignInPage() {
             autoComplete="email"
             className={`${
               hasEmailError ? "inputError" : ""
+            } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="username" className="block font-medium text-sm/6">
+          Nombre de usuario
+        </label>
+        <div className="mt-2">
+          <input
+            id="username"
+            name="username"
+            type="username"
+            required
+            autoComplete="username"
+            className={`${
+              hasUsernameError ? "inputError" : ""
             } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
           />
         </div>
@@ -129,19 +158,27 @@ export default function SignInPage() {
       <div className="flex flex-row gap-1">
         <button
           type="submit"
-          className="flex w-full justify-center rounded-md bg-amber-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-amber-500 focus-visible:outline-2 focus-visible:outline-amber-600 focus-visible:outline-offset-2"
+          className="flex w-full justify-center rounded-md bg-amber-800 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-amber-500 focus-visible:outline-2 focus-visible:outline-amber-600 focus-visible:outline-offset-2"
         >
-          Iniciar Sesión
+          Registrarse
         </button>
       </div>
     </form>
   );
 
-  function resetAllErrors() {
+  function resetBlankError() {
     setTimeout(() => {
       setHasEmailError(false);
       setHasPasswordError(false);
+      setHasUsernameError(false);
       setGeneralErrorMessage("");
     }, 3000);
+  }
+
+  function resetEmailError() {
+    setTimeout(() => {
+      setHasEmailError(false);
+      setEmailErrorMessage("");
+    }, 5000);
   }
 }

@@ -1,6 +1,6 @@
-package com.reservo.persistencia.DAO;
+package com.reservo.persistencia.DAO.user;
 
-
+import com.reservo.modelo.user.AuthInfo;
 import com.reservo.modelo.user.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UsuarioDAO extends JpaRepository<Usuario, Long> {
+public interface AuthInfoDAO extends JpaRepository<AuthInfo, String> {
 
-    @Query("select count(u) > 0 from Usuario u where u.email = :unEmail and (u.id != :unId or :unId is null)")
-    boolean existeEmail(@Param("unEmail") String email, @Param("unId") Long unId);
+    @Query("select ai from AuthInfo ai where ai.user.id = :unUserId")
+    Optional<AuthInfo> getInfoDeUsuario(@Param("unUserId") Long id);
 }

@@ -17,10 +17,12 @@ public class UsuarioTests {
     void usuarioTieneNombre() {
         assertEquals("jorge", jorge.getName());
     }
+
     @Test
     void usuarioTienePassword() {
         assertEquals("aa21", jorge.getPassword());
     }
+
     @Test
     void usuarioTieneEmail() {
         assertEquals("jorge@yahoo.com.ar", jorge.getEmail());
