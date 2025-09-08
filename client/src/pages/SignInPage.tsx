@@ -3,7 +3,7 @@ import type { SignInError as SignInError } from "@/types/types";
 import { useState, type FormEvent } from "react";
 
 export default function SignInPage() {
-  const { login } = useAuth();
+  const { login, signIn } = useAuth();
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
   */
@@ -55,17 +55,7 @@ export default function SignInPage() {
       return;
     }
 
-    const response = await fetch("http://localhost:8080/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: username.value,
-        password: password.value,
-        email: email.value,
-      }),
-    });
+    const response = await signIn(username.value, password.value, email.value);
 
     /*
     Manejo de error: Email se encuentra registrado

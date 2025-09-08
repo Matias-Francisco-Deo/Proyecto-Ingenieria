@@ -8,6 +8,11 @@ type AuthContextType = {
   // setIsAuthenticated: unknown;
   login: (email: string, password: string) => Promise<SignInError | null>;
   logout: () => void;
+  signIn: (
+    username: string,
+    password: string,
+    email: string
+  ) => Promise<Response>;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -23,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // llamada a db
     const userInfo = await getUserInfo(email, password);
 
-    console.log(userInfo);
     if (!userInfo) return { error: "Credenciales incorrectas." };
 
     setKey(userInfo.key);
@@ -40,11 +44,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     email: string,
     password: string
   ): Promise<UserInfo> => {
-    //   if (!key) return { user_name: "Guest", key: "" };
-    const resp = await fetch(
-      `http://localhost:8080/auth/login/?email=${email}&pass=${password}`
-    );
+    const resp = await fetch(`http://localhost:8080/auth/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
     return resp.json();
+  };
+
+  const signIn = async (username: string, password: string, email: string) => {
+    return await fetch("http://localhost:8080/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: username,
+        password,
+        email,
+      }),
+    });
   };
 
   const logout = () => {
@@ -56,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, signIn }}>
       {children}
     </AuthContext.Provider>
   );

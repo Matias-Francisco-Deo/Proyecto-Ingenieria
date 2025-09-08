@@ -1,6 +1,7 @@
 package com.reservo.controller;
 
 import com.reservo.controller.dto.CredentialsDTO;
+import com.reservo.controller.dto.LoginRequestDTO;
 import com.reservo.controller.dto.UsuarioRequestDTO;
 import com.reservo.controller.dto.UsuarioResponseDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
@@ -32,21 +33,13 @@ public final class UsuarioControllerREST {
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioResponseDTO.desdeModelo(user));
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UsuarioResponseDTO> getUsuarioById(@PathVariable Long id) {
-//        if (this.usuarioService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
-//        Usuario user = this.usuarioService.findById(id).get();
-//        return ResponseEntity.ok(UsuarioResponseDTO.desdeModelo(user));
-//    }
+    @PostMapping("/login/")
+    public ResponseEntity<CredentialsDTO> getUsuarioById(@RequestBody LoginRequestDTO loginRequestDTO) throws CredencialesIncorrectas {
 
-    @GetMapping("/login/")
-    public ResponseEntity<CredentialsDTO> getUsuarioById(@RequestParam String email, @RequestParam String pass) throws CredencialesIncorrectas {
+        Credentials userCredentials = new Credentials(loginRequestDTO.email(), loginRequestDTO.password());
 
-        Credentials userCredentials = new Credentials(email, pass);
-
-        CredentialsDTO loginCredentials = usuarioService.login(userCredentials); // TODO chequear nombre de credentials
-        if (loginCredentials == null) return ResponseEntity.status(404).body(null); // TODO
-//        Usuario user = this.usuarioService.findById(id).get();
+        CredentialsDTO loginCredentials = usuarioService.login(userCredentials);
+        if (loginCredentials == null) return ResponseEntity.status(404).body(null);
         return ResponseEntity.ok(loginCredentials);
     }
 
