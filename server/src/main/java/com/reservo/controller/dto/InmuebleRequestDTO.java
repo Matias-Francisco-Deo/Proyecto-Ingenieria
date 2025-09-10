@@ -3,8 +3,11 @@ package com.reservo.controller.dto;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public record InmuebleRequestDTO(
         String name,
@@ -14,8 +17,7 @@ public record InmuebleRequestDTO(
         Integer capacity,
         String condition,
         String start,
-        String end,
-        String image,        // este
+        String end,      // este
         String cancellation, // este
         String key           // este está NULL
 ) {
@@ -39,6 +41,6 @@ public record InmuebleRequestDTO(
         };
 
         return new Inmueble(name, description, price, ubication, capacity, condition,
-                horaInicio, horaFin, cancellationPolicy); // , new Usuario()
+                horaInicio, horaFin, cancellationPolicy,new ArrayList<>()); // , new Usuario()
     }
 }

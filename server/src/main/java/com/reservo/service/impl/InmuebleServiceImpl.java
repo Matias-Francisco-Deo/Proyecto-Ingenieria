@@ -6,9 +6,17 @@ import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -21,7 +29,11 @@ public class InmuebleServiceImpl implements InmuebleService {
     }
 
     @Override
-    public Inmueble create(Inmueble inmueble) {
+    public Inmueble create(Inmueble inmueble,List<MultipartFile> images) {
+
+        List<String> imagePaths = saveImages(images);
+        inmueble.getImages().addAll(imagePaths);
+
         if (dao.existeInmueble(inmueble.getId())) throw new InmuebleRepetidoException("El inmueble ya está registrado.");
         return dao.save(inmueble);
     }
@@ -49,5 +61,32 @@ public class InmuebleServiceImpl implements InmuebleService {
     @Override
     public List<Inmueble> findByName(String name) {
         return dao.findByNameContainingIgnoreCase(name);
+    }
+
+    private List<String> saveImages(List<MultipartFile> images) {
+        List<String> paths = new ArrayList<>();
+        Path uploadDir = Paths.get("uploads");
+
+        try {
+
+            Files.createDirectories(uploadDir);// Crear la carpeta si no existe
+
+            for (MultipartFile file : images) {
+                String originalFilename = file.getOriginalFilename();
+                //if (originalFilename == null || originalFilename.isBlank()) continue;
+
+                String filename = UUID.randomUUID() + "_" + originalFilename;
+                Path filePath = uploadDir.resolve(filename);
+
+
+                Files.copy(file.getInputStream(), filePath);// Guardar archivo
+
+                paths.add(filename);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar las imágenes");
+        }
+
+        return paths;
     }
 }

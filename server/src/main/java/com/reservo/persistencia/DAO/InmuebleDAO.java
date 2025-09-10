@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("select count(i) > 0 from Inmueble i where i.id = :unId")
-    boolean existeInmueble(@Param("unId") Long unId);
+    boolean existeInmueble(@Param("unId") Long unId);//no es necesario validar id
 
     List<Inmueble> findByNameContainingIgnoreCase(String unName);
 }
