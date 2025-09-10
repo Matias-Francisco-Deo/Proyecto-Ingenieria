@@ -102,6 +102,8 @@ export default function createPropertyPage() {
       return;
     }
 
+    location.href = "/home";
+
     function checkHasNoBlanks() {
       if (propertyNameIsBlank) {
         setHasNameError(true);
