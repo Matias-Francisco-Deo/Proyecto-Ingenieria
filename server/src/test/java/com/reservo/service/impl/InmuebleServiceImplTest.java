@@ -98,6 +98,18 @@ public class InmuebleServiceImplTest {
     }
 
     @Test
+    public void seBuscaLosInmueblesConLaInicialP() throws EmailRepetido {
+        userService.create(jorge);
+        inmuebleService.create(inmueble1);
+        List<Inmueble> resultados = inmuebleService.findByName("P");
+
+        resultados.stream().forEach(inmueble -> {
+            assertTrue(inmueble.getName().startsWith("P"));
+        });
+
+    }
+
+    @Test
     void noPuedenHaberDosUsuariosConElInmueble() throws EmailRepetido {
         userService.create(jorge);
         userService.create(juan);
