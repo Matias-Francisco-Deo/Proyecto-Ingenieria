@@ -106,7 +106,7 @@ public class InmuebleServiceImplTest {
     @Test
     public void seBuscaLosInmueblesConLaInicialP() throws EmailRepetido {
         userService.create(jorge);
-        inmuebleService.create(inmueble1);
+        inmuebleService.create(inmueble1,emptyImages);
         List<Inmueble> resultados = inmuebleService.findByName("P");
 
         resultados.stream().forEach(inmueble -> {
