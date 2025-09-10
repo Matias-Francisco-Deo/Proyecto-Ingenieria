@@ -18,10 +18,25 @@ export default function createPropertyPage() {
   const [hasEndTimeError, setHasEndTimeError] = useState(false);
   const [hasImageError, setHasImageError] = useState(false);
   const [hasCancellationError, sethasCancellationError] = useState(false);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
 
 
   /* Se usa para poner el mensaje de error abajo del último input */
   const [generalErrorMessage, setGeneralErrorMessage] = useState("");
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const urls = Array.from(files).map(file => URL.createObjectURL(file));
+    setPreviewImages(prev => [...prev, ...urls]);
+
+    e.target.value = "";
+  };
+
+  const removeImage = (index: number) => {
+  setPreviewImages(prev => prev.filter((_, i) => i !== index));
+};
 
   async function handleProperty(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -225,17 +240,35 @@ export default function createPropertyPage() {
                   Subir imagenes
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-2 flex gap-2 flex-wrap">
                 <input
                   id="images"
                   name="images"
                   type="file"
+                  multiple
                   required
                   autoComplete="images"
+                  onChange={handleImageChange}
                   className={`${
                     hasImageError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
+                {previewImages.map((img, idx) => (
+                  <div key={idx} className="relative">
+                    <img
+                      src={img}
+                      alt={`Preview ${idx}`}
+                      className="w-32 h-32 object-contain border rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
