@@ -24,11 +24,16 @@ export default function createPropertyPage() {
   /* Se usa para poner el mensaje de error abajo del último input */
   const [generalErrorMessage, setGeneralErrorMessage] = useState("");
 
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    const urls = Array.from(files).map(file => URL.createObjectURL(file));
+    const newFiles = Array.from(files);
+    setSelectedFiles(prev => [...prev, ...newFiles]);
+
+    const urls = newFiles.map(file => URL.createObjectURL(file));
     setPreviewImages(prev => [...prev, ...urls]);
 
     e.target.value = "";
@@ -36,6 +41,7 @@ export default function createPropertyPage() {
 
   const removeImage = (index: number) => {
   setPreviewImages(prev => prev.filter((_, i) => i !== index));
+  setSelectedFiles(prev => prev.filter((_, i) => i !== index));
 };
 
   async function handleProperty(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -62,7 +68,7 @@ export default function createPropertyPage() {
     const propertyNameIsBlank = propertyName.value == "";
     const propertyDescIsBlank = propertyDesc.value == "";
     const propertyUbicationIsBlank = propertyUbication.value == "";
-    const propertyImageIsBlank = propertyImage.value == "";
+    const propertyImageIsBlank = selectedFiles.length === 0;
     const propertyPriceIsBlank = propertyPrice.value == "";
     const propertyStartTimeIsBlank = propertyStartTime.value == "";
     const propertyEndTimeIsBlank = propertyEndTime.value == "";
@@ -83,24 +89,35 @@ export default function createPropertyPage() {
       return;
     }
 
-    const response = await fetch("http://localhost:8080/property", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: propertyName.value,
-        description: propertyDesc.value,
-        image: propertyImage.value,         // HMMM
-        price: propertyPrice.value,
-        start: propertyStartTime.value,
-        end: propertyEndTime.value,
-        ubication: propertyUbication.value,
-        capacity: propertyCapacity.value,
-        condition: propertyConditions.value,
-        cancellation: propertyCancellation.value,
-      }),
+    const formData = new FormData();
+
+  // Adjuntamos JSON con los datos del inmueble
+    const propertyJson = {
+      name: propertyName.value,
+      description: propertyDesc.value,
+      price: propertyPrice.value,
+      start: propertyStartTime.value,
+      end: propertyEndTime.value,
+      ubication: propertyUbication.value,
+      capacity: propertyCapacity.value,
+      condition: propertyConditions.value,
+      cancellation: propertyCancellation.value
+    };
+    formData.append(
+      "property",
+      new Blob([JSON.stringify(propertyJson)], { type: "application/json" })
+    );
+
+    // Adjuntamos todas las imágenes
+      selectedFiles.forEach(file => {
+        formData.append("images", file);
     });
+
+
+    const response = await fetch("http://localhost:8080/property", {
+    method: "POST",
+    body: formData
+  });
 
     /*
     Manejo de error: Email se encuentra registrado

@@ -13,8 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,7 @@ public class InmuebleServiceImplTest {
     private PoliticasDeCancelacion cancellation;
     private Inmueble inmueble1;
     private Inmueble inmueble2;
+    private List<MultipartFile> emptyImages;
 
     @BeforeEach
     public void setUp() {
@@ -51,6 +54,8 @@ public class InmuebleServiceImplTest {
         inmueble2 = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
                 LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION);
+
+        emptyImages = Collections.emptyList();
     }
 
     @Test
@@ -64,7 +69,8 @@ public class InmuebleServiceImplTest {
     void seGuardaUnInmuebleEnlaDB() throws EmailRepetido {
         userService.create(jorge);
 
-        inmuebleService.create(inmueble1);
+
+        inmuebleService.create(inmueble1,emptyImages);
         Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
 
         assertTrue(in.isPresent());
@@ -73,7 +79,7 @@ public class InmuebleServiceImplTest {
     @Test
     void sePersistenLosDatosDelInmueble() throws EmailRepetido {
         userService.create(jorge);
-        inmuebleService.create(inmueble1);
+        inmuebleService.create(inmueble1,emptyImages);
         Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
 
         assertEquals("Plaza", in.get().getName());
@@ -89,8 +95,8 @@ public class InmuebleServiceImplTest {
     void sePersistenVariasPropiedades() throws EmailRepetido {
         userService.create(jorge);
         userService.create(juan);
-        inmuebleService.create(inmueble1);
-        inmuebleService.create(inmueble2);
+        inmuebleService.create(inmueble1,emptyImages);
+        inmuebleService.create(inmueble2,emptyImages);
 
         List<Inmueble> inmuebles = inmuebleService.findAll();
 
@@ -101,9 +107,9 @@ public class InmuebleServiceImplTest {
     void noPuedenHaberDosUsuariosConElInmueble() throws EmailRepetido {
         userService.create(jorge);
         userService.create(juan);
-        inmuebleService.create(inmueble1);
+        inmuebleService.create(inmueble1,emptyImages);
 
-        assertThrows(InmuebleRepetidoException.class, () -> {inmuebleService.create(inmueble1);});
+        assertThrows(InmuebleRepetidoException.class, () -> {inmuebleService.create(inmueble1,emptyImages);});
     }
 
     @AfterEach
