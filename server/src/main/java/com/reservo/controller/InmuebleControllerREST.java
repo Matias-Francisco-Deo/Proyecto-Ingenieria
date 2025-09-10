@@ -2,6 +2,7 @@ package com.reservo.controller;
 
 import com.reservo.controller.dto.InmuebleRequestDTO;
 import com.reservo.controller.dto.InmuebleResponseDTO;
+import com.reservo.controller.dto.InmuebleSummaryDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.service.InmuebleService;
@@ -54,11 +55,11 @@ public final class InmuebleControllerREST {
     }
 
     @GetMapping("/buscar/{name}")
-    public ResponseEntity<Set<InmuebleResponseDTO>> getInmuebleByName(@PathVariable String name) {
+    public ResponseEntity<Set<InmuebleSummaryDTO>> getInmuebleByName(@PathVariable String name) {
         if(this.inmuebleService.findByName(name).isEmpty()) return ResponseEntity.status(404).body(null);
 
         return ResponseEntity.ok(this.inmuebleService.findByName(name).stream()
-                .map(InmuebleResponseDTO::desdeModelo)
+                .map(InmuebleSummaryDTO::desdeModelo)
                 .collect(Collectors.toSet()));
     }
 }
