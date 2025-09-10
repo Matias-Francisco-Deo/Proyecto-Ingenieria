@@ -12,20 +12,36 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 // const LoginPage = lazy(() => import("../pages/LoginPage"));
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
+const SearchPage = lazy(() => import("../pages/SearchPropertyPage"));
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
-  return (
-    <MainLayout>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/home" component={HomePage} />
-          <Route path="/signin" component={AuthPage} />
-          <Route path="/alta-inmueble" component={PropertyPage} />
-
-          {/* Rutas protegidas */}
-          {/* <Route path="/home" component={HomePage} />
+    return (
+        <MainLayout>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                    <Route
+                        path="/"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/home"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/signin"
+                        component={AuthPage}
+                    />
+                    <Route
+                        path="/alta-inmueble"
+                        component={PropertyPage}
+                    />
+                    <Route
+                        path="/buscador"
+                        component={SearchPage}
+                    />
+                    {/* Rutas protegidas */}
+                    {/* <Route path="/home" component={HomePage} />
 
           <Route path="/search/:query?" component={SearchPage} />
           <Route path="/gif/:id" component={GifsDetails} />
@@ -34,11 +50,11 @@ export function AppRoutes() {
 
           <ProtectedRoute path="/upload" component={UploadPage} /> */}
 
-          {/* Ruta 404 */}
+                    {/* Ruta 404 */}
 
-          <Route component={Page404} />
-        </Switch>
-      </Suspense>
-    </MainLayout>
-  );
+                    <Route component={Page404} />
+                </Switch>
+            </Suspense>
+        </MainLayout>
+    );
 }

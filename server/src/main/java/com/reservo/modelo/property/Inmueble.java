@@ -36,7 +36,7 @@ public class Inmueble {
     @Column(nullable = false)
     private final String conditions;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private final Usuario owner;
 
     @Column(nullable = false)

@@ -106,7 +106,7 @@ public class InmuebleServiceImplTest {
         assertThrows(InmuebleRepetidoException.class, () -> {inmuebleService.create(inmueble1);});
     }
 
-    @AfterEach
+    //@AfterEach
     void limpiarDb(){
         testService.eliminarInmuebles();
         testService.eliminarUsuarios();

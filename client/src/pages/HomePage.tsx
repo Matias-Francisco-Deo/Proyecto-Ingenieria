@@ -1,77 +1,90 @@
 import { useEffect, useState } from "react";
 
 type Inmueble = {
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number;
-  conditions: string;
-  start: string;
-  end: string;
-  capacity: number;
-  cancellation: string;
+    id: number;
+    name: string;
+    description: string;
+    ubication: string;
+    price: number;
+    conditions: string;
+    start: string;
+    end: string;
+    capacity: number;
+    cancellation: string;
 };
 
 // export default function HomePage() {
-  // return <div className="flex flex-col items-start gap-8">Homepage</div>;
+// return <div className="flex flex-col items-start gap-8">Homepage</div>;
 
 function Buscador() {
-  const [query, setQuery] = useState("");
-  const [resultados, setResultados] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false); // Para saber si ya se buscó
+    const [query, setQuery] = useState("");
+    const [resultados, setResultados] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [searched, setSearched] = useState(false); // Para saber si ya se buscó
 
-  const buscar = async () => {
-    setLoading(true);
-    setSearched(true);
+    const buscar = async () => {
+        setLoading(true);
+        setSearched(true);
 
-    // fetch(`http://localhost:8080/property/buscar/${query}`)
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setResultados(data);
-    //     console.log(data);
-    //   });
+        // fetch(`http://localhost:8081/property/buscar/${query}`)
+        //   .then(res => res.json())
+        //   .then(data => {
+        //     setResultados(data);
+        //     console.log(data);
+        //   });
 
-    try {
-      const resp = await fetch(`http://localhost:8080/property/buscar/${query}`);
-      const data = await resp.json();
-      setResultados(data);
-    } catch (e) {
-      console.error(e);
-      setResultados([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+        try {
+            const resp = await fetch(
+                `http://localhost:8081/property/buscar/${query}`
+            );
+            const data = await resp.json();
+            setResultados(data);
+        } catch (e) {
+            console.error(e);
+            setResultados([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <div className="p-4">
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Buscar objeto..."
-        className="border p-2 rounded"
-      />
-      <button onClick={buscar} className="ml-2 px-4 py-2 bg-amber-500 hover:bg-amber-700 text-white rounded">
-        Buscar
-      </button>
+    return (
+        <div className="p-4">
+            <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar objeto..."
+                className="border p-2 rounded"
+            />
+            <button
+                onClick={buscar}
+                className="ml-2 px-4 py-2 bg-amber-500 hover:bg-amber-700 text-white rounded"
+            >
+                Buscar
+            </button>
 
-      {loading && <p>Cargando...</p>}
+            {loading && <p>Cargando...</p>}
 
-      {!loading && searched && resultados.length === 0 && (
-        <p className="text-red-500 mt-2">Sin coincidencias</p>
-      )}
+            {!loading && searched && resultados.length === 0 && (
+                <p className="text-red-500 mt-2">Sin coincidencias</p>
+            )}
 
-      {!loading && resultados.length > 0 && (
-        <ul className="mt-2 list-disc pl-5 ">
-          {resultados.map(inm => (
-          <li key={inm.id} className="border-2 border-amber-600 mt-2 pl-2 p-2">{inm.name} - {inm.description}</li>
-        ))}
-        </ul>
-      )}
-    </div>
-  );
+            {!loading && resultados.length > 0 && (
+                <ul className="mt-2 list-disc pl-5 ">
+                    {resultados.map((inm) => {
+                        console.log(inm);
+                        return (
+                            <li
+                                key={inm.id}
+                                className="border-2 border-amber-600 mt-2 pl-2 p-2"
+                            >
+                                {inm.name} - {inm.description}
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
+        </div>
+    );
 }
 
 export default Buscador;
@@ -82,7 +95,7 @@ export default Buscador;
 // const [resultados, setResultados] = useState<Inmueble[]>([]);
 
 // const handleBuscar = () => {
-//   fetch(`http://localhost:8080/property/buscar/${nombre}`)
+//   fetch(`http://localhost:8081/property/buscar/${nombre}`)
 //     .then(res => res.json())
 //     .then(data => {
 //       setResultados(data);
@@ -91,7 +104,7 @@ export default Buscador;
 // };
 
 // useEffect(() => {
-//   fetch("http://localhost:8080/property")
+//   fetch("http://localhost:8081/property")
 //     .then(res => res.json())
 //     .then(data => setInmuebles(data));
 // }, []);
