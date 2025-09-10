@@ -1,3 +1,4 @@
+import ListaDeInmuebles from "@/components/ListaDeInmuebles";
 import type { Inmueble } from "@/types/types";
 import { useState } from "react";
 
@@ -30,36 +31,7 @@ export default function ListaInmuebles() {
                     Buscar
                 </button>
 
-                <ul className="mt-4">
-                    {resultados.map((inm) => (
-                        <li
-                            key={inm.id}
-                            className="border-2 border-amber-600 mt-2 pl-2 p-2"
-                        >
-                            <div
-                                key={inm.id}
-                                className="p-4 shadow rounded bg-gray"
-                            >
-                                <h2 className="text-xl font-bold">
-                                    {inm.name}
-                                </h2>
-                                <p>
-                                    <strong>Ubicación: </strong> {inm.ubication}
-                                </p>
-                                <p>
-                                    <strong>Precio: </strong> ${inm.price}
-                                </p>
-                                <p>
-                                    <strong>Nombre del dueño:</strong>{" "}
-                                    {inm.nameDelDuenio}
-                                </p>
-                                <p>
-                                    <strong>Email:</strong> {inm.email}
-                                </p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                <ListaDeInmuebles resultados={resultados} />
             </div>
         </div>
     );
