@@ -6,9 +6,13 @@ import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.service.InmuebleService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,10 +26,17 @@ public final class InmuebleControllerREST {
         this.inmuebleService = inmuebleService;
     }
 
-    @PostMapping
-    public ResponseEntity<InmuebleResponseDTO> createInmueble(@RequestBody InmuebleRequestDTO inmuebleRequestDTO) throws ParametroIncorrecto {
-        Inmueble inmueble = this.inmuebleService.create(inmuebleRequestDTO.aModelo());
-        return ResponseEntity.status(HttpStatus.CREATED).body(InmuebleResponseDTO.desdeModelo(inmueble));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<InmuebleResponseDTO> createInmueble(
+            @RequestPart("property") InmuebleRequestDTO inmuebleDTO,
+            @RequestPart("images") List<MultipartFile> images
+    ) throws ParametroIncorrecto {
+
+        Inmueble inmueble = inmuebleDTO.aModelo();
+
+        Inmueble saved = inmuebleService.create(inmueble,images);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(InmuebleResponseDTO.desdeModelo(saved));
     }
 
     @GetMapping

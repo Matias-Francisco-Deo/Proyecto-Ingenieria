@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -49,13 +51,13 @@ public class Inmueble {
     @Enumerated(EnumType.STRING)
     private final PoliticasDeCancelacion cancellation;
 
-//    @Column(nullable = false)
-//    private final List<String> images = new ArrayList<>(); // en to' caso, la referencia al disco
+    @ElementCollection
+    private List<String> images = new ArrayList<>(); // en to' caso, la referencia al disco
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal,
-                    PoliticasDeCancelacion cancellation) { // , Usuario owner
+                    PoliticasDeCancelacion cancellation,List<String> images) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -66,8 +68,7 @@ public class Inmueble {
         this.horaInicio = horaInicio;
         this.horaFin = horaFinal;
         this.cancellation = cancellation;
-
-//      this.images.addAll(image);
+        this.images.addAll(images);
     }
 
     public Inmueble(String name, String desc, Double price,
