@@ -64,7 +64,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         AuthInfo authInfo = authInfoDAO.save(new AuthInfo(user)); // guardo la key
 
-        return (new CredentialsDTO(authInfo.getId(), username));
+        return (new CredentialsDTO(user.getId(),authInfo.getId(), username));
     }
 
     private void removePreviousKey(Usuario user) {

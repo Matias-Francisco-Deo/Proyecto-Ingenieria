@@ -1,4 +1,4 @@
 package com.reservo.controller.dto;
 
-public record CredentialsDTO(String key, String username) {
+public record CredentialsDTO(Long id,String key, String username) {
 }

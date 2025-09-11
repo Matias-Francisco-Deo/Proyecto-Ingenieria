@@ -1,7 +1,12 @@
 import type { RegisterError } from "@/types/types";
 import { useState, type FormEvent } from "react";
+import { useUser } from "@/hooks/useUser";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function createPropertyPage() {
+    const { isAuthenticated } = useAuth();
+    const { getId } = useUser();
+    
     /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
   */
@@ -47,6 +52,11 @@ export default function createPropertyPage() {
         event: FormEvent<HTMLFormElement>
     ): Promise<void> {
         event.preventDefault();
+
+        if (!isAuthenticated || !getId()) {
+            setGeneralErrorMessage("Debes iniciar sesión para dar de alta un inmueble.");
+            return;
+        }
 
         /*
     Toma los datos de los input y los envía al backend a /auth
@@ -97,6 +107,8 @@ export default function createPropertyPage() {
         const propertyConditionsIsBlank = propertyConditions.value == "";
         const propertyCancellationIsBlank = propertyCancellation.value == "";
 
+        const userId = getId();
+
         /* Pone en rojo a los campos que falten  */
         checkHasNoBlanks();
 
@@ -131,6 +143,7 @@ export default function createPropertyPage() {
             capacity: propertyCapacity.value,
             condition: propertyConditions.value,
             cancellation: propertyCancellation.value,
+            userId: userId,
         };
         formData.append(
             "property",
@@ -480,6 +493,7 @@ export default function createPropertyPage() {
                         <div>
                             <button
                                 type="submit"
+                                
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
                             >
                                 Dar de Alta

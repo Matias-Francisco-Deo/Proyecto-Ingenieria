@@ -57,14 +57,14 @@ public class Inmueble {
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal,
-                    PoliticasDeCancelacion cancellation,List<String> images) { // , Usuario owner
+                    PoliticasDeCancelacion cancellation,List<String> images,Usuario owner) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;
         this.ubication = ubi;
         this.capacity = capacity;
         this.conditions = condition;
-        this.owner = null;
+        this.owner = owner;
         this.horaInicio = horaInicio;
         this.horaFin = horaFinal;
         this.cancellation = cancellation;
