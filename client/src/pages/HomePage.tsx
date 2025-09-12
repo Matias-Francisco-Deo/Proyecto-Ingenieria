@@ -1,24 +1,12 @@
-import { useEffect, useState } from "react";
-
-type Inmueble = {
-    id: number;
-    name: string;
-    description: string;
-    ubication: string;
-    price: number;
-    conditions: string;
-    start: string;
-    end: string;
-    capacity: number;
-    cancellation: string;
-};
+import type { Inmueble } from "@/types/types";
+import { useState } from "react";
 
 // export default function HomePage() {
 // return <div className="flex flex-col items-start gap-8">Homepage</div>;
 
 function Buscador() {
     const [query, setQuery] = useState("");
-    const [resultados, setResultados] = useState<any[]>([]);
+    const [resultados, setResultados] = useState<Inmueble[]>([]);
     const [loading, setLoading] = useState(false);
     const [searched, setSearched] = useState(false); // Para saber si ya se buscó
 
@@ -77,7 +65,7 @@ function Buscador() {
                                 key={inm.id}
                                 className="border-2 border-amber-600 mt-2 pl-2 p-2"
                             >
-                                {inm.name} - {inm.description}
+                                {inm.name}
                             </li>
                         );
                     })}

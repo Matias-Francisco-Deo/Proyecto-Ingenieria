@@ -8,6 +8,10 @@ import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,11 +66,19 @@ public final class InmuebleControllerREST {
     }
 
     @GetMapping("/buscar/{name}")
-    public ResponseEntity<Set<InmuebleSummaryDTO>> getInmuebleByName(@PathVariable String name) {
-        if(this.inmuebleService.findByName(name).isEmpty()) return ResponseEntity.status(404).body(null);
+    public ResponseEntity<List<InmuebleSummaryDTO>> getInmuebleByName(
+            @PathVariable String name,
+            @RequestParam(defaultValue = "0") int page
+    ) {
 
-        return ResponseEntity.ok(this.inmuebleService.findByName(name).stream()
+        Page<Inmueble> findByName = this.inmuebleService.findByName(name, PageRequest.of(page, 10));
+
+        if(findByName.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        List<InmuebleSummaryDTO> inmuebles = findByName.stream()
                 .map(InmuebleSummaryDTO::desdeModelo)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(inmuebles);
     }
 }

@@ -1,6 +1,8 @@
 package com.reservo.persistencia.DAO;
 
 import com.reservo.modelo.property.Inmueble;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,5 +15,5 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("select count(i) > 0 from Inmueble i where i.id = :unId")
     boolean existeInmueble(@Param("unId") Long unId);//no es necesario validar id
 
-    List<Inmueble> findByNameContainingIgnoreCase(String unName);
+    Page<Inmueble> findByNameContainingIgnoreCase(String unName, Pageable pageable);
 }
