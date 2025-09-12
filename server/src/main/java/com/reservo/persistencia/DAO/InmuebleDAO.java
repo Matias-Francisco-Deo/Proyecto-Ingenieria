@@ -15,5 +15,6 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("select count(i) > 0 from Inmueble i where i.id = :unId")
     boolean existeInmueble(@Param("unId") Long unId);//no es necesario validar id
 
+    @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%')")
     Page<Inmueble> findByNameContainingIgnoreCase(String unName, Pageable pageable);
 }
