@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Carrusel from "../components/Carrusel";
 
 type Inmueble = {
     id: number;
@@ -16,6 +17,8 @@ type Inmueble = {
 
 export default function Publicacion() {
     const [inmueble, setInmueble] = useState<Inmueble | null>(null);
+    const [images, setImages] = useState<string[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
 
     const params = new URLSearchParams(window.location.search);
@@ -29,19 +32,34 @@ export default function Publicacion() {
                 const res = await fetch(`http://localhost:8081/property/${id}`);
                 if (!res.ok) throw new Error("publicación no encontrada");
                 const data = await res.json();
-
-
                 setInmueble(data);
             } catch (err) {
                 console.error(err);
                 setInmueble(null);
+            }
+        };
+
+        const fetchImages = async () => {
+            try {
+                const res = await fetch(`http://localhost:8081/property/${id}/images`);
+                if (!res.ok) throw new Error("imágenes no encontradas");
+                const data = await res.json();
+                setImages(data);
+            } catch (err) {
+                console.error(err);
+                setImages([]);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchInmueble();
+        fetchImages();
     }, [id]);
+
+    const nextImage = () => setCurrentIndex((prev) => (prev + 1) % images.length);
+    const prevImage = () =>
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
 
     if (loading) return <p>Cargando...</p>;
     if (!inmueble) return <p>Inmueble no encontrado</p>;
@@ -58,8 +76,13 @@ export default function Publicacion() {
             </div>
 
             <div className="flex gap-6">
-                <div className="w-3/5 bg-gray-800 rounded-xl flex items-center justify-center h-[500px]">
-                    <span className="text-gray-400">[Imagen]</span>
+                <div className="w-3/5">
+                    <Carrusel
+                        images={images}
+                        currentIndex={currentIndex}
+                        nextImage={nextImage}
+                        prevImage={prevImage}
+                    />
                 </div>
 
                 <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
