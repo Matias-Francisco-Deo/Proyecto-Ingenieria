@@ -13,9 +13,9 @@ public record InmuebleResponseDTO(
         String start,
         String end,
         String cancellation,
-        String ownerName
+        String ownerName,
         //Long ownerId,
-        //String ownerContact
+        String ownerEmail
 ) {
     public static InmuebleResponseDTO desdeModelo(Inmueble prop) {
         return new InmuebleResponseDTO(
@@ -24,9 +24,9 @@ public record InmuebleResponseDTO(
             prop.getPrice(), prop.getCapacity(), prop.getConditions(),
             prop.getHoraInicio().toString(), prop.getHoraFin().toString(),
             prop.getCancellation().toString(),
-            prop.getOwner().getName()
+            prop.getOwner().getName(),
             //prop.getOwner().getId(),
-            //prop.getUser().getTelefono()
+            prop.getOwner().getEmail()
         );
     }
 }

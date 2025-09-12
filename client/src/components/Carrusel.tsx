@@ -47,7 +47,7 @@ const Carrusel: React.FC<CarruselProps> = ({ images, currentIndex, nextImage, pr
                     </div>
 
                     {/* Botones */}
-                    <Botones onNext={nextImage} onPrev={prevImage} />
+                    {images.length > 1 && <Botones onNext={nextImage} onPrev={prevImage} />}
                 </>
             ) : (
                 <span className="text-gray-400">[Imagen]</span>

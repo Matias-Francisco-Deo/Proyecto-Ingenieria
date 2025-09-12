@@ -13,6 +13,7 @@ type Inmueble = {
     capacity: number;
     cancellation: string;
     ownerName: string; 
+    ownerEmail: string;
 };
 
 export default function Publicacion() {
@@ -68,7 +69,9 @@ export default function Publicacion() {
         <div className="p-6 text-white border border-gray-700 rounded-xl">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-3xl font-extrabold">{inmueble.name}</h1>
-                <div className="border border-gray-600 rounded-lg px-4 py-2 ml-4">
+                <div className="border border-gray-600 rounded-lg px-4 py-2 ml-4 flex items-center gap-3">
+                    {/* ✅ email a la izquierda */}
+                    <p className="text-base text-white">{inmueble.ownerEmail}</p>
                     <p className="text-lg font-semibold text-gray-200">
                         {inmueble.ownerName}
                     </p>
