@@ -66,7 +66,7 @@ public final class InmuebleControllerREST {
     }
 
     @GetMapping("/buscar/{name}")
-    public ResponseEntity<List<InmuebleSummaryDTO>> getInmuebleByName(
+    public ResponseEntity<Page<InmuebleSummaryDTO>> getInmuebleByName(
             @PathVariable String name,
             @RequestParam(defaultValue = "0") int page
     ) {
@@ -75,9 +75,7 @@ public final class InmuebleControllerREST {
 
         if(findByName.isEmpty()) return ResponseEntity.status(404).body(null);
 
-        List<InmuebleSummaryDTO> inmuebles = findByName.stream()
-                .map(InmuebleSummaryDTO::desdeModelo)
-                .collect(Collectors.toList());
+        Page<InmuebleSummaryDTO> inmuebles = findByName.map(InmuebleSummaryDTO::desdeModelo);
 
         return ResponseEntity.ok(inmuebles);
     }
