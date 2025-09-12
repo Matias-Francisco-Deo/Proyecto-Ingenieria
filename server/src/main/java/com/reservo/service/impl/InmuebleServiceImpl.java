@@ -75,13 +75,12 @@ public class InmuebleServiceImpl implements InmuebleService {
 
             for (MultipartFile file : images) {
                 String originalFilename = file.getOriginalFilename();
-                //if (originalFilename == null || originalFilename.isBlank()) continue;
 
                 String filename = UUID.randomUUID() + "_" + originalFilename;
                 Path filePath = uploadDir.resolve(filename);
 
 
-                Files.copy(file.getInputStream(), filePath);// Guardar archivo
+                Files.copy(file.getInputStream(), filePath,StandardCopyOption.REPLACE_EXISTING);// Guardar archivo
 
                 paths.add(filename);
             }

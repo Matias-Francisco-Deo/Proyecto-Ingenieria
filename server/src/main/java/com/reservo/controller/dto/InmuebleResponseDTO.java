@@ -12,7 +12,10 @@ public record InmuebleResponseDTO(
         String condition,
         String start,
         String end,
-        String cancellation
+        String cancellation,
+        String ownerName,
+        //Long ownerId,
+        String ownerEmail
 ) {
     public static InmuebleResponseDTO desdeModelo(Inmueble prop) {
         return new InmuebleResponseDTO(
@@ -20,7 +23,10 @@ public record InmuebleResponseDTO(
             prop.getName(), prop.getDescription(), prop.getUbication(),
             prop.getPrice(), prop.getCapacity(), prop.getConditions(),
             prop.getHoraInicio().toString(), prop.getHoraFin().toString(),
-            prop.getCancellation().toString()
+            prop.getCancellation().toString(),
+            prop.getOwner().getName(),
+            //prop.getOwner().getId(),
+            prop.getOwner().getEmail()
         );
     }
 }

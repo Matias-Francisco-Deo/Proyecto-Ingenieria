@@ -1,8 +1,6 @@
 import type { Inmueble } from "@/types/types";
 import { useState } from "react";
-
-// export default function HomePage() {
-// return <div className="flex flex-col items-start gap-8">Homepage</div>;
+import { Link } from "wouter";
 
 function Buscador() {
     const [query, setQuery] = useState("");
@@ -14,16 +12,9 @@ function Buscador() {
         setLoading(true);
         setSearched(true);
 
-        // fetch(`http://localhost:8081/property/buscar/${query}`)
-        //   .then(res => res.json())
-        //   .then(data => {
-        //     setResultados(data);
-        //     console.log(data);
-        //   });
-
         try {
             const resp = await fetch(
-                `http://localhost:8081/property/buscar/${query}`
+                `http://localhost:8081/property/buscar/${query}?page=0`
             );
             const data = await resp.json();
             setResultados(data);
@@ -61,12 +52,14 @@ function Buscador() {
                     {resultados.map((inm) => {
                         console.log(inm);
                         return (
-                            <li
-                                key={inm.id}
-                                className="border-2 border-amber-600 mt-2 pl-2 p-2"
-                            >
-                                {inm.name}
-                            </li>
+                            <Link href={`/publicacion?id=${inm.id}`}>
+                                <li
+                                    key={inm.id}
+                                    className="border-2 border-amber-600 mt-2 pl-2 p-2"
+                                >
+                                    {inm.name}
+                                </li>
+                            </Link>
                         );
                     })}
                 </ul>

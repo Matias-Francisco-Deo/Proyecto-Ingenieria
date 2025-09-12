@@ -9,21 +9,46 @@ export function Header({ ...props }: HeaderProps) {
   const { logout } = useAuth();
 
   const { getUsername } = useUser();
+  const { isAuthenticated } = useAuth();
 
   return (
-    <header {...props}>
-      <div className="flex">{getUsername()}</div>
-      <div className="flex">
-        <Link type="button" to="/alta-inmueble">
+    <header
+      {...props}
+      className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 bg-amber-600 text-white"
+    >
+      <div className="flex items-center gap-4">
+        {getUsername()}
+
+        <Link
+          to="/home"
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
+          Inicio
+        </Link>
+
+        <Link
+          to={isAuthenticated ? "/alta-inmueble" : "/signin"}
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
           Dar de alta un sitio
         </Link>
       </div>
-      <button
-        onClick={logout}
-        className="bg-amber-500 h-1/4 absolute right-0 px-2.5"
-      >
-        Logout
-      </button>
+
+      {isAuthenticated ? (
+        <button
+          onClick={logout}
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
+          Logout
+        </button>
+      ) : (
+        <Link
+          to="/signin"
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
+          Sign In / Login
+        </Link>
+      )}
     </header>
   );
 }

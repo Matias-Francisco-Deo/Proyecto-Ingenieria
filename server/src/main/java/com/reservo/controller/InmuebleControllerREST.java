@@ -79,4 +79,17 @@ public final class InmuebleControllerREST {
 
         return ResponseEntity.ok(inmuebles);
     }
+
+    @GetMapping("/{id}/images")
+    public ResponseEntity<List<String>> getInmuebleImages(@PathVariable Long id) {
+        return inmuebleService.findById(id)
+                .map(inmueble -> {
+                    List<String> imagePaths = inmueble.getImages()
+                            .stream()
+                            .map(filename -> "/uploads/" + filename)
+                            .toList();
+                    return ResponseEntity.ok(imagePaths);
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
 }
