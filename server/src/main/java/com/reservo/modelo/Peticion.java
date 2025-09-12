@@ -50,6 +50,7 @@ public class Peticion {
     private EstadoDePeticion estado;// crear estados de la peticion
 
     @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     private PoliticasDeCancelacion politicaCancelacion;
 
     public Peticion(Usuario cliente,Inmueble inmueble,Double price,LocalDate Fecha,LocalTime horaInicio
@@ -64,7 +65,7 @@ public class Peticion {
         this.politicaCancelacion = politicaCancelacion;
     }
 
-    public void aprovar(){
+    public void aprobar(){
         this.estado.aprobar(this);
     }
 
