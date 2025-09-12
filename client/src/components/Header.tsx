@@ -9,6 +9,7 @@ export function Header({ ...props }: HeaderProps) {
   const { logout } = useAuth();
 
   const { getUsername } = useUser();
+  const { isAuthenticated } = useAuth();
 
   return (
     <header
@@ -19,19 +20,35 @@ export function Header({ ...props }: HeaderProps) {
         {getUsername()}
 
         <Link
-          to="/alta-inmueble"
+          to="/home"
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
+          Inicio
+        </Link>
+
+        <Link
+          to={isAuthenticated ? "/alta-inmueble" : "/signin"}
           className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
         >
           Dar de alta un sitio
         </Link>
       </div>
 
-      <button
-        onClick={logout}
-        className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
-      >
-        Logout
-      </button>
+      {isAuthenticated ? (
+        <button
+          onClick={logout}
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
+          Logout
+        </button>
+      ) : (
+        <Link
+          to="/signin"
+          className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+        >
+          Sign In / Login
+        </Link>
+      )}
     </header>
   );
 }
