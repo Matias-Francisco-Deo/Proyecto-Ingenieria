@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
 
 type Inmueble = {
     id: number;
@@ -73,12 +74,16 @@ function Buscador() {
                     {resultados.map((inm) => {
                         console.log(inm);
                         return (
+                            <Link href={`/publicacion?id=${inm.id}`}>
                             <li
                                 key={inm.id}
                                 className="border-2 border-amber-600 mt-2 pl-2 p-2"
                             >
-                                {inm.name} - {inm.description}
+                                
+                                    {inm.name} - {inm.description}
+                                
                             </li>
+                            </Link>
                         );
                     })}
                 </ul>
