@@ -32,7 +32,7 @@ const Carrusel: React.FC<CarruselProps> = ({ images, currentIndex, nextImage, pr
                                     key={index}
                                     src={`http://localhost:8081${img}`}
                                     alt={`imagen ${index + 1}`}
-                                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 rounded-xl cursor-pointer"
+                                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 rounded-xl"
                                     style={{
                                         transform: `translateX(${translateX}%) scale(${scale})`,
                                         zIndex,
