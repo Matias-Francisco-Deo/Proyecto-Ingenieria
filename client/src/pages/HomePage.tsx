@@ -1,25 +1,10 @@
-import { useEffect, useState } from "react";
+import type { Inmueble } from "@/types/types";
+import { useState } from "react";
 import { Link } from "wouter";
-
-type Inmueble = {
-    id: number;
-    name: string;
-    description: string;
-    ubication: string;
-    price: number;
-    conditions: string;
-    start: string;
-    end: string;
-    capacity: number;
-    cancellation: string;
-};
-
-// export default function HomePage() {
-// return <div className="flex flex-col items-start gap-8">Homepage</div>;
 
 function Buscador() {
     const [query, setQuery] = useState("");
-    const [resultados, setResultados] = useState<any[]>([]);
+    const [resultados, setResultados] = useState<Inmueble[]>([]);
     const [loading, setLoading] = useState(false);
     const [searched, setSearched] = useState(false); // Para saber si ya se buscó
 
@@ -27,16 +12,9 @@ function Buscador() {
         setLoading(true);
         setSearched(true);
 
-        // fetch(`http://localhost:8081/property/buscar/${query}`)
-        //   .then(res => res.json())
-        //   .then(data => {
-        //     setResultados(data);
-        //     console.log(data);
-        //   });
-
         try {
             const resp = await fetch(
-                `http://localhost:8081/property/buscar/${query}`
+                `http://localhost:8081/property/buscar/${query}?page=0`
             );
             const data = await resp.json();
             setResultados(data);
@@ -75,14 +53,12 @@ function Buscador() {
                         console.log(inm);
                         return (
                             <Link href={`/publicacion?id=${inm.id}`}>
-                            <li
-                                key={inm.id}
-                                className="border-2 border-amber-600 mt-2 pl-2 p-2"
-                            >
-                                
-                                    {inm.name} - {inm.description}
-                                
-                            </li>
+                                <li
+                                    key={inm.id}
+                                    className="border-2 border-amber-600 mt-2 pl-2 p-2"
+                                >
+                                    {inm.name}
+                                </li>
                             </Link>
                         );
                     })}

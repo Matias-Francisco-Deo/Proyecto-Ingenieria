@@ -13,6 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
@@ -104,14 +107,34 @@ public class InmuebleServiceImplTest {
     }
 
     @Test
-    public void seBuscaLosInmueblesConLaInicialP() throws EmailRepetido {
+    public void seBuscaLosInmueblesConLaInicialPYTraeDosPaginas() throws EmailRepetido {
         userService.create(jorge);
-        inmuebleService.create(inmueble1,emptyImages);
-        List<Inmueble> resultados = inmuebleService.findByName("P");
 
-        resultados.stream().forEach(inmueble -> {
+        //  Setup
+        for (int i = 0; i < 10; i++) {
+            Inmueble inm = new Inmueble(
+                    "Plaza"+i, "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
+                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
+            inmuebleService.create(inm, emptyImages);
+        }
+
+
+
+        // Página 1 (índice 0)
+        Page<Inmueble> pagina1 = inmuebleService.findByName("P", PageRequest.of(0, 5));
+        assertFalse(pagina1.isEmpty());
+        pagina1.getContent().forEach(inmueble -> {
             assertTrue(inmueble.getName().startsWith("P"));
         });
+
+        // Página 2 (índice 1)
+        Page<Inmueble> pagina2 = inmuebleService.findByName("P", PageRequest.of(1, 5));
+        assertFalse(pagina2.isEmpty());
+        pagina2.getContent().forEach(inmueble -> {
+            assertTrue(inmueble.getName().startsWith("P"));
+        });
+
+        assertNotEquals(pagina1.getContent(), pagina2.getContent());
 
     }
 
@@ -124,7 +147,7 @@ public class InmuebleServiceImplTest {
         assertThrows(InmuebleRepetidoException.class, () -> {inmuebleService.create(inmueble1,emptyImages);});
     }
 
-    @AfterEach
+    //@AfterEach
     void limpiarDb(){
         testService.eliminarInmuebles();
         testService.eliminarUsuarios();
