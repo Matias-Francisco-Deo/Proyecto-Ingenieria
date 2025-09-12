@@ -13,6 +13,7 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
 const SearchPage = lazy(() => import("../pages/SearchPropertyPage"));
+const Publicacion = lazy(() => import("../pages/Publicacion"));
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
@@ -40,6 +41,9 @@ export function AppRoutes() {
                         path="/buscador"
                         component={SearchPage}
                     />
+                    <Route
+                        path="/publicacion" 
+                        component={Publicacion}/>
                     {/* Rutas protegidas */}
                     {/* <Route path="/home" component={HomePage} />
 
