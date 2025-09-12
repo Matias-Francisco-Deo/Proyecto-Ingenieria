@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
         return JSON.parse(localStorage.getItem("isAuthenticated") || "false");
     });
-    const { setUsername, setKey } = useUser();
+    const { setUsername, setKey,setId } = useUser();
 
     const login = async (email: string, password: string) => {
         const userInfo = await getUserInfo(email, password);
@@ -30,6 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         setKey(userInfo.key);
         setUsername(userInfo.username);
+        setId(userInfo.id); 
         setIsAuthenticated(true);
 
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
@@ -77,6 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(false);
         setKey("");
         setUsername("");
+        localStorage.removeItem("key");
+        localStorage.removeItem("username");
+        localStorage.removeItem("userId");
         localStorage.setItem("isAuthenticated", JSON.stringify(false));
         location.href = "/signin";
     };

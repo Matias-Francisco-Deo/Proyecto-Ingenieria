@@ -5,7 +5,9 @@ import com.reservo.controller.dto.InmuebleResponseDTO;
 import com.reservo.controller.dto.InmuebleSummaryDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
+import com.reservo.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +24,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/property")
 public final class InmuebleControllerREST {
     private final InmuebleService inmuebleService;
+    private final UsuarioService usuarioService;
 
-    public InmuebleControllerREST(InmuebleService inmuebleService) {
+    public InmuebleControllerREST(InmuebleService inmuebleService, UsuarioService usuarioService) {
         this.inmuebleService = inmuebleService;
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -33,7 +37,10 @@ public final class InmuebleControllerREST {
             @RequestPart("images") List<MultipartFile> images
     ) throws ParametroIncorrecto {
 
-        Inmueble inmueble = inmuebleDTO.aModelo();
+        Usuario user = usuarioService.findById(inmuebleDTO.userId())
+                .orElseThrow(() -> new ParametroIncorrecto("Usuario no encontrado"));
+
+        Inmueble inmueble = inmuebleDTO.aModelo(user);
 
         Inmueble saved = inmuebleService.create(inmueble,images);
 

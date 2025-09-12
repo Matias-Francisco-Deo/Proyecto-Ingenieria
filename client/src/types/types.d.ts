@@ -3,6 +3,7 @@ export interface SignInError {
 }
 
 export interface UserInfo {
+    id: number;
     username: string;
     key: string;
     error?: string;
