@@ -52,12 +52,12 @@ public class Inmueble {
     private final PoliticasDeCancelacion cancellation;
 
     @ElementCollection
-    private List<String> images = new ArrayList<>(); // en to' caso, la referencia al disco
+    private List<String> images = new ArrayList<>();
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal,
-                    PoliticasDeCancelacion cancellation,List<String> images,Usuario owner) { // , Usuario owner
+                    PoliticasDeCancelacion cancellation,List<String> images,Usuario owner) {
         this.name = name;
         this.description = desc;
         this.price = price;

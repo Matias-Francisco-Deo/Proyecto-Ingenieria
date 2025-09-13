@@ -47,10 +47,10 @@ public class Peticion {
     private LocalTime horaFin;
 
     @Column(nullable = false)
-    private EstadoDePeticion estado;// crear estados de la peticion
+    @ManyToOne(fetch = FetchType.EAGER)
+    private EstadoDePeticion estado;
 
     @Column(nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER)
     private PoliticasDeCancelacion politicaCancelacion;
 
     public Peticion(Usuario cliente,Inmueble inmueble,Double price,LocalDate Fecha,LocalTime horaInicio
@@ -80,5 +80,6 @@ public class Peticion {
     public void finalizar(){
         this.estado.finalizar(this);
     }
+
 
 }
