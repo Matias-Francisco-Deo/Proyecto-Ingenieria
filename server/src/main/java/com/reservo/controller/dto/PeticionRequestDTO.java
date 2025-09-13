@@ -12,13 +12,11 @@ import java.util.ArrayList;
 public record PeticionRequestDTO (
     Long userId,
     Long inmuebleId,
-    Double price,
-    LocalDate Fecha,
+    LocalDate fecha,
     LocalTime horaInicio,
-    LocalTime horaFin,
-    PoliticasDeCancelacion politicaCancelacion
+    LocalTime horaFin
 ){
     public Peticion aModelo(Inmueble inmueble, Usuario user){//TODO agregar validaciones
-        return new Peticion(user,inmueble,price,Fecha,horaInicio,horaFin,politicaCancelacion);
+        return new Peticion(user,inmueble,inmueble.getPrice(),fecha,horaInicio,horaFin,inmueble.getCancellation());
     }
 }

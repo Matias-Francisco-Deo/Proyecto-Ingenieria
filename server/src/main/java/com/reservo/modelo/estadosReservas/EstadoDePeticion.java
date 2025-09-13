@@ -1,19 +1,20 @@
 package com.reservo.modelo.estadosReservas;
 
 import com.reservo.modelo.Peticion;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public interface EstadoDePeticion {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class EstadoDePeticion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    void aprobar(Peticion peticion);
+    public abstract void aprobar(Peticion peticion);
 
-    void cancelar(Peticion peticion);
+    public abstract void cancelar(Peticion peticion);
 
-    void rechazar(Peticion peticion);
+    public abstract void rechazar(Peticion peticion);
 
-    void finalizar(Peticion peticion);
+    public abstract void finalizar(Peticion peticion);
 }

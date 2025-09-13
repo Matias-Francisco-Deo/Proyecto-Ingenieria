@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/petition")
+@RequestMapping("/peticion")
 public class PeticionControllerREST {
     private final PeticionService peticionService;
     private final UsuarioService usuarioService;
@@ -26,7 +26,7 @@ public class PeticionControllerREST {
         this.inmuebleService = inmuebleService;
     }
 
-    @PostMapping
+    @PostMapping("/enviar")
     public ResponseEntity<PeticionResponseDTO> createPeticion(@RequestBody PeticionRequestDTO peticionDTO) throws ParametroIncorrecto {//TODO cambiar error, solo es temporal
 
         Usuario user = usuarioService.findById(peticionDTO.userId())

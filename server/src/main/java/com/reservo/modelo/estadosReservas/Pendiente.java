@@ -4,7 +4,7 @@ import com.reservo.modelo.Peticion;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Pendiente implements EstadoDePeticion {
+public class Pendiente extends EstadoDePeticion {
     @Override
     public void aprobar(Peticion peticion) {
 
