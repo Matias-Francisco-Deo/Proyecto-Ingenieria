@@ -92,7 +92,7 @@ export default function Publicacion() {
                 <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
                     <div className="space-y-3">
                         <p className="text-2xl font-bold text-amber-400">
-                            Precio: ${inmueble.price}
+                            Precio Por Hora: ${inmueble.price}
                         </p>
                         <p>
                             <span className="font-semibold text-lg">Horario:</span>{" "}
