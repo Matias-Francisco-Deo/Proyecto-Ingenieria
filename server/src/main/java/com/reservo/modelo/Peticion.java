@@ -53,16 +53,16 @@ public class Peticion {
 
     private PoliticasDeCancelacion politicaCancelacion;
 
-    public Peticion(Usuario cliente,Inmueble inmueble,Double price,LocalDate Fecha,LocalTime horaInicio
-                    ,LocalTime horaFin,PoliticasDeCancelacion politicaCancelacion){
+    public Peticion(Usuario cliente,Inmueble inmueble,LocalDate Fecha,LocalTime horaInicio
+                    ,LocalTime horaFin){
         this.cliente = cliente;
         this.inmueble = inmueble;
-        this.price = price;
+        this.price = inmueble.getPrice();
         this.fecha = Fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.estado = new Pendiente() ;
-        this.politicaCancelacion = politicaCancelacion;
+        this.politicaCancelacion = inmueble.getCancellation();
     }
 
     public void aprobar(){

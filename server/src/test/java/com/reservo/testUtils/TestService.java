@@ -19,4 +19,7 @@ public class TestService {
     public void eliminarInmuebles() {
         entityManager.createNativeQuery("DELETE FROM inmueble").executeUpdate();
     }
+
+    public void eliminarPeticiones(){entityManager.createNativeQuery("DELETE FROM peticion").executeUpdate();}
+
 }

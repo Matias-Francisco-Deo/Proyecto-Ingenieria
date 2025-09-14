@@ -20,36 +20,36 @@ public class Inmueble {
     private Long id;
 
     @Column(nullable = false)
-    private final String name;
+    private  String name;
 
     @Column(nullable = false)
-    private final String description;
+    private  String description;
 
 
     @Column(nullable = false)
-    private final Double price;
+    private  Double price;
 
     @Column(nullable = false)
-    private final String ubication; // dirección o localidad || inferir con base en las coords
+    private  String ubication; // dirección o localidad || inferir con base en las coords
 
     @Column(nullable = false)
-    private final Integer capacity;
+    private  Integer capacity;
 
     @Column(nullable = false)
-    private final String conditions;
+    private  String conditions;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private final Usuario owner;
+    private  Usuario owner;
 
     @Column(nullable = false)
-    private final LocalTime horaInicio;
+    private  LocalTime horaInicio;
 
     @Column(nullable = false)
-    private final LocalTime horaFin;
+    private  LocalTime horaFin;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private final PoliticasDeCancelacion cancellation;
+    private  PoliticasDeCancelacion cancellation;
 
     @ElementCollection
     private List<String> images = new ArrayList<>();

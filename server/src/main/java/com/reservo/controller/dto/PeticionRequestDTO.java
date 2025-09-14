@@ -17,6 +17,6 @@ public record PeticionRequestDTO (
     LocalTime horaFin
 ){
     public Peticion aModelo(Inmueble inmueble, Usuario user){//TODO agregar validaciones
-        return new Peticion(user,inmueble,inmueble.getPrice(),fecha,horaInicio,horaFin,inmueble.getCancellation());
+        return new Peticion(user,inmueble,fecha,horaInicio,horaFin);
     }
 }
