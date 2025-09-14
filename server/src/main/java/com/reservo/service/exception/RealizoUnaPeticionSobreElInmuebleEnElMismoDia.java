@@ -3,6 +3,6 @@ package com.reservo.service.exception;
 public class RealizoUnaPeticionSobreElInmuebleEnElMismoDia extends RuntimeException{
 
     public RealizoUnaPeticionSobreElInmuebleEnElMismoDia() {
-        super("Una por dia mounstruo");
+        super("Sólo se admite una reserva por día.");
     }
 }
