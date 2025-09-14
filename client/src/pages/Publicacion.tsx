@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Carrusel from "../components/Carrusel";
+import { Link } from "wouter";
 
 type Inmueble = {
     id: number;
@@ -70,7 +71,7 @@ export default function Publicacion() {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-3xl font-extrabold">{inmueble.name}</h1>
                 <div className="border border-gray-600 rounded-lg px-4 py-2 ml-4 flex items-center gap-3">
-                    {/* ✅ email a la izquierda */}
+                    
                     <p className="text-base text-white">{inmueble.ownerEmail}</p>
                     <p className="text-lg font-semibold text-gray-200">
                         {inmueble.ownerName}
@@ -118,9 +119,11 @@ export default function Publicacion() {
                     </div>
 
                     <div className="flex justify-center mt-6">
-                        <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl">
+                        <Link href={`/peticion?id=${inmueble.id}`}>
+                            <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl">
                             Reservar
-                        </button>
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </div>
