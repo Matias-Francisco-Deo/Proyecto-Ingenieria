@@ -8,7 +8,9 @@ import com.reservo.service.exception.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,11 +28,20 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public Peticion create(Peticion peticion) {
         verificarDisponibilidad(peticion);
+        verificarSiEsDuenioDeLaPropiedad(peticion);
         verificarSiOrdenDeHorarioDeLaPeticion(peticion);
         verificarSeDentroDelRango(peticion);
         verificarSiYaSeRealizoLaPeticion(peticion);
         verificarSiEsUnViajeroDelTiempo(peticion);
         return peticionDAO.save(peticion);
+    }
+
+    private void verificarSiEsDuenioDeLaPropiedad(Peticion peticion) {
+        if (esDuenio(peticion)) throw new EsDueñoDeLaPropiedadSolicitada();
+    }
+
+    private boolean esDuenio(Peticion peticion) {
+        return Objects.equals(peticion.getCliente().getId(), peticion.getInmueble().getOwner().getId());
     }
 
     private void verificarSiEsUnViajeroDelTiempo(Peticion peticion) {
@@ -73,4 +84,9 @@ public class PeticionServiceImpl implements PeticionService {
 
     @Override
     public void delete(Peticion peticion) {peticionDAO.delete(peticion);}
+
+    @Override
+    public List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date) {
+        return peticionDAO.findAllVigentesByDateInInmueble(inmuebleId, date);
+    }
 }

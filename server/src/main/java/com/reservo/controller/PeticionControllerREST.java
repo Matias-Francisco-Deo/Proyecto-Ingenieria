@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/peticion")
@@ -39,4 +42,14 @@ public class PeticionControllerREST {
         Peticion saved = peticionService.create(peticion);
         return ResponseEntity.status(HttpStatus.CREATED).body(PeticionResponseDTO.desdeModelo(saved));
     }
+
+    @GetMapping("/vigentes/{inmuebleId}/{date}")
+    public ResponseEntity<List<HorarioPeticionDTO>> findAllVigentesByDateInInmueble(@PathVariable Long inmuebleId, @PathVariable LocalDate date){
+
+        List<Peticion> peticiones = peticionService.findAllVigentesByDateInInmueble(inmuebleId, date);
+        List<HorarioPeticionDTO> horarios = peticiones.stream().map(HorarioPeticionDTO::desdeModelo).toList();
+
+        return ResponseEntity.ok(horarios);
+    }
+
 }

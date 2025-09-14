@@ -22,10 +22,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class PeticionServiceImplTest {
@@ -45,6 +46,7 @@ public class PeticionServiceImplTest {
 
     private Usuario jorge;
     private Usuario alan;
+    private Usuario raul;
     private PoliticasDeCancelacion cancellation;
     private Inmueble inmueble;
     private List<MultipartFile> emptyImages;
@@ -58,10 +60,11 @@ public class PeticionServiceImplTest {
 
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         alan = new Usuario("alan", "aa21", "alan@yahoo.com.ar");
+        raul = new Usuario("alan", "aa21", "alan@yahoo.com.ar");
 
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION);
 
         emptyImages = Collections.emptyList();
 
@@ -154,6 +157,42 @@ public class PeticionServiceImplTest {
 
 
     }
+
+    @Test
+    public void jorgeSolicitaLasPeticionesVigentesDeHoy() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(alan);
+
+        Inmueble savedIn = inmuebleService.create(inmueble, emptyImages);
+
+        peticion.setEstado(new Vigente());
+        Peticion savedPeticion = peticionService.create(peticion);
+
+        Peticion peticionDelFuturo =  new Peticion(alan, inmueble, LocalDate.now().plusDays(3),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50));
+        peticionDelFuturo.setEstado(new Vigente());
+
+        Peticion savedPeticion2 = peticionService.create(peticionDelFuturo);
+
+        List<Peticion> peticiones = peticionService.findAllVigentesByDateInInmueble(savedIn.getId(), LocalDate.now());
+
+        assertThat(peticiones)
+                .extracting(Peticion::getId)
+                .contains(savedPeticion.getId())
+                .doesNotContain(savedPeticion2.getId())
+                .hasSize(1);
+    }
+
+    @Test
+    public void raulIntentaSolicitarSuInmueble() throws EmailRepetido {
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionRaul = new Peticion(raul, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50));
+
+        assertThrows(EsDueñoDeLaPropiedadSolicitada.class, () -> peticionService.create(peticionRaul));
+    }
+
 
     @AfterEach
     void limpiarDb(){

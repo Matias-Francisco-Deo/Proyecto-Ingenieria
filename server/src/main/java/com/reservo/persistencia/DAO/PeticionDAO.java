@@ -15,14 +15,17 @@ import java.util.Optional;
 @Repository
 public interface PeticionDAO extends JpaRepository<Peticion, Long> {
 
-    @Query("FROM Peticion p WHERE TYPE(p.estado) = Vigente AND p.inmueble.id = :inmuebleId AND p.fecha = fecha")
+    @Query("FROM Peticion p WHERE TYPE(p.estado) = Vigente AND p.inmueble.id = :inmuebleId AND p.fecha = :fecha")
     List<Peticion> findPeticionesVigentes(@Param("inmuebleId") Long inmuebleId,
                                           @Param("fecha")LocalDate fecha
     );
 
     @Query("FROM Peticion p WHERE TYPE(p.estado) IN (Vigente, Pendiente) " +
-            "AND p.cliente = :cliente AND p.inmueble = :inmueble AND p.fecha = fecha")
+            "AND p.cliente = :cliente AND p.inmueble = :inmueble AND p.fecha = :fecha")
     Optional<Peticion> findByUsuarioAndInmueble(@Param("cliente") Usuario cliente,
                                                 @Param("inmueble") Inmueble inmueble,
                                                 @Param("fecha")LocalDate fecha);
+
+    @Query("FROM Peticion p WHERE TYPE(p.estado) = Vigente AND p.inmueble.id = :inmuebleId AND p.fecha = :date")
+    List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
 }

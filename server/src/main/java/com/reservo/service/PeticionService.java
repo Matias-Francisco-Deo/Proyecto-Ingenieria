@@ -2,6 +2,7 @@ package com.reservo.service;
 
 import com.reservo.modelo.Peticion;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,4 +12,6 @@ public interface PeticionService {
     List<Peticion> findAll();
     void update(Peticion peticion);
     void delete(Peticion peticion);
+
+    List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
 }
