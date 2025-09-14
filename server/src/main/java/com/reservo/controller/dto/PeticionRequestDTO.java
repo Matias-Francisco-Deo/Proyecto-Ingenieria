@@ -15,8 +15,9 @@ public record PeticionRequestDTO (
     LocalDate fecha,
     LocalTime horaInicio,
     LocalTime horaFin
+    ,Double precioTotal
 ){
     public Peticion aModelo(Inmueble inmueble, Usuario user){//TODO agregar validaciones
-        return new Peticion(user,inmueble,fecha,horaInicio,horaFin);
+        return new Peticion(user,inmueble,fecha,horaInicio,horaFin,precioTotal);
     }
 }

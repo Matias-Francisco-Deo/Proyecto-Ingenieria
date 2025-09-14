@@ -54,10 +54,10 @@ public class Peticion {
     private PoliticasDeCancelacion politicaCancelacion;
 
     public Peticion(Usuario cliente,Inmueble inmueble,LocalDate Fecha,LocalTime horaInicio
-                    ,LocalTime horaFin){
+                    ,LocalTime horaFin,Double price){
         this.cliente = cliente;
         this.inmueble = inmueble;
-        this.price = inmueble.getPrice();
+        this.price = price;
         this.fecha = Fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;

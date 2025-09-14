@@ -163,6 +163,7 @@ export default function PeticionForm() {
         fecha: selectedDate.toISOString().split("T")[0],
         horaInicio: horaInicioLocalTime,
         horaFin: horaFinLocalTime,
+        precioTotal,
       };
 
       const res = await fetch("http://localhost:8081/peticion/enviar", {
