@@ -58,7 +58,7 @@ function Buscador() {
             />
             <button
                 onClick={buscar}
-                className="ml-2 px-4 py-2 bg-amber-500 hover:bg-amber-700 text-white rounded"
+                className="ml-2 px-4 py-2 bg-amber-500 hover:bg-amber-700 text-white rounded cursor-pointer"
             >
                 Buscar
             </button>

@@ -120,7 +120,7 @@ export default function Publicacion() {
 
                     <div className="flex justify-center mt-6">
                         <Link href={`/peticion?id=${inmueble.id}`}>
-                            <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl">
+                            <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
                             Reservar
                             </button>
                         </Link>
