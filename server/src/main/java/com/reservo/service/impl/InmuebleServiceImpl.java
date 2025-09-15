@@ -4,6 +4,8 @@ import com.reservo.modelo.property.Inmueble;
 import com.reservo.persistencia.DAO.InmuebleDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,8 +61,8 @@ public class InmuebleServiceImpl implements InmuebleService {
     }
 
     @Override
-    public List<Inmueble> findByName(String name) {
-        return dao.findByNameContainingIgnoreCase(name);
+    public Page<Inmueble> findByName(String name, Pageable pageable) {
+        return dao.findByNameContainingIgnoreCase(name, pageable);
     }
 
     private List<String> saveImages(List<MultipartFile> images) {
