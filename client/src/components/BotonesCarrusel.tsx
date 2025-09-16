@@ -27,7 +27,8 @@ const Botones: React.FC<BotonesProps> = ({ onNext, onPrev }) => {
 
             <button
                 onClick={onNext}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 rounded z-20 p-1 flex items-center justify-center"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 rounded z-20 p-1 flex items-center justify-center
+                cursor-pointer"
             >
                 <div className="bg-amber-500 w-8 h-8 flex items-center justify-center rounded">
                     <svg
