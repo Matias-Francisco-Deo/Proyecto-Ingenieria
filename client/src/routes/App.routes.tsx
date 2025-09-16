@@ -12,7 +12,6 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 // const LoginPage = lazy(() => import("../pages/LoginPage"));
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
-const SearchPage = lazy(() => import("../pages/SearchPropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/PeticionForm"));
 const Page404 = () => <div>Page Not Found</div>;
@@ -37,10 +36,6 @@ export function AppRoutes() {
                     <Route
                         path="/alta-inmueble"
                         component={PropertyPage}
-                    />
-                    <Route
-                        path="/buscador"
-                        component={SearchPage}
                     />
                     <Route
                         path="/publicacion" 
