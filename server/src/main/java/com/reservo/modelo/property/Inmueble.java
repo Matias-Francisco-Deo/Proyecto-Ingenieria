@@ -4,6 +4,7 @@ import com.reservo.modelo.user.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ public class Inmueble {
 
     @Column(nullable = false)
     private  String description;
-
 
     @Column(nullable = false)
     private  Double price;
@@ -48,6 +48,9 @@ public class Inmueble {
     private  LocalTime horaFin;
 
     @Column(nullable = false)
+    private List<DiasDeLaSemana> availableDays;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private  PoliticasDeCancelacion cancellation;
 
@@ -56,7 +59,7 @@ public class Inmueble {
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
-                    LocalTime horaInicio, LocalTime horaFinal,
+                    LocalTime horaInicio, LocalTime horaFinal, List<DiasDeLaSemana> availableDays,
                     PoliticasDeCancelacion cancellation,List<String> images,Usuario owner) {
         this.name = name;
         this.description = desc;
@@ -67,6 +70,7 @@ public class Inmueble {
         this.owner = owner;
         this.horaInicio = horaInicio;
         this.horaFin = horaFinal;
+        this.availableDays = availableDays;
         this.cancellation = cancellation;
         this.images.addAll(images);
     }
