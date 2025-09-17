@@ -1,5 +1,8 @@
 package com.reservo.modelo.property;
 
+import lombok.Getter;
+
+@Getter
 public enum DiasDeLaSemana {
     LUNES("Lunes"),
     MARTES("Martes"),
@@ -15,7 +18,4 @@ public enum DiasDeLaSemana {
         this.nombre = nombre;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
 }

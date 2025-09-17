@@ -54,8 +54,6 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
         )}
       </div>
 
-      {/* <BotonesCarrusel onNext={() => moveDay(1)} onPrev={() => moveDay(-1)} /> */}
-
       <div className="flex justify-center overflow-hidden">
         <div
           ref={containerRef}
@@ -63,9 +61,7 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
         >
           {Array.from(days).map((day) => {
             const uppercaseDay = convertToUppercaseEng(day);
-            console.log(uppercaseDay);
             const isSelected = selectedDays.has(uppercaseDay);
-            // console.log(uppercaseDay, isSelected);
 
             return (
               <button
@@ -81,7 +77,6 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
                 }`}
                 style={{ cursor: "pointer", scrollSnapAlign: "center" }}
               >
-                {/* <span className="text-sm">{day}</span> */}
                 <span className="text-sm">{day}</span>
               </button>
             );
