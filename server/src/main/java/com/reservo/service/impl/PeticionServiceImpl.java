@@ -89,4 +89,9 @@ public class PeticionServiceImpl implements PeticionService {
     public List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date) {
         return peticionDAO.findAllVigentesByDateInInmueble(inmuebleId, date);
     }
+
+    @Override
+    public List<Peticion> findAllByOwnerId(Long userId) {
+        return peticionDAO.findAllByOwnerId(userId);
+    }
 }

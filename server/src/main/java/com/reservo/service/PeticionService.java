@@ -14,4 +14,6 @@ public interface PeticionService {
     void delete(Peticion peticion);
 
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
+
+    List<Peticion> findAllByOwnerId(Long id);
 }

@@ -52,4 +52,19 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(horarios);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PeticionResponseDTO> findPeticionById(@PathVariable Long id){
+        if (this.peticionService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
+        Peticion peticion = peticionService.findById(id).get();
+        return ResponseEntity.ok(PeticionResponseDTO.desdeModelo(peticion));
+    }
+
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<List<PeticionResponseDTO>> findAllByOwnerId(@PathVariable Long id){
+        if (this.usuarioService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
+        List<Peticion> peticiones = peticionService.findAllByOwnerId(id);
+        List<PeticionResponseDTO> peticionesDTO = peticiones.stream().map(PeticionResponseDTO::desdeModelo).toList();
+        return ResponseEntity.ok(peticionesDTO);
+    }
+
 }

@@ -7,25 +7,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record PeticionResponseDTO(
-        Long peticionId,
-        Long userId,
-        Long inmuebleId,
-        Double price,
-        LocalDate Fecha,
-        LocalTime horaInicio,
-        LocalTime horaFin,
-        PoliticasDeCancelacion politicaCancelacion
+        Long id,
+        String client_name,
+        LocalTime requested_date_start,
+        LocalTime requested_date_end,
+        String property_name,
+        LocalDate created_date
 )  {
     public static PeticionResponseDTO desdeModelo(Peticion prop) {
         return new PeticionResponseDTO(
                 prop.getId(),
-                prop.getCliente().getId(),
-                prop.getInmueble().getId(),
-                prop.getPrice(),
-                prop.getFecha(),
+                prop.getCliente().getName(),
                 prop.getHoraInicio(),
                 prop.getHoraFin(),
-                prop.getPoliticaCancelacion()
+                prop.getInmueble().getName(),
+                prop.getFecha()
         );
     }
 
