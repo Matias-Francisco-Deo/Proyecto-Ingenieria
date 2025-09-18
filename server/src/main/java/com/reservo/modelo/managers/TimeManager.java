@@ -24,7 +24,7 @@ public class TimeManager {
     }
 
     public boolean elRangoEstaOcupadoPorAlgunaPeticion(Peticion peticion, PeticionDAO peticionDAO) {
-        List<Peticion> peticionesVigentes = peticionDAO.findPeticionesVigentes(peticion.getInmueble().getId(), peticion.getFecha());
+        List<Peticion> peticionesVigentes = peticionDAO.findPeticionesVigentes(peticion.getInmueble().getId(), peticion.getFechaDelEvento());
 
         return peticionesVigentes.stream().anyMatch(p -> estaOcupado(peticion, p));
     }
@@ -42,7 +42,7 @@ public class TimeManager {
 
     public boolean esActual(Peticion peticion) {
         LocalDateTime ahora = LocalDateTime.now();
-        LocalDateTime inicioPeticion = LocalDateTime.of(peticion.getFecha(), peticion.getHoraInicio());
+        LocalDateTime inicioPeticion = LocalDateTime.of(peticion.getFechaDelEvento(), peticion.getHoraInicio());
 
         // Opcional: restar un minuto si querés incluir margen
         inicioPeticion = inicioPeticion.minusMinutes(1);

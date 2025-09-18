@@ -21,7 +21,7 @@ public record PeticionResponseDTO(
                 prop.getHoraInicio(),
                 prop.getHoraFin(),
                 prop.getInmueble().getName(),
-                prop.getFecha()
+                prop.getFechaEmision()
         );
     }
 

@@ -53,7 +53,7 @@ public class PeticionServiceImpl implements PeticionService {
     }
 
     private boolean existeUnaPeticionHecha(Peticion peticion) {
-        return peticionDAO.findByUsuarioAndInmueble(peticion.getCliente(), peticion.getInmueble(), peticion.getFecha()).isPresent();
+        return peticionDAO.findByUsuarioAndInmueble(peticion.getCliente(), peticion.getInmueble(), peticion.getFechaDelEvento()).isPresent();
     }
 
     //BORRAR SI SE AGREGAN RESERVA DE DOS DIAS
