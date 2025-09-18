@@ -18,7 +18,7 @@ export default function SectionSelectButton({
         if (sectionName == activeSection) return;
         setActive(sectionName);
       }}
-      className={`flex flex-col items-center min-w-[80px] px-6 py-3 rounded-lg transition-colors ${
+      className={`flex flex-col min-w-60 items-center px-6 py-3 rounded-lg transition-colors ${
         activeSection == sectionName
           ? "bg-amber-500 text-white font-bold"
           : "bg-gray-800 hover:bg-gray-700"
