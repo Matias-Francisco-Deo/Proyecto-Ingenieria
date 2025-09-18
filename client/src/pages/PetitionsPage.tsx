@@ -1,6 +1,7 @@
 import ListaDePeticionesPendientes from "@/components/ListaDePeticionesPendientes";
 import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
+import { useUser } from "@/hooks/useUser";
 import type { PeticionPendiente } from "@/types/types";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -17,14 +18,18 @@ export default function PetitionsPage() {
     PetitionsSummaryResponse | null | undefined
   >();
   const [loading, setLoading] = useState(false);
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
+  const { getId } = useUser();
   const [activeSection, setActiveSection] = useState("Pendientes");
 
   const handlePendingPetitionsFetch = async (page: number) => {
     setLocation("/peticiones?q=pendientes");
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8081/peticion/owner/1`); // TODO revisar el hardcodeo uwu
+      console.log(getId());
+      const res = await fetch(
+        `http://localhost:8081/peticion/owner/${getId()}`
+      );
       if (!res.ok) {
         if (res.status === 404) {
           setData(null);
