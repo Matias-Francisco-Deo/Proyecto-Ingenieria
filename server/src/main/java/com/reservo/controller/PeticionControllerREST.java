@@ -8,6 +8,8 @@ import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,11 +62,16 @@ public class PeticionControllerREST {
     }
 
     @GetMapping("/owner/{id}")
-    public ResponseEntity<List<PeticionResponseDTO>> findAllByOwnerId(@PathVariable Long id){
-        if (this.usuarioService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
-        List<Peticion> peticiones = peticionService.findAllByOwnerId(id);
-        List<PeticionResponseDTO> peticionesDTO = peticiones.stream().map(PeticionResponseDTO::desdeModelo).toList();
-        return ResponseEntity.ok(peticionesDTO);
-    }
+    public ResponseEntity<Page<PeticionSummaryDTO>> findAllByOwnerId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<Peticion> findById = this.peticionService.findAllByOwnerId(id, PageRequest.of(page, 10));
 
+        if (findById.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<PeticionSummaryDTO> peticiones = findById.map(PeticionSummaryDTO::desdeModelo);
+
+        return ResponseEntity.ok(peticiones);
+    }
 }
