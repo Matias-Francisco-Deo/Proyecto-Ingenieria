@@ -3,14 +3,14 @@ import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
 import type { PeticionPendiente } from "@/types/types";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { useEffect, useState } from "react";
+// import { useEffect } from "react";
+import { useLocation, useRoute } from "wouter";
 
 interface PetitionsSummaryResponse {
   content: PeticionPendiente[];
   totalPages: number;
-  page: number;
+  number: number;
 }
 
 export default function PetitionsPage() {
@@ -22,14 +22,23 @@ export default function PetitionsPage() {
   const { getId } = useUser();
   const [activeSection, setActiveSection] = useState("Pendientes");
 
-  const handlePendingPetitionsFetch = async (page: number) => {
-    setLocation("/peticiones?q=pendientes");
+
+  // LO NUEVO
+  const [match, params] = useRoute("/peticiones/:estado");
+  const estado = match ? params.estado : "pendientes";
+
+  useEffect(() => {
+    if (estado === "pendientes") handlePendingPetitionsFetch(0);
+  }, [estado]);
+
+
+  const handlePendingPetitionsFetch = async (page: number = 0) => {
     setLoading(true);
-    try {
-      console.log(getId());
+    try {      
       const res = await fetch(
-        `http://localhost:8081/peticion/owner/${getId()}`
+        `http://localhost:8081/peticion/owner/${getId()}?page=${page}`
       );
+
       if (!res.ok) {
         if (res.status === 404) {
           setData(null);
@@ -38,22 +47,16 @@ export default function PetitionsPage() {
         }
         return;
       }
-      const json: PeticionPendiente[] = await res.json();
-      setData({
-        content: json,
-        totalPages: 5,
-        page,
-      });
+        
+      const json: PetitionsSummaryResponse = await res.json();
+      setData(json);
+
     } catch {
       setData(null);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    handlePendingPetitionsFetch(0);
-  }, []);
 
   return (
     <div className="flex justify-center ">
@@ -63,9 +66,7 @@ export default function PetitionsPage() {
             sectionName="Pendientes"
             activeSection={activeSection}
             setActive={setActiveSection}
-            onClick={() => {
-              handlePendingPetitionsFetch(0);
-            }}
+            onClick={() => setLocation("/peticiones/pendientes")}
           ></SectionSelectButton>
           <SectionSelectButton
             sectionName="Vigentes"
@@ -86,7 +87,6 @@ export default function PetitionsPage() {
             onClick={() => {}}
           ></SectionSelectButton>
         </div>
-
         {loading && <p>Cargando...</p>}
         {!loading && data === null && (
           <p className="text-white-500 mt-2">No hay peticiones.</p>
@@ -96,7 +96,7 @@ export default function PetitionsPage() {
             <ListaDePeticionesPendientes resultados={data.content} />
             <div className="mt-4 bottom-6 sticky">
               <Paginacion
-                paginaActual={data.page + 1}
+                paginaActual={data.number + 1}
                 totalPaginas={data.totalPages}
                 onPageChange={(page) => handlePendingPetitionsFetch(page - 1)}
               />

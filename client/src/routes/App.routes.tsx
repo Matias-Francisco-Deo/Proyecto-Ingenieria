@@ -27,6 +27,7 @@ export function AppRoutes() {
           <Route path="/buscador" component={SearchPage} />
           <Route path="/publicacion" component={Publicacion} />
           <Route path="/peticion" component={PeticionForm} />
+          <Route path="/peticiones/:estado" component={PetitionsPage} />
           <Route path="/peticiones" component={PetitionsPage} />
           {/* Rutas protegidas */}
           {/* <Route path="/home" component={HomePage} />
