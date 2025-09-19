@@ -14,37 +14,25 @@ const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/PeticionForm"));
+const ReservaPendientePage = lazy(
+  () => import("../pages/ReservaPendientePage")
+);
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
-    return (
-        <MainLayout>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Switch>
-                    <Route
-                        path="/"
-                        component={HomePage}
-                    />
-                    <Route
-                        path="/home"
-                        component={HomePage}
-                    />
-                    <Route
-                        path="/signin"
-                        component={AuthPage}
-                    />
-                    <Route
-                        path="/alta-inmueble"
-                        component={PropertyPage}
-                    />
-                    <Route
-                        path="/publicacion" 
-                        component={Publicacion}/>
-                    <Route 
-                        path="/peticion"
-                        component={PeticionForm} />
-                    {/* Rutas protegidas */}
-                    {/* <Route path="/home" component={HomePage} />
+  return (
+    <MainLayout>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          <Route path="/" component={HomePage} />
+          <Route path="/home" component={HomePage} />
+          <Route path="/signin" component={AuthPage} />
+          <Route path="/alta-inmueble" component={PropertyPage} />
+          <Route path="/publicacion" component={Publicacion} />
+          <Route path="/peticion" component={PeticionForm} />
+          <Route path="/peticion/pendiente" component={ReservaPendientePage} />
+          {/* Rutas protegidas */}
+          {/* <Route path="/home" component={HomePage} />
 
           <Route path="/search/:query?" component={SearchPage} />
           <Route path="/gif/:id" component={GifsDetails} />
@@ -53,11 +41,11 @@ export function AppRoutes() {
 
           <ProtectedRoute path="/upload" component={UploadPage} /> */}
 
-                    {/* Ruta 404 */}
+          {/* Ruta 404 */}
 
-                    <Route component={Page404} />
-                </Switch>
-            </Suspense>
-        </MainLayout>
-    );
+          <Route component={Page404} />
+        </Switch>
+      </Suspense>
+    </MainLayout>
+  );
 }
