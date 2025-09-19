@@ -1,6 +1,7 @@
 package com.reservo.service;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.reserva.Peticion;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,4 +15,7 @@ public interface PeticionService {
     void delete(Peticion peticion);
 
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
+
+
+    void reject(RechazoDTO  rechazoDTO);
 }

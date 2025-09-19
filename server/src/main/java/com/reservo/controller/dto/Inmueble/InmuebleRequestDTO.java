@@ -1,14 +1,12 @@
-package com.reservo.controller.dto;
+package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public record InmuebleRequestDTO(
         String name,

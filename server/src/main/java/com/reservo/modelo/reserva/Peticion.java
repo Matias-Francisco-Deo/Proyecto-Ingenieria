@@ -1,7 +1,7 @@
-package com.reservo.modelo;
+package com.reservo.modelo.reserva;
 
-import com.reservo.modelo.estadosReservas.EstadoDePeticion;
-import com.reservo.modelo.estadosReservas.Pendiente;
+import com.reservo.modelo.reserva.estadosReservas.EstadoDePeticion;
+import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
@@ -37,8 +37,6 @@ public class Peticion {
     @Column(nullable = false)
     private LocalDate fecha;
 
-    //@Column(nullable = false)
-    //private LocalDate FechaFin;//podrian ser 2 fechas?
 
     @Column(nullable = false)
     private LocalTime horaInicio;
@@ -50,6 +48,9 @@ public class Peticion {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "estadoId")
     private EstadoDePeticion estado;
+
+    @Column(length = 150)
+    private String motivoRechazo;
 
     private PoliticasDeCancelacion politicaCancelacion;
 
@@ -73,8 +74,9 @@ public class Peticion {
         this.estado.cancelar(this);
     }
 
-    public void rechazar(){
+    public void rechazar(String motivo){
         this.estado.rechazar(this);
+        this.setMotivoRechazo(motivo);
     }
 
     public void finalizar(){

@@ -1,6 +1,6 @@
 package com.reservo.service;
 
-import com.reservo.controller.dto.CredentialsDTO;
+import com.reservo.controller.dto.Usuario.CredentialsDTO;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.exception.CredencialesIncorrectas;

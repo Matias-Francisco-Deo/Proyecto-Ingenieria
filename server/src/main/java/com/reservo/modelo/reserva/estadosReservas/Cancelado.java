@@ -1,6 +1,6 @@
-package com.reservo.modelo.estadosReservas;
+package com.reservo.modelo.reserva.estadosReservas;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import jakarta.persistence.Entity;
 
 @Entity

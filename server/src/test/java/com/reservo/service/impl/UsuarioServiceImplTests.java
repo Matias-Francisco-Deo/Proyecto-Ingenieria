@@ -1,6 +1,6 @@
 package com.reservo.service.impl;
 
-import com.reservo.controller.dto.CredentialsDTO;
+import com.reservo.controller.dto.Usuario.CredentialsDTO;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,6 +117,8 @@ public class UsuarioServiceImplTests {
 
     @AfterEach
     void limpiarDb(){
-        testService.eliminarUsuarios();
+        testService.eliminarPeticiones();
+        testService.eliminarInmuebles();
+        testService.eliminarUsuarios();;
     }
 }

@@ -1,8 +1,8 @@
 package com.reservo.controller;
 
-import com.reservo.controller.dto.InmuebleRequestDTO;
-import com.reservo.controller.dto.InmuebleResponseDTO;
-import com.reservo.controller.dto.InmuebleSummaryDTO;
+import com.reservo.controller.dto.Inmueble.InmuebleRequestDTO;
+import com.reservo.controller.dto.Inmueble.InmuebleResponseDTO;
+import com.reservo.controller.dto.Inmueble.InmuebleSummaryDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.Usuario;
@@ -10,12 +10,9 @@ import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

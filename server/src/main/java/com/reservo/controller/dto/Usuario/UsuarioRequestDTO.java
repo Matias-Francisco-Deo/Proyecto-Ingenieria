@@ -1,4 +1,4 @@
-package com.reservo.controller.dto;
+package com.reservo.controller.dto.Usuario;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.user.Usuario;

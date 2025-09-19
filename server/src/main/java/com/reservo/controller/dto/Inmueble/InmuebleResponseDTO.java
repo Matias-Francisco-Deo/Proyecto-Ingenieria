@@ -1,4 +1,4 @@
-package com.reservo.controller.dto;
+package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.modelo.property.Inmueble;
 

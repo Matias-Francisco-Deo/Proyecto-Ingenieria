@@ -1,6 +1,6 @@
 package com.reservo.persistencia.DAO;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +28,7 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
 
     @Query("FROM Peticion p WHERE TYPE(p.estado) = Vigente AND p.inmueble.id = :inmuebleId AND p.fecha = :date")
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
+
+    @Query("select count(p) > 0 from Peticion p where p.inmueble.owner.id = :ownerId and p.id = :petitionId")
+    boolean isPetitionOfOwner(@Param("petitionId") Long petitionId, @Param("ownerId") Long ownerId);
 }

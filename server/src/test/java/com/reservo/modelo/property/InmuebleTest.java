@@ -1,9 +1,9 @@
 package com.reservo.modelo.property;
 
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.yaml.snakeyaml.util.Tuple;
 
 import java.time.LocalTime;
 
@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class InmuebleTest {
     private Usuario jorge;
     private Inmueble propiedad;
+    private Peticion peticionDeJorge;
 
     @BeforeEach
     public void setUp() {
@@ -20,6 +21,8 @@ public class InmuebleTest {
         propiedad = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
                 LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
+
+
     }
 
     @Test

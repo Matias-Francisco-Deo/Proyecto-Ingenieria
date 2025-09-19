@@ -1,8 +1,10 @@
 package com.reservo.service.impl;
 
-import com.reservo.modelo.Peticion;
-import com.reservo.modelo.estadosReservas.Pendiente;
-import com.reservo.modelo.estadosReservas.Vigente;
+import com.reservo.modelo.reserva.Peticion;
+import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.reserva.estadosReservas.Cancelado;
+import com.reservo.modelo.reserva.estadosReservas.Pendiente;
+import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
@@ -22,7 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class PeticionServiceImplTest {
 
+    public static final String NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO = "No me gustó la comida de ganzo.";
     @Autowired
     private TestService testService; // cambiar por uno para inmueble
 
@@ -50,8 +52,8 @@ public class PeticionServiceImplTest {
     private PoliticasDeCancelacion cancellation;
     private Inmueble inmueble;
     private List<MultipartFile> emptyImages;
-    private Peticion peticion;
-    private Peticion peticion2;
+    private Peticion peticionDeJorge;
+    private Peticion peticionDeAlan;
 
 
     @BeforeEach
@@ -68,9 +70,9 @@ public class PeticionServiceImplTest {
 
         emptyImages = Collections.emptyList();
 
-        peticion = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
-        peticion2 = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
-        peticion2.setEstado(new Vigente());
+        peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
+        peticionDeAlan = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
+        peticionDeAlan.setEstado(new Vigente());
 
     }
 
@@ -81,11 +83,11 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-        Peticion peticionSaved = peticionService.create(peticion);
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
 
-        Optional<Peticion> peticionGetted = peticionService.findById(peticionSaved.getId());
+        Optional<Peticion> peticionGot = peticionService.findById(peticionSaved.getId());
 
-        assertTrue(peticionGetted.isPresent());
+        assertTrue(peticionGot.isPresent());
     }
 
     @Test
@@ -96,9 +98,9 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-        peticionService.create(peticion2);
+        peticionService.create(peticionDeAlan);
 
-        assertThrows(HorariosSuperpuestos.class, () -> peticionService.create(peticion));
+        assertThrows(HorariosSuperpuestos.class, () -> peticionService.create(peticionDeJorge));
     }
 
     @Test
@@ -108,14 +110,14 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-        LocalTime horaInicio = peticion.getHoraInicio();
+        LocalTime horaInicio = peticionDeJorge.getHoraInicio();
 
 
-        peticion.setHoraInicio(peticion.getHoraFin());
-        peticion.setHoraFin(horaInicio);
+        peticionDeJorge.setHoraInicio(peticionDeJorge.getHoraFin());
+        peticionDeJorge.setHoraFin(horaInicio);
 
 
-        assertThrows(HorarioDesordenado.class, () -> peticionService.create(peticion));
+        assertThrows(HorarioDesordenado.class, () -> peticionService.create(peticionDeJorge));
     }
 
     @Test
@@ -125,10 +127,10 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-        peticion.setHoraInicio(inmueble.getHoraInicio().minusMinutes(1));
+        peticionDeJorge.setHoraInicio(inmueble.getHoraInicio().minusMinutes(1));
 
 
-        assertThrows(RangoDeHorarioSuperado.class, () -> peticionService.create(peticion));
+        assertThrows(RangoDeHorarioSuperado.class, () -> peticionService.create(peticionDeJorge));
     }
 
     @Test
@@ -141,11 +143,11 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-        peticion.setFecha(LocalDate.now().minusDays(1));
-        peticion.setHoraInicio(LocalTime.now().minusMinutes(30));
-        peticion.setHoraFin(LocalTime.now().plusMinutes(30));
+        peticionDeJorge.setFecha(LocalDate.now().minusDays(1));
+        peticionDeJorge.setHoraInicio(LocalTime.now().minusMinutes(30));
+        peticionDeJorge.setHoraFin(LocalTime.now().plusMinutes(30));
 
-        assertThrows(VieneDelPasado.class, () -> peticionService.create(peticion));
+        assertThrows(VieneDelPasado.class, () -> peticionService.create(peticionDeJorge));
     }
 
     @Test
@@ -155,7 +157,7 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-        peticionService.create(peticion);
+        peticionService.create(peticionDeJorge);
 
         Peticion peticionPe = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
 
@@ -172,8 +174,8 @@ public class PeticionServiceImplTest {
 
         Inmueble savedIn = inmuebleService.create(inmueble, emptyImages);
 
-        peticion.setEstado(new Vigente());
-        Peticion savedPeticion = peticionService.create(peticion);
+        peticionDeJorge.setEstado(new Vigente());
+        Peticion savedPeticion = peticionService.create(peticionDeJorge);
 
         Peticion peticionDelFuturo =  new Peticion(alan, inmueble, LocalDate.now().plusDays(3),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
         peticionDelFuturo.setEstado(new Vigente());
@@ -199,6 +201,78 @@ public class PeticionServiceImplTest {
 
         assertThrows(EsDueñoDeLaPropiedadSolicitada.class, () -> peticionService.create(peticionRaul));
     }
+
+    @Test
+    public void unInmuebleEsReservadoPorUnUsuarioYLuegoCanceladoPorSuDueñoYSuEstadoPasaARechazado() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+
+        RechazoDTO rechazoDTO = new RechazoDTO(raul.getId(), peticionSaved.getId(), "No me gustó la comida de ganzo.");
+
+        peticionService.reject(rechazoDTO);
+
+        Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
+
+        assertInstanceOf(Cancelado.class, peticionFromDb.getEstado());
+
+    }
+
+    @Test
+    public void unInmuebleEsReservadoPorUnUsuarioYLuegoCanceladoPorSuDueñoYTieneMensajeDeRechazo() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+
+        RechazoDTO rechazoDTO = new RechazoDTO(raul.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
+
+        peticionService.reject(rechazoDTO);
+
+        Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
+
+        assertEquals(NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO, peticionFromDb.getMotivoRechazo());
+
+    }
+
+    @Test
+    public void unInmuebleEsReservadoPorUnUsuarioYLuegoCanceladoPorAlguienQueNoEsSuDueñoYNoHaceNada() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+
+        RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
+
+        peticionService.reject(rechazoDTO);
+
+        Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
+
+        assertEquals(null, peticionFromDb.getMotivoRechazo());
+        assertInstanceOf(Pendiente.class, peticionFromDb.getEstado());
+
+    }
+
+    @Test
+    public void unaPeticionQueNoExisteNoEsPosibleDeCancelar() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+
+        RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), -1L, NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
+
+
+        assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
+
+    }
+
+
 
 
     @AfterEach

@@ -1,6 +1,6 @@
 package com.reservo.service.impl;
 
-import com.reservo.controller.dto.CredentialsDTO;
+import com.reservo.controller.dto.Usuario.CredentialsDTO;
 import com.reservo.modelo.user.AuthInfo;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional

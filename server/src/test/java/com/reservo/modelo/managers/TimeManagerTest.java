@@ -1,6 +1,6 @@
 package com.reservo.modelo.managers;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import org.junit.jupiter.api.BeforeEach;

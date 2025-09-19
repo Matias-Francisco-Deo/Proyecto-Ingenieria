@@ -1,6 +1,6 @@
-package com.reservo.controller.dto;
+package com.reservo.controller.dto.Peticion;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 
 import java.time.LocalDate;

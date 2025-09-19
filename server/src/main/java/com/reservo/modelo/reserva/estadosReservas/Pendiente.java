@@ -1,6 +1,6 @@
-package com.reservo.modelo.estadosReservas;
+package com.reservo.modelo.reserva.estadosReservas;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import jakarta.persistence.Entity;
 
 @Entity
@@ -17,7 +17,7 @@ public class Pendiente extends EstadoDePeticion {
 
     @Override
     public void rechazar(Peticion peticion) {
-
+        peticion.setEstado(new Cancelado());
     }
 
     @Override

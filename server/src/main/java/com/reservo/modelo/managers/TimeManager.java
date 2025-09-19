@@ -1,10 +1,9 @@
 package com.reservo.modelo.managers;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;

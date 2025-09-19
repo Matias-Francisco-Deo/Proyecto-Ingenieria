@@ -1,9 +1,9 @@
 package com.reservo.controller;
 
-import com.reservo.controller.dto.CredentialsDTO;
-import com.reservo.controller.dto.LoginRequestDTO;
-import com.reservo.controller.dto.UsuarioRequestDTO;
-import com.reservo.controller.dto.UsuarioResponseDTO;
+import com.reservo.controller.dto.Usuario.CredentialsDTO;
+import com.reservo.controller.dto.Usuario.LoginRequestDTO;
+import com.reservo.controller.dto.Usuario.UsuarioRequestDTO;
+import com.reservo.controller.dto.Usuario.UsuarioResponseDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;

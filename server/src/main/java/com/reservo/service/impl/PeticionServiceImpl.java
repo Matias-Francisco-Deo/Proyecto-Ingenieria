@@ -1,6 +1,7 @@
 package com.reservo.service.impl;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
@@ -89,4 +90,14 @@ public class PeticionServiceImpl implements PeticionService {
     public List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date) {
         return peticionDAO.findAllVigentesByDateInInmueble(inmuebleId, date);
     }
+
+    @Override
+    public void reject(RechazoDTO rechazoDTO) {
+        if (!peticionDAO.isPetitionOfOwner(rechazoDTO.peticionId(), rechazoDTO.ownerId())) return;
+        Peticion peticion = peticionDAO.findById(rechazoDTO.peticionId()).get(); // no debería tirar error porque el check de arriba hace return si no existe también
+        peticion.rechazar(rechazoDTO.motivoDeRechazo());
+        peticionDAO.save(peticion);
+    }
+
+
 }
