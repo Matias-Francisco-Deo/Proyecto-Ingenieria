@@ -107,7 +107,7 @@ public class PeticionServiceImpl implements PeticionService {
 
         Peticion peticion = optionalPeticion.get();
 
-        if (peticionDAO.itsDeprecatedFromDate(peticionId, LocalTime.now())) throw new PeticionVencida("La petición esta vencida.");
+        if (peticionDAO.itsDeprecatedFromDate(peticionId, LocalDate.now())) throw new PeticionVencida("La petición esta vencida.");
         Long inmuebleId = peticion.getInmueble().getId();
         if (peticionDAO.wasAcceptedInSameTimeRange(inmuebleId, peticion.getHoraInicio(), peticion.getHoraFin())) throw new HorarioOcupado("El horario ya esta ocupado por otra petición.");
 

@@ -94,7 +94,7 @@ public class PeticionDAOTests {
 
         peticionDAO.save(peticionDeprecada);
 
-        assertTrue(peticionDAO.itsDeprecatedFromDate(peticionDeprecada.getId(), LocalTime.now()));
+        assertTrue(peticionDAO.itsDeprecatedFromDate(peticionDeprecada.getId(), LocalDate.now()));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class PeticionDAOTests {
 
         peticionDAO.save(peticionDeAlan);
 
-        assertFalse(peticionDAO.itsDeprecatedFromDate(peticionDeAlan.getId(), LocalTime.now()));
+        assertFalse(peticionDAO.itsDeprecatedFromDate(peticionDeAlan.getId(), LocalDate.now()));
     }
 
     @Test

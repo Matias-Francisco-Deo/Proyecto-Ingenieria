@@ -1,21 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Carrusel from "../components/Carrusel";
-import { Link } from "wouter";
+import { useUser } from "@/hooks/useUser";
+import type { ApproveResponse, PendingPetition } from "@/types/types";
 
-type PendingPetition = {
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number;
-  date_start: string;
-  date_end: string;
-  capacity: number;
-  client_name: string;
-  client_email: string;
-};
-
-export default function Publicacion() {
+export default function ReservaPendientePage() {
   const examplePendingPetition: PendingPetition = {
     id: 1,
     name: "Pepe yoga class",
@@ -36,12 +24,16 @@ export default function Publicacion() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
+  const [rejError, setRejError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const rejectionMotive = useRef<HTMLTextAreaElement>(null);
+  const { getId } = useUser();
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
   useEffect(() => {
-    if (!id) return;
+    if (id) return;
 
     const fetchInmueble = async () => {
       try {
@@ -140,7 +132,10 @@ export default function Publicacion() {
             </div>
 
             <div className="flex mt-6 gap-4">
-              <button className="bg-green-900 hover:bg-green-500 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
+              <button
+                className="bg-green-900 hover:bg-green-500 text-white font-bold py-2 px-7 rounded-xl cursor-pointer"
+                onClick={(evt) => approvePetition(evt)}
+              >
                 Aceptar
               </button>
               <button
@@ -151,6 +146,7 @@ export default function Publicacion() {
               </button>
             </div>
           </div>
+          <p className="text-red-500">{generalError}</p>
         </div>
       </div>
     </div>
@@ -176,18 +172,18 @@ export default function Publicacion() {
           <textarea
             placeholder="Ingrese el motivo..."
             className="w-full resize-none h-20 bg-gray-800 placeholder-white rounded-xl"
+            ref={rejectionMotive}
           ></textarea>
           <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
             Confirmar el rechazo
           </button>
+          <p className="text-red-500">{rejError}</p>
         </form>
         <div className="top-0 right-0 absolute ">
           <button
             type="button"
-            onClick={() => {
-              setIsRejecting(false);
-            }}
             className="hover:cursor-pointer absolute top-0 right-0 bg-red-950 hover:bg-red-800 text-white rounded-full w-10 h-10 flex items-center justify-center text-xs"
+            onClick={() => setIsRejecting(false)}
           >
             X
           </button>
@@ -195,9 +191,52 @@ export default function Publicacion() {
       </div>
     );
   }
-  function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
+
+  async function approvePetition(
+    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     evt.preventDefault();
-    // todo sale bien
-    setIsRejecting(false);
+    const response = await fetch("http://localhost:8081/peticion/aprobar", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        peticionId: id,
+      }),
+    }).catch(() => {
+      setGeneralError("Hubo un error inesperado.");
+      return;
+    });
+
+    console.log(response);
+
+    if (!response) return;
+
+    const approveResponse = (await response.json()) as ApproveResponse;
+
+    if (approveResponse.error) {
+      setGeneralError(approveResponse.error);
+      return;
+    }
+  }
+
+  async function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
+    const response = await fetch("http://localhost:8081/peticion/rechazar", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ownerId: getId(),
+        peticionId: id,
+        motivoDeRechazo: rejectionMotive.current?.value,
+      }),
+    }).catch(() => {
+      setRejError("Hubo un error inesperado.");
+      return;
+    });
+    if (response) setIsRejecting(false);
   }
 }

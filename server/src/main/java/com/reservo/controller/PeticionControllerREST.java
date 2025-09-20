@@ -65,11 +65,11 @@ public class PeticionControllerREST {
     }
 
     @PatchMapping("/rechazar")
-    public ResponseEntity.BodyBuilder reject(@RequestBody RechazoDTO rechazoDTO){
+    public ResponseEntity<Object> reject(@RequestBody RechazoDTO rechazoDTO){
 
         peticionService.reject(rechazoDTO);
 
-        return ResponseEntity.ok();
+        return ResponseEntity.ok().build();
     }
 
 }
