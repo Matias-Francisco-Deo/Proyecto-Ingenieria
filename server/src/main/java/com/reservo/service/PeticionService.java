@@ -16,6 +16,5 @@ public interface PeticionService {
 
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
 
-
-    void reject(RechazoDTO  rechazoDTO);
+    void reject(RechazoDTO rechazoDTO);
 }

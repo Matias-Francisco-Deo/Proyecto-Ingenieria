@@ -1,8 +1,6 @@
 package com.reservo.controller;
 
-import com.reservo.controller.dto.Peticion.HorarioPeticionDTO;
-import com.reservo.controller.dto.Peticion.PeticionRequestDTO;
-import com.reservo.controller.dto.Peticion.PeticionResponseDTO;
+import com.reservo.controller.dto.Peticion.*;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.property.Inmueble;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -54,4 +53,19 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(horarios);
     }
 
+    @GetMapping("/pendiente/{id}")
+    public ResponseEntity<PeticionPendienteResponseDTO> getPeticionById(@PathVariable Long id) {
+        Optional<Peticion> peticion = this.peticionService.findById(id);
+
+        if (peticion.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        return ResponseEntity.ok(PeticionPendienteResponseDTO.desdeModelo(peticion.get()));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RechazoDTO> rechazarPeticion(@RequestBody RechazoDTO rechazoDTO) {
+        this.peticionService.reject(rechazoDTO);
+
+        return ResponseEntity.ok(rechazoDTO);
+    }
 }
