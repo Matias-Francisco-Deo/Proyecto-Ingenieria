@@ -18,4 +18,6 @@ public interface PeticionService {
 
 
     void reject(RechazoDTO  rechazoDTO);
+
+    void approve(Long id);
 }

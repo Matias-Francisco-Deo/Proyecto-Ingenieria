@@ -1,8 +1,10 @@
 package com.reservo.controller;
 
+import com.reservo.controller.dto.Peticion.AprobarDTO;
 import com.reservo.controller.dto.Peticion.HorarioPeticionDTO;
 import com.reservo.controller.dto.Peticion.PeticionRequestDTO;
 import com.reservo.controller.dto.Peticion.PeticionResponseDTO;
+import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.property.Inmueble;
@@ -52,6 +54,22 @@ public class PeticionControllerREST {
         List<HorarioPeticionDTO> horarios = peticiones.stream().map(HorarioPeticionDTO::desdeModelo).toList();
 
         return ResponseEntity.ok(horarios);
+    }
+
+    @PatchMapping("/aprobar")
+    public ResponseEntity.BodyBuilder approve(@RequestBody AprobarDTO aprobarDTO){
+
+        peticionService.approve(aprobarDTO.peticionId());
+
+        return ResponseEntity.ok();
+    }
+
+    @PatchMapping("/rechazar")
+    public ResponseEntity.BodyBuilder reject(@RequestBody RechazoDTO rechazoDTO){
+
+        peticionService.reject(rechazoDTO);
+
+        return ResponseEntity.ok();
     }
 
 }

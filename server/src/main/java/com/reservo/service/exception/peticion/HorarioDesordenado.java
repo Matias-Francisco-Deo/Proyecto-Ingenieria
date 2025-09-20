@@ -1,4 +1,4 @@
-package com.reservo.service.exception;
+package com.reservo.service.exception.peticion;
 
 public class HorarioDesordenado extends RuntimeException{
     public HorarioDesordenado() {
