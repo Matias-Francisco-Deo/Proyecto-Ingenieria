@@ -3,6 +3,7 @@ package com.reservo.modelo.reserva;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.user.Usuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,9 +37,17 @@ public class ReservaTest {
     }
 
     @Test
+    public void peticionSePasaAVigente() {
+        peticionDeJorge.aprobar();
+        assertInstanceOf(Vigente.class, peticionDeJorge.getEstado());
+    }
+
+    @Test
     public void peticionTieneMotivoDeRechazo() {
         peticionDeJorge.rechazar("No me gustó la comida de gato");
         assertInstanceOf(Cancelado.class, peticionDeJorge.getEstado());
     }
+
+
 
 }

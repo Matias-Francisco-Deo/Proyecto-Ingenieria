@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -61,11 +60,20 @@ public class PeticionControllerREST {
 
         return ResponseEntity.ok(PeticionPendienteResponseDTO.desdeModelo(peticion.get()));
     }
+    @PatchMapping("/aprobar")
+    public ResponseEntity.BodyBuilder approve(@RequestBody AprobarDTO aprobarDTO){
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<RechazoDTO> rechazarPeticion(@RequestBody RechazoDTO rechazoDTO) {
-        this.peticionService.reject(rechazoDTO);
+        peticionService.approve(aprobarDTO.peticionId());
 
-        return ResponseEntity.ok(rechazoDTO);
+        return ResponseEntity.ok();
     }
+
+    @PatchMapping("/rechazar")
+    public ResponseEntity.BodyBuilder reject(@RequestBody RechazoDTO rechazoDTO){
+
+        peticionService.reject(rechazoDTO);
+
+        return ResponseEntity.ok();
+    }
+
 }

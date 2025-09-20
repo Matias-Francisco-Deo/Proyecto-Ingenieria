@@ -1,15 +1,16 @@
 package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.service.exception.peticion.*;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
-import com.reservo.service.exception.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -96,6 +97,21 @@ public class PeticionServiceImpl implements PeticionService {
         if (!peticionDAO.isPetitionOfOwner(rechazoDTO.peticionId(), rechazoDTO.ownerId())) return;
         Peticion peticion = peticionDAO.findById(rechazoDTO.peticionId()).get(); // no debería tirar error porque el check de arriba hace return si no existe también
         peticion.rechazar(rechazoDTO.motivoDeRechazo());
+        peticionDAO.save(peticion);
+    }
+
+    @Override
+    public void approve(Long peticionId) {
+        Optional<Peticion> optionalPeticion = peticionDAO.findById(peticionId);
+        if (optionalPeticion.isEmpty()) return;
+
+        Peticion peticion = optionalPeticion.get();
+
+        if (peticionDAO.itsDeprecatedFromDate(peticionId, LocalTime.now())) throw new PeticionVencida("La petición esta vencida.");
+        Long inmuebleId = peticion.getInmueble().getId();
+        if (peticionDAO.wasAcceptedInSameTimeRange(inmuebleId, peticion.getHoraInicio(), peticion.getHoraFin())) throw new HorarioOcupado("El horario ya esta ocupado por otra petición.");
+
+        peticion.aprobar();
         peticionDAO.save(peticion);
     }
 

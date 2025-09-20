@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 public class Pendiente extends EstadoDePeticion {
     @Override
     public void aprobar(Peticion peticion) {
-
+        peticion.setEstado(new Vigente());
     }
 
     @Override

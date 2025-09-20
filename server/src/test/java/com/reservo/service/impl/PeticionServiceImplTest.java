@@ -12,6 +12,7 @@ import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.*;
+import com.reservo.service.exception.peticion.*;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,7 @@ public class PeticionServiceImplTest {
     private List<MultipartFile> emptyImages;
     private Peticion peticionDeJorge;
     private Peticion peticionDeAlan;
+    private Peticion peticionDeAlanNoVigente;
 
 
     @BeforeEach
@@ -73,6 +75,8 @@ public class PeticionServiceImplTest {
         peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
         peticionDeAlan = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
         peticionDeAlan.setEstado(new Vigente());
+
+        peticionDeAlanNoVigente = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
 
     }
 
@@ -255,7 +259,7 @@ public class PeticionServiceImplTest {
 
         Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
 
-        assertEquals(null, peticionFromDb.getMotivoRechazo());
+        assertNull(peticionFromDb.getMotivoRechazo());
         assertInstanceOf(Pendiente.class, peticionFromDb.getEstado());
 
     }
@@ -269,6 +273,38 @@ public class PeticionServiceImplTest {
 
 
         assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
+
+    }
+
+    @Test
+    public void unInmuebleEsReservadoPorUnUsuario() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+        peticionService.approve(peticionDeJorge.getId());
+
+        Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
+
+        assertInstanceOf(Vigente.class, peticionFromDb.getEstado());
+
+    }
+
+    @Test
+    public void unInmuebleEsReservadoPorUnUsuarioYLuegoOtroUsuarioQuiereReservarALaVezEntoncesSeTiraException() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        usuarioService.create(alan);
+        inmuebleService.create(inmueble, emptyImages);
+
+         peticionService.create(peticionDeJorge);
+        Peticion peticionAlanSaved = peticionService.create(peticionDeAlanNoVigente);
+
+        peticionService.approve(peticionDeJorge.getId());
+
+        assertThrows(HorarioOcupado.class, () -> peticionService.approve(peticionAlanSaved.getId()));
+
 
     }
 
