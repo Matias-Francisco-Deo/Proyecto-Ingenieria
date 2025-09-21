@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -56,10 +57,27 @@ public class PeticionControllerREST {
     public ResponseEntity<PeticionPendienteResponseDTO> getPeticionById(@PathVariable Long id) {
         Optional<Peticion> peticion = this.peticionService.findById(id);
 
-        if (peticion.isEmpty()) return ResponseEntity.status(404).body(null);
-
-        return ResponseEntity.ok(PeticionPendienteResponseDTO.desdeModelo(peticion.get()));
+        return peticion.map(value -> ResponseEntity.ok(PeticionPendienteResponseDTO.desdeModelo(value)))
+                .orElseGet(() -> ResponseEntity.status(404).body(null));
     }
+
+    @GetMapping("/pendiente/{id}/images")
+    public ResponseEntity<List<String>> getInmuebleImages(@PathVariable Long id) {
+
+        Peticion pt = peticionService.findById(id).get();
+
+        return inmuebleService.findById(pt.getInmueble().getId())
+                .map(inmueble -> {
+                    List<String> imagePaths =
+                        inmueble.getImages()
+                        .stream()
+                        .map(filename -> "/uploads/" + filename)
+                        .toList();
+                    return ResponseEntity.ok(imagePaths);
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
     @PatchMapping("/aprobar")
     public ResponseEntity.BodyBuilder approve(@RequestBody AprobarDTO aprobarDTO){
 
@@ -69,11 +87,9 @@ public class PeticionControllerREST {
     }
 
     @PatchMapping("/rechazar")
-    public ResponseEntity.BodyBuilder reject(@RequestBody RechazoDTO rechazoDTO){
-
+    public ResponseEntity<String> reject(@RequestBody RechazoDTO rechazoDTO) {
         peticionService.reject(rechazoDTO);
-
-        return ResponseEntity.ok();
+        return ResponseEntity.ok("Petición rechazada con éxito");
     }
 
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Carrusel from "../components/Carrusel";
-import { Link } from "wouter";
+import { useUser } from "@/hooks/useUser";
+// import { Link } from "wouter";
 
 type PendingPetition = {
   id: number;
@@ -16,36 +17,26 @@ type PendingPetition = {
 };
 
 export default function Publicacion() {
-  const examplePendingPetition: PendingPetition = {
-    id: 1,
-    name: "Pepe yoga class",
-    description: "I wanted to fly.",
-    ubication: "Central Park, NYC",
-    price: 100,
-    date_start: "2025-10-01 17:00",
-    date_end: "2025-10-01 21:00",
-    capacity: 30,
-    client_name: "Tuvi Eja",
-    client_email: "tu.mama@si.com",
-  };
-
-  const [petition, setPetition] = useState<PendingPetition | null>(
-    examplePendingPetition
-  );
+  const [petition, setPetition] = useState<PendingPetition | null>();
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
+  const [motivo, setMotivo] = useState("");
 
+  const { getId } = useUser();
+  
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const peticionId = params.get("id");
+  const userId = getId();
+
 
   useEffect(() => {
-    if (!id) return;
+    if (!peticionId) return;
 
     const fetchInmueble = async () => {
       try {
-        const res = await fetch(`http://localhost:8081/reserva/pending/${id}`);
+        const res = await fetch(`http://localhost:8081/peticion/pendiente/${peticionId}`);
         if (!res.ok) throw new Error("Reserva no encontrada.");
         const data = await res.json();
         setPetition(data);
@@ -58,7 +49,7 @@ export default function Publicacion() {
     const fetchImages = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8081/reserva/pending/${id}/images`
+          `http://localhost:8081/peticion/pendiente/${peticionId}/images`
         );
         if (!res.ok) throw new Error("Imágenes no encontradas.");
         const data = await res.json();
@@ -73,7 +64,7 @@ export default function Publicacion() {
 
     fetchInmueble();
     fetchImages();
-  }, [id]);
+  }, [peticionId]);
 
   const nextImage = () => setCurrentIndex((prev) => (prev + 1) % images.length);
   const prevImage = () =>
@@ -175,6 +166,8 @@ export default function Publicacion() {
         >
           <textarea
             placeholder="Ingrese el motivo..."
+            value={motivo}
+            onChange={(e) => setMotivo(e.target.value)}
             className="w-full resize-none h-20 bg-gray-800 placeholder-white rounded-xl"
           ></textarea>
           <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
@@ -195,9 +188,31 @@ export default function Publicacion() {
       </div>
     );
   }
-  function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
+  
+  async function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    // todo sale bien
-    setIsRejecting(false);
+    
+    try {
+      const response = await fetch(`http://localhost:8081/peticion/rechazar`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          ownerId: userId,
+          peticionId: peticionId,
+          motivoDeRechazo: motivo
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al rechazar la petición");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setIsRejecting(true);
+    location.href = "/peticiones/pendientes";
   }
 }
