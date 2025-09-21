@@ -33,7 +33,10 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
 
     @Query("FROM Peticion p WHERE TYPE(p.estado) = Pendiente AND p.inmueble.owner.id = :unId ORDER BY p.fechaDelEvento asc")
-    Page<Peticion> findAllByOwnerId(@Param("unId") Long userId, Pageable pageable);
+    Page<Peticion> findAllPendientByOwnerId(@Param("unId") Long userId, Pageable pageable);
+
+    @Query("FROM Peticion p WHERE TYPE(p.estado) = Vigente AND p.inmueble.owner.id = :unId ORDER BY p.fechaDelEvento asc")
+    Page<Peticion> findAllApproveByOwnerId(@Param("unId") Long userId, Pageable pageable);
 
     @Query("select count(p) > 0 from Peticion p where p.inmueble.owner.id = :ownerId and p.id = :petitionId")
     boolean isPetitionOfOwner(@Param("petitionId") Long petitionId, @Param("ownerId") Long ownerId);

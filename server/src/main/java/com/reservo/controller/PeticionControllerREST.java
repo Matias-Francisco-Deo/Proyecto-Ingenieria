@@ -63,12 +63,12 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(PeticionResponseDTO.desdeModelo(peticion));
     }
 
-    @GetMapping("/owner/{id}")
-    public ResponseEntity<Page<PeticionSummaryDTO>> findAllByOwnerId(
+    @GetMapping("/owner/pendiente/{id}")
+    public ResponseEntity<Page<PeticionSummaryDTO>> findAllPendientByOwnerId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page
     ) {
-        Page<Peticion> findById = this.peticionService.findAllByOwnerId(id, PageRequest.of(page, 10));
+        Page<Peticion> findById = this.peticionService.findAllPendientByOwnerId(id, PageRequest.of(page, 10));
 
         if (findById.isEmpty()) return ResponseEntity.status(404).body(null);
 
@@ -76,6 +76,22 @@ public class PeticionControllerREST {
 
         return ResponseEntity.ok(peticiones);
     }
+
+    @GetMapping("/owner/vigente/{id}")
+    public ResponseEntity<Page<PeticionSummaryDTO>> findAllApproveByOwnerId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<Peticion> findById = this.peticionService.findAllApproveByOwnerId(id, PageRequest.of(page, 10));
+
+        if (findById.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<PeticionSummaryDTO> peticiones = findById.map(PeticionSummaryDTO::desdeModelo);
+
+        return ResponseEntity.ok(peticiones);
+    }
+
+
     @GetMapping("/pendiente/{id}")
     public ResponseEntity<PeticionPendienteResponseDTO> getPeticionById(@PathVariable Long id) {
         Optional<Peticion> peticion = this.peticionService.findById(id);

@@ -117,10 +117,13 @@ public class PeticionServiceImpl implements PeticionService {
         peticionDAO.save(peticion);
     }
 
-
+    @Override
+    public Page<Peticion> findAllPendientByOwnerId(Long userId, Pageable pageable) {
+        return peticionDAO.findAllPendientByOwnerId(userId, pageable);
+    }
 
     @Override
-    public Page<Peticion> findAllByOwnerId(Long userId, Pageable pageable) {
-        return peticionDAO.findAllByOwnerId(userId, pageable);
+    public Page<Peticion> findAllApproveByOwnerId(Long userId, Pageable pageable) {
+        return peticionDAO.findAllApproveByOwnerId(userId, pageable);
     }
 }

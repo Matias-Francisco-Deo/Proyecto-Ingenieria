@@ -16,10 +16,8 @@ public interface PeticionService {
     void update(Peticion peticion);
     void delete(Peticion peticion);
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
-
-
     void reject(RechazoDTO  rechazoDTO);
-
     void approve(Long id);
-    Page<Peticion> findAllByOwnerId(Long id, Pageable pageable);
+    Page<Peticion> findAllPendientByOwnerId(Long id, Pageable pageable);
+    Page<Peticion> findAllApproveByOwnerId(Long id, Pageable pageable);
 }

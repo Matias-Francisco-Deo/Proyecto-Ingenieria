@@ -1,4 +1,5 @@
 import ListaDePeticionesPendientes from "@/components/ListaDePeticionesPendientes";
+import ListaDePeticionesVigentes from "@/components/ListaDePeticionesVigentes";
 import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
@@ -28,13 +29,39 @@ export default function PetitionsPage() {
 
   useEffect(() => {
     if (estado === "pendientes") handlePendingPetitionsFetch(0);
+    if (estado === "vigentes") handleApprovegPetitionsFetch(0);
   }, [estado]);
 
   const handlePendingPetitionsFetch = async (page: number = 0) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:8081/peticion/owner/${getId()}?page=${page}`
+        `http://localhost:8081/peticion/owner/pendiente/${getId()}?page=${page}`
+      );
+
+      if (!res.ok) {
+        if (res.status === 404) {
+          setData(null);
+        } else {
+          throw new Error(`Error HTTP: ${res.status}`);
+        }
+        return;
+      }
+
+      const json: PetitionsSummaryResponse = await res.json();
+      setData(json);
+    } catch {
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApprovegPetitionsFetch = async (page: number = 0) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:8081/peticion/owner/vigente/${getId()}?page=${page}`
       );
 
       if (!res.ok) {
@@ -69,7 +96,7 @@ export default function PetitionsPage() {
             sectionName="Vigentes"
             activeSection={activeSection}
             setActive={setActiveSection}
-            onClick={() => {}}
+            onClick={() => setLocation("/mis-peticiones/vigentes")}
           ></SectionSelectButton>
           <SectionSelectButton
             sectionName="Deprecadas"
@@ -88,7 +115,8 @@ export default function PetitionsPage() {
         {!loading && data === null && (
           <p className="text-white-500 mt-2">No hay peticiones.</p>
         )}
-        {!loading && data && data.content.length > 0 && (
+        
+        {!loading && data && data.content.length > 0 && estado === "pendientes" &&(
           <div className="flex flex-col items-center ">
             <ListaDePeticionesPendientes resultados={data.content} />
             <div className="mt-4 bottom-6 sticky">
@@ -96,6 +124,19 @@ export default function PetitionsPage() {
                 paginaActual={data.number + 1}
                 totalPaginas={data.totalPages}
                 onPageChange={(page) => handlePendingPetitionsFetch(page - 1)}
+              />
+            </div>
+          </div>
+        )}
+
+        {!loading && data && data.content.length > 0 && estado === "vigentes" &&(
+          <div className="flex flex-col items-center ">
+            <ListaDePeticionesVigentes resultados={data.content} />
+            <div className="mt-4 bottom-6 sticky">
+              <Paginacion
+                paginaActual={data.number + 1}
+                totalPaginas={data.totalPages}
+                onPageChange={(page) => handleApprovegPetitionsFetch(page - 1)}
               />
             </div>
           </div>
