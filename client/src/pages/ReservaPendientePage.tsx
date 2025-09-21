@@ -131,7 +131,10 @@ export default function Publicacion() {
             </div>
 
             <div className="flex mt-6 gap-4">
-              <button className="bg-green-900 hover:bg-green-500 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
+              <button
+                onClick={() => approvePetition()}
+                className="bg-green-900 hover:bg-green-500 text-white font-bold py-2 px-7 rounded-xl cursor-pointer"
+              >
                 Aceptar
               </button>
               <button
@@ -212,7 +215,29 @@ export default function Publicacion() {
     } catch (err) {
       console.error(err);
     }
-    setIsRejecting(true);
+    setIsRejecting(false);
+    location.href = "/peticiones/pendientes";
+  }
+
+  async function approvePetition() {
+    try {
+      const response = await fetch(`http://localhost:8081/peticion/aprobar`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          peticionId: peticionId
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al aceptar la petición");
+      }
+    } catch (err) {
+      console.error(err);
+    }
     location.href = "/peticiones/pendientes";
   }
 }

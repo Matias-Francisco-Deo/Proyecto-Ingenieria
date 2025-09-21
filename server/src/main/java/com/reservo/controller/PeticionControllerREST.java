@@ -79,16 +79,16 @@ public class PeticionControllerREST {
     }
 
     @PatchMapping("/aprobar")
-    public ResponseEntity.BodyBuilder approve(@RequestBody AprobarDTO aprobarDTO){
-
+    public ResponseEntity<String> approve(@RequestBody AprobarDTO aprobarDTO){
         peticionService.approve(aprobarDTO.peticionId());
 
-        return ResponseEntity.ok();
+        return ResponseEntity.ok("Petición aceptada con éxito");
     }
 
     @PatchMapping("/rechazar")
     public ResponseEntity<String> reject(@RequestBody RechazoDTO rechazoDTO) {
         peticionService.reject(rechazoDTO);
+
         return ResponseEntity.ok("Petición rechazada con éxito");
     }
 
