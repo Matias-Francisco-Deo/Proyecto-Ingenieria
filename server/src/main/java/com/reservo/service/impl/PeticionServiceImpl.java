@@ -5,6 +5,8 @@ import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
 import com.reservo.service.exception.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +55,7 @@ public class PeticionServiceImpl implements PeticionService {
     }
 
     private boolean existeUnaPeticionHecha(Peticion peticion) {
-        return peticionDAO.findByUsuarioAndInmueble(peticion.getCliente(), peticion.getInmueble(), peticion.getFecha()).isPresent();
+        return peticionDAO.findByUsuarioAndInmueble(peticion.getCliente(), peticion.getInmueble(), peticion.getFechaDelEvento()).isPresent();
     }
 
     //BORRAR SI SE AGREGAN RESERVA DE DOS DIAS
@@ -88,5 +90,10 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date) {
         return peticionDAO.findAllVigentesByDateInInmueble(inmuebleId, date);
+    }
+
+    @Override
+    public Page<Peticion> findAllByOwnerId(Long userId, Pageable pageable) {
+        return peticionDAO.findAllByOwnerId(userId, pageable);
     }
 }

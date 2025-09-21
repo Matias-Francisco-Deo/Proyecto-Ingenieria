@@ -1,6 +1,8 @@
 package com.reservo.service;
 
 import com.reservo.modelo.Peticion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +14,6 @@ public interface PeticionService {
     List<Peticion> findAll();
     void update(Peticion peticion);
     void delete(Peticion peticion);
-
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
+    Page<Peticion> findAllByOwnerId(Long id, Pageable pageable);
 }
