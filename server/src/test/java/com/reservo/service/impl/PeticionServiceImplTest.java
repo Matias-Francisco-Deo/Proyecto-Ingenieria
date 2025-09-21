@@ -56,6 +56,7 @@ public class PeticionServiceImplTest {
     private Peticion peticionDeJorge;
     private Peticion peticionDeAlan;
     private Peticion peticionDeAlanNoVigente;
+    private RechazoDTO rechazoDTO;
 
 
     @BeforeEach
@@ -147,10 +148,7 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
-//        peticion.setFechaDelEvento(LocalDate.now().minusDays(1));
-//        peticion.setHoraInicio(LocalTime.now().minusMinutes(30));
-//        peticion.setHoraFin(LocalTime.now().plusMinutes(30));
-        peticionDeJorge.setFecha(LocalDate.now().minusDays(1));
+        peticionDeJorge.setFechaDelEvento(LocalDate.now().minusDays(1));
         peticionDeJorge.setHoraInicio(LocalTime.now().minusMinutes(30));
         peticionDeJorge.setHoraFin(LocalTime.now().plusMinutes(30));
 
@@ -217,8 +215,6 @@ public class PeticionServiceImplTest {
         inmuebleService.create(inmueble, emptyImages);
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
-
-        RechazoDTO rechazoDTO = new RechazoDTO(raul.getId(), peticionSaved.getId(), "No me gustó la comida de ganzo.");
 
         peticionService.reject(rechazoDTO);
 
@@ -309,6 +305,52 @@ public class PeticionServiceImplTest {
         assertThrows(HorarioOcupado.class, () -> peticionService.approve(peticionAlanSaved.getId()));
 
 
+    }
+
+    @Test
+    public void unaPeticionNoPuedeSerAceptadaMasDeUnaVezYNoHaceNada() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+        peticionService.approve(peticionDeJorge.getId());
+
+        assertDoesNotThrow(() -> {peticionService.approve(peticionDeJorge.getId());});
+
+
+
+
+    }
+
+    @Test
+    public void unaPeticionNoPuedeSerRechazadaMasDeUnaVezYNoHaceNada() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+        RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
+        peticionService.reject(rechazoDTO);
+
+        assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
+
+
+
+
+    }
+
+    @Test
+    public void unaPeticionNoPuedeSerRechazadaYLuegoAceptada() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionService.create(peticionDeJorge);
+        RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
+        peticionService.approve(peticionDeJorge.getId());
+
+        assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
     }
 
 

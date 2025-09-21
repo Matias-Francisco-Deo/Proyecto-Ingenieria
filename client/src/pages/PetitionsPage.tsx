@@ -2,13 +2,13 @@ import ListaDePeticionesPendientes from "@/components/ListaDePeticionesPendiente
 import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
-import type { PeticionPendiente } from "@/types/types";
+import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
 // import { useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 
 interface PetitionsSummaryResponse {
-  content: PeticionPendiente[];
+  content: PendingPetitionDraft[];
   totalPages: number;
   number: number;
 }
@@ -22,7 +22,6 @@ export default function PetitionsPage() {
   const { getId } = useUser();
   const [activeSection, setActiveSection] = useState("Pendientes");
 
-
   // LO NUEVO
   const [match, params] = useRoute("/peticiones/:estado");
   const estado = match ? params.estado : "pendientes";
@@ -31,10 +30,9 @@ export default function PetitionsPage() {
     if (estado === "pendientes") handlePendingPetitionsFetch(0);
   }, [estado]);
 
-
   const handlePendingPetitionsFetch = async (page: number = 0) => {
     setLoading(true);
-    try {      
+    try {
       const res = await fetch(
         `http://localhost:8081/peticion/owner/${getId()}?page=${page}`
       );
@@ -47,10 +45,9 @@ export default function PetitionsPage() {
         }
         return;
       }
-        
+
       const json: PetitionsSummaryResponse = await res.json();
       setData(json);
-
     } catch {
       setData(null);
     } finally {

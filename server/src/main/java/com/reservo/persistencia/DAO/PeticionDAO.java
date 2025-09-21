@@ -38,12 +38,12 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
     @Query("select count(p) > 0 from Peticion p where p.inmueble.owner.id = :ownerId and p.id = :petitionId")
     boolean isPetitionOfOwner(@Param("petitionId") Long petitionId, @Param("ownerId") Long ownerId);
 
-    @Query("select count(p) > 0 from Peticion p where p.id = :petitionId and  (p.fecha < :date or (p.fecha = :date and p.horaInicio < :horaActual))")
+    @Query("select count(p) > 0 from Peticion p where p.id = :petitionId and  (p.fechaDelEvento < :date or (p.fechaDelEvento = :date and p.horaInicio < :horaActual))")
     boolean itsDeprecatedFromDateAndTime(@Param("petitionId") Long petitionId, @Param("date") LocalDate date, @Param("horaActual") LocalTime horaActual);
 
-
-    @Query("select count(p) > 0 from Peticion p where p.inmueble.id = :inmuebleId and TYPE(p.estado) = Vigente and p.fecha = :fecha and (p.horaInicio < :horaFin and p.horaFin > :horaInicio)" )
+    @Query("select count(p) > 0 from Peticion p where p.inmueble.id = :inmuebleId and TYPE(p.estado) = Vigente and p.fechaDelEvento = :fecha and (p.horaInicio < :horaFin and p.horaFin > :horaInicio)" )
     boolean wasAcceptedInSameTimeRange(@Param("inmuebleId") Long id,@Param("fecha") LocalDate fecha, @Param("horaInicio") LocalTime horaInicio, @Param("horaFin") LocalTime horaFin);
 
-
+    @Query("select p from Peticion p where p.id = :peticionId and TYPE(p.estado) = Pendiente" )
+    Optional<Peticion> findPendienteById(@Param("peticionId") Long peticionId);
 }

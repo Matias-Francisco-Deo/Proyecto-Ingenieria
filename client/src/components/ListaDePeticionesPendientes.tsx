@@ -1,8 +1,8 @@
-import type { PeticionPendiente } from "@/types/types";
+import type { PendingPetitionDraft } from "@/types/types";
 import { Link } from "wouter";
 
 interface ListaResultadosProps {
-  resultados: PeticionPendiente[];
+  resultados: PendingPetitionDraft[];
 }
 
 export default function ListaDePeticionesPendientes({
@@ -12,7 +12,7 @@ export default function ListaDePeticionesPendientes({
     <ul className="mt-4 w-3/4 bg-gray-900 rounded-2xl p-10 min-w-max">
       <h1 className="text-3xl ">Peticiones pendientes:</h1>
       {resultados.map((petition) => (
-        <Link href={`/peticiones/pendiente/${petition.id}`}>
+        <Link href={`/peticion/pendiente?id=${petition.id}`}>
           <li
             key={petition.id}
             className="rounded-2xl bg-gray-700 mt-2 pl-2 p-2 flex flex-row justify-between min-w-80"
@@ -26,7 +26,7 @@ export default function ListaDePeticionesPendientes({
                 <strong>Fecha del evento: </strong>
                 {petition.event_date}
               </p>
-              
+
               <p>
                 <strong>Empieza: </strong>
                 {petition.requested_date_start}

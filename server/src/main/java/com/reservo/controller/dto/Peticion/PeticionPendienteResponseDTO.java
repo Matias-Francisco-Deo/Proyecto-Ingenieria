@@ -26,8 +26,8 @@ public record PeticionPendienteResponseDTO(
                 in.getDescription(),
                 in.getUbication(),
                 peticion.getPrice(),
-                STR."\{peticion.getFecha()} \{peticion.getHoraInicio().toString()}",
-                STR."\{peticion.getFecha()} \{peticion.getHoraFin().toString()}",
+                STR."\{peticion.getFechaDelEvento()} \{peticion.getHoraInicio().toString()}",
+                STR."\{peticion.getFechaDelEvento()} \{peticion.getHoraFin().toString()}",
                 in.getCapacity(),
                 peticion.getCliente().getName(),
                 peticion.getCliente().getEmail()

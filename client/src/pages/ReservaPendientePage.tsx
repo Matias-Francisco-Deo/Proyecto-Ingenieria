@@ -4,13 +4,14 @@ import { useUser } from "@/hooks/useUser";
 import type { ApproveResponse, PendingPetition } from "@/types/types";
 
 export default function ReservaPendientePage() {
-  const [petition, setPetition] = useState<PendingPetition | null>();
+  const [petition, setPetition] = useState<PendingPetition | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
   const [rejError, setRejError] = useState("");
   const [generalError, setGeneralError] = useState("");
+  const [approvalMessage, setApprovalMessage] = useState("");
   const rejectionMotive = useRef<HTMLTextAreaElement>(null);
   const { getId } = useUser();
 
@@ -18,11 +19,14 @@ export default function ReservaPendientePage() {
   const id = params.get("id");
 
   useEffect(() => {
+    console.log(`http://localhost:8081/peticion/pendiente/${id}`);
     if (!id) return;
 
     const fetchInmueble = async () => {
       try {
-        const res = await fetch(`http://localhost:8081/peticion/pendiente/${id}`);
+        const res = await fetch(
+          `http://localhost:8081/peticion/pendiente/${id}`
+        );
         if (!res.ok) throw new Error("Reserva no encontrada.");
         const data = await res.json();
         setPetition(data);
@@ -62,9 +66,7 @@ export default function ReservaPendientePage() {
   return (
     <div className="p-6 text-white border border-gray-700 rounded-xl ">
       {popUpRechazo()}
-      <div className="flex justify-between items-center mb-4">
-        <div className="border border-gray-600 rounded-lg px-4 py-2 ml-4 flex items-center gap-3"></div>
-      </div>
+
       <div className="flex gap-6">
         <div className="w-3/5">
           <Carrusel
@@ -131,6 +133,7 @@ export default function ReservaPendientePage() {
               </button>
             </div>
           </div>
+          <p className="text-green-500">{approvalMessage}</p>
           <p className="text-red-500">{generalError}</p>
         </div>
       </div>
@@ -156,7 +159,7 @@ export default function ReservaPendientePage() {
         >
           <textarea
             placeholder="Ingrese el motivo..."
-            className="w-full resize-none h-20 bg-gray-800 placeholder-white rounded-xl"
+            className="p-2 w-full resize-none h-20 bg-gray-800 placeholder-white rounded-xl"
             ref={rejectionMotive}
           ></textarea>
           <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
@@ -192,13 +195,17 @@ export default function ReservaPendientePage() {
         peticionId: id,
       }),
     }).catch(() => {
-      setGeneralError("Hubo un error inesperado.");
+      setGeneralError("No se pudo concretar la operación.");
       return;
     });
 
-    console.log(response);
-
     if (!response) return;
+
+    if (response.ok) {
+      setApprovalMessage("Petición aceptada");
+
+      location.href = "/peticiones/pendientes";
+    }
 
     const approveResponse = (await response.json()) as ApproveResponse;
 
@@ -206,7 +213,6 @@ export default function ReservaPendientePage() {
       setGeneralError(approveResponse.error);
       return;
     }
-    location.href = "/peticiones/pendientes";
   }
 
   async function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
@@ -222,7 +228,7 @@ export default function ReservaPendientePage() {
         motivoDeRechazo: rejectionMotive.current?.value,
       }),
     }).catch(() => {
-      setRejError("Hubo un error inesperado.");
+      setRejError("No se pudo concretar la operación.");
       return;
     });
     if (response) setIsRejecting(false);

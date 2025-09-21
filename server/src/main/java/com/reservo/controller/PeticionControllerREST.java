@@ -1,9 +1,10 @@
 package com.reservo.controller;
 
 import com.reservo.controller.dto.Peticion.*;
+import com.reservo.controller.dto.PeticionSummaryDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
-import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;

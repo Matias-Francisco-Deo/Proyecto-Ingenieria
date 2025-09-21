@@ -98,21 +98,20 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public void reject(RechazoDTO rechazoDTO) {
         if (!peticionDAO.isPetitionOfOwner(rechazoDTO.peticionId(), rechazoDTO.ownerId())) return;
-        Peticion peticion = peticionDAO.findById(rechazoDTO.peticionId()).get(); // no debería tirar error porque el check de arriba hace return si no existe también
+        Peticion peticion = peticionDAO.findPendienteById(rechazoDTO.peticionId()).get(); // no debería tirar error porque el check de arriba hace return si no existe también
         peticion.rechazar(rechazoDTO.motivoDeRechazo());
         peticionDAO.save(peticion);
     }
 
     @Override
     public void approve(Long peticionId) {
-        Optional<Peticion> optionalPeticion = peticionDAO.findById(peticionId);
+        Optional<Peticion> optionalPeticion = peticionDAO.findPendienteById(peticionId);
         if (optionalPeticion.isEmpty()) return;
 
         Peticion peticion = optionalPeticion.get();
-
         if (peticionDAO.itsDeprecatedFromDateAndTime(peticionId, LocalDate.now(), LocalTime.now())) throw new PeticionVencida("La petición esta vencida.");
         Long inmuebleId = peticion.getInmueble().getId();
-        if (peticionDAO.wasAcceptedInSameTimeRange(inmuebleId, peticion.getFecha(), peticion.getHoraInicio(), peticion.getHoraFin())) throw new HorarioOcupado("El horario ya esta ocupado por otra petición.");
+        if (peticionDAO.wasAcceptedInSameTimeRange(inmuebleId, peticion.getFechaDelEvento(), peticion.getHoraInicio(), peticion.getHoraFin())) throw new HorarioOcupado("El horario ya esta ocupado por otra petición.");
 
         peticion.aprobar();
         peticionDAO.save(peticion);

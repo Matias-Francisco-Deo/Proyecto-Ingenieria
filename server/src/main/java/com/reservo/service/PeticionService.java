@@ -1,10 +1,9 @@
 package com.reservo.service;
 
-import com.reservo.modelo.Peticion;
+import com.reservo.modelo.reserva.Peticion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
-import com.reservo.modelo.reserva.Peticion;
 
 import java.time.LocalDate;
 import java.util.List;

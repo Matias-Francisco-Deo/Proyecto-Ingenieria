@@ -1,6 +1,7 @@
 package com.reservo.controller.dto;
 
-import com.reservo.modelo.Peticion;
+
+import com.reservo.modelo.reserva.Peticion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

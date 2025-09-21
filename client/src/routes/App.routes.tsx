@@ -18,7 +18,6 @@ const ReservaPendientePage = lazy(
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
-
   return (
     <MainLayout>
       <Suspense fallback={<div>Loading...</div>}>
@@ -30,13 +29,9 @@ export function AppRoutes() {
           <Route path="/publicacion" component={Publicacion} />
           <Route path="/peticion" component={PeticionForm} />
           <Route path="/peticion/pendiente" component={ReservaPendientePage} />
-                    
-                    <Route
-                        path="/peticiones/:estado"
-                        component={PetitionsPage} />
-                    <Route
-                        path="/peticiones"
-                        component={PetitionsPage} />
+
+          <Route path="/peticiones/:estado" component={PetitionsPage} />
+          <Route path="/peticiones" component={PetitionsPage} />
           {/* Rutas protegidas */}
           {/* <Route path="/home" component={HomePage} />
 
@@ -50,11 +45,6 @@ export function AppRoutes() {
           {/* Ruta 404 */}
           {/* Ruta 404 */}
 
-          <Route component={Page404} />
-        </Switch>
-      </Suspense>
-    </MainLayout>
-  );
           <Route component={Page404} />
         </Switch>
       </Suspense>

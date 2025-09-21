@@ -133,7 +133,7 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan.getInmueble().getId(), peticionDeAlan.getFecha(), peticionDeAlan.getHoraInicio(), peticionDeAlan.getHoraFin()));
+        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan.getInmueble().getId(), peticionDeAlan.getFechaDelEvento(), peticionDeAlan.getHoraInicio(), peticionDeAlan.getHoraFin()));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFecha(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
+        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFechaDelEvento(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
     }
 
     @Test
@@ -163,7 +163,7 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFecha(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
+        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFechaDelEvento(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class PeticionDAOTests {
 
         peticionDAO.save(peticionDeprecada);
 
-        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeprecada.getInmueble().getId(), peticionDeprecada.getFecha(), peticionDeprecada.getHoraInicio(), peticionDeprecada.getHoraFin()));
+        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeprecada.getInmueble().getId(), peticionDeprecada.getFechaDelEvento(), peticionDeprecada.getHoraInicio(), peticionDeprecada.getHoraFin()));
     }
 
     @Test
@@ -224,6 +224,50 @@ public class PeticionDAOTests {
         Peticion approvedPeticionFromDb =  peticionDAO.findById(peticionDeJorge.getId()).get();
 
         assertInstanceOf(Vigente.class, approvedPeticionFromDb.getEstado());
+    }
+
+    @Test
+    void unaPeticionYaAprobadaNoSeBuscaComoPendiente() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+
+        peticionDAO.save(peticionDeJorge);
+
+        Peticion peticionFromDb =  peticionDAO.findById(peticionDeJorge.getId()).get();
+        peticionFromDb.aprobar();
+        peticionDAO.save(peticionFromDb);
+
+        assertTrue(peticionDAO.findPendienteById(peticionDeJorge.getId()).isEmpty());
+    }
+
+    @Test
+    void unaPeticionRechazadaNoSeBuscaComoPendiente() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+
+        peticionDAO.save(peticionDeJorge);
+
+        Peticion peticionFromDb =  peticionDAO.findById(peticionDeJorge.getId()).get();
+        peticionFromDb.rechazar("NO ME GUSTAN LAS MAYUS!!!!!");
+        peticionDAO.save(peticionFromDb);
+
+        assertTrue(peticionDAO.findPendienteById(peticionDeJorge.getId()).isEmpty());
+    }
+
+    @Test
+    void unaPeticionPendienteSeBusca() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+
+        peticionDAO.save(peticionDeJorge);
+
+        assertFalse(peticionDAO.findPendienteById(peticionDeJorge.getId()).isEmpty());
     }
 
 
