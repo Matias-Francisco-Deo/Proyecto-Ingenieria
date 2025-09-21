@@ -20,4 +20,5 @@ public interface PeticionService {
     void approve(Long id);
     Page<Peticion> findAllPendientByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllApproveByOwnerId(Long id, Pageable pageable);
+    Page<Peticion> findAllRejectByOwnerId(Long id, Pageable pageable);
 }

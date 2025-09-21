@@ -2,7 +2,7 @@ import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticion
 import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
-import type { PendingPetitionDraft, PeticionPendiente } from "@/types/types";
+import type { PendingPetitionDraft, PendingPetition } from "@/types/types";
 import { useEffect, useState } from "react";
 // import { useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -11,7 +11,7 @@ import ListaDePeticionesDeprecadas from "@/components/peticiones/ListaDePeticion
 import ListaDePeticionesCanceladasRechazadas from "@/components/peticiones/ListaDePeticionesCanceladasRechazadas";
 
 interface PetitionsSummaryResponse {
-  content: PeticionPendiente[];
+  content: PendingPetitionDraft[];
   totalPages: number;
   number: number;
 }
@@ -31,7 +31,8 @@ export default function PetitionsPage() {
 
   useEffect(() => {
     if (estado === "pendientes") handlePendingPetitionsFetch(0);
-    if (estado === "vigentes") handleApprovegPetitionsFetch(0);
+    if (estado === "vigentes") handleApprovePetitionsFetch(0);
+    if (estado === "canceladas-rechazadas") handleRejectPetitionsFetch(0);
   }, [estado]);
 
   const handlePendingPetitionsFetch = async (page: number = 0) => {
@@ -59,11 +60,36 @@ export default function PetitionsPage() {
     }
   };
 
-  const handleApprovegPetitionsFetch = async (page: number = 0) => {
+  const handleApprovePetitionsFetch = async (page: number = 0) => {
     setLoading(true);
     try {
       const res = await fetch(
         `http://localhost:8081/peticion/owner/vigente/${getId()}?page=${page}`
+      );
+
+      if (!res.ok) {
+        if (res.status === 404) {
+          setData(null);
+        } else {
+          throw new Error(`Error HTTP: ${res.status}`);
+        }
+        return;
+      }
+
+      const json: PetitionsSummaryResponse = await res.json();
+      setData(json);
+    } catch {
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRejectPetitionsFetch = async (page: number = 0) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:8081/peticion/owner/cancelado/${getId()}?page=${page}`
       );
 
       if (!res.ok) {

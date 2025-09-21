@@ -126,4 +126,9 @@ public class PeticionServiceImpl implements PeticionService {
     public Page<Peticion> findAllApproveByOwnerId(Long userId, Pageable pageable) {
         return peticionDAO.findAllApproveByOwnerId(userId, pageable);
     }
+
+    @Override
+    public Page<Peticion> findAllRejectByOwnerId(Long userId, Pageable pageable) {
+        return peticionDAO.findAllRejectByOwnerId(userId, pageable);
+    }
 }

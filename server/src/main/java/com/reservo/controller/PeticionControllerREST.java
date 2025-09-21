@@ -91,6 +91,20 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(peticiones);
     }
 
+    @GetMapping("/owner/cancelado/{id}")
+    public ResponseEntity<Page<PeticionSummaryDTO>> findAllRejectByOwnerId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<Peticion> findById = this.peticionService.findAllRejectByOwnerId(id, PageRequest.of(page, 10));
+
+        if (findById.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<PeticionSummaryDTO> peticiones = findById.map(PeticionSummaryDTO::desdeModelo);
+
+        return ResponseEntity.ok(peticiones);
+    }
+
 
     @GetMapping("/pendiente/{id}")
     public ResponseEntity<PeticionPendienteResponseDTO> getPeticionById(@PathVariable Long id) {
