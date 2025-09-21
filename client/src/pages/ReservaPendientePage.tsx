@@ -1,42 +1,28 @@
 import { useState, useEffect } from "react";
 import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
-// import { Link } from "wouter";
+import type { ApproveResponse, PendingPetition } from "@/types/types";
 
-type PendingPetition = {
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number;
-  date_start: string;
-  date_end: string;
-  capacity: number;
-  client_name: string;
-  client_email: string;
-};
-
-export default function Publicacion() {
+export default function ReservaPendientePage() {
   const [petition, setPetition] = useState<PendingPetition | null>();
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
-  const [motivo, setMotivo] = useState("");
-
+  const [rejError, setRejError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const rejectionMotive = useRef<HTMLTextAreaElement>(null);
   const { getId } = useUser();
-  
-  const params = new URLSearchParams(window.location.search);
-  const peticionId = params.get("id");
-  const userId = getId();
 
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
   useEffect(() => {
-    if (!peticionId) return;
+    if (id) return;
 
     const fetchInmueble = async () => {
       try {
-        const res = await fetch(`http://localhost:8081/peticion/pendiente/${peticionId}`);
+        const res = await fetch(`http://localhost:8081/peticion/pendiente/${id}`);
         if (!res.ok) throw new Error("Reserva no encontrada.");
         const data = await res.json();
         setPetition(data);
@@ -49,7 +35,7 @@ export default function Publicacion() {
     const fetchImages = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8081/peticion/pendiente/${peticionId}/images`
+          `http://localhost:8081/peticion/pendiente/${id}/images`
         );
         if (!res.ok) throw new Error("Imágenes no encontradas.");
         const data = await res.json();
@@ -64,7 +50,7 @@ export default function Publicacion() {
 
     fetchInmueble();
     fetchImages();
-  }, [peticionId]);
+  }, [id]);
 
   const nextImage = () => setCurrentIndex((prev) => (prev + 1) % images.length);
   const prevImage = () =>
@@ -132,8 +118,8 @@ export default function Publicacion() {
 
             <div className="flex mt-6 gap-4">
               <button
-                onClick={() => approvePetition()}
                 className="bg-green-900 hover:bg-green-500 text-white font-bold py-2 px-7 rounded-xl cursor-pointer"
+                onClick={(evt) => approvePetition(evt)}
               >
                 Aceptar
               </button>
@@ -145,6 +131,7 @@ export default function Publicacion() {
               </button>
             </div>
           </div>
+          <p className="text-red-500">{generalError}</p>
         </div>
       </div>
     </div>
@@ -169,13 +156,13 @@ export default function Publicacion() {
         >
           <textarea
             placeholder="Ingrese el motivo..."
-            value={motivo}
-            onChange={(e) => setMotivo(e.target.value)}
             className="w-full resize-none h-20 bg-gray-800 placeholder-white rounded-xl"
+            ref={rejectionMotive}
           ></textarea>
           <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
             Confirmar el rechazo
           </button>
+          <p className="text-red-500">{rejError}</p>
         </form>
         <div className="top-0 right-0 absolute ">
           <button
@@ -191,53 +178,54 @@ export default function Publicacion() {
       </div>
     );
   }
-  
-  async function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
-    evt.preventDefault();
-    
-    try {
-      const response = await fetch(`http://localhost:8081/peticion/rechazar`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          ownerId: userId,
-          peticionId: peticionId,
-          motivoDeRechazo: motivo
-        }),
-      });
 
-      if (!response.ok) {
-        throw new Error("Error al rechazar la petición");
-      }
-    } catch (err) {
-      console.error(err);
+  async function approvePetition(
+    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    evt.preventDefault();
+    const response = await fetch("http://localhost:8081/peticion/aprobar", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        peticionId: id,
+      }),
+    }).catch(() => {
+      setGeneralError("Hubo un error inesperado.");
+      return;
+    });
+
+    console.log(response);
+
+    if (!response) return;
+
+    const approveResponse = (await response.json()) as ApproveResponse;
+
+    if (approveResponse.error) {
+      setGeneralError(approveResponse.error);
+      return;
     }
-    setIsRejecting(false);
     location.href = "/peticiones/pendientes";
   }
 
-  async function approvePetition() {
-    try {
-      const response = await fetch(`http://localhost:8081/peticion/aprobar`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          peticionId: peticionId
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al aceptar la petición");
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  async function rejectPetition(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
+    const response = await fetch("http://localhost:8081/peticion/rechazar", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ownerId: getId(),
+        peticionId: id,
+        motivoDeRechazo: rejectionMotive.current?.value,
+      }),
+    }).catch(() => {
+      setRejError("Hubo un error inesperado.");
+      return;
+    });
+    if (response) setIsRejecting(false);
     location.href = "/peticiones/pendientes";
   }
 }

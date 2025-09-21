@@ -2,6 +2,8 @@ package com.reservo.controller.exception;
 
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.peticion.HorarioOcupado;
+import com.reservo.service.exception.peticion.PeticionVencida;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +28,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(CredencialesIncorrectas.class)
     public ResponseEntity<DTOResponseError> wrongCredentials(CredencialesIncorrectas ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PeticionVencida.class)
+    public ResponseEntity<DTOResponseError> wrongCredentials(PeticionVencida ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HorarioOcupado.class)
+    public ResponseEntity<DTOResponseError> wrongCredentials(HorarioOcupado ex) {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
