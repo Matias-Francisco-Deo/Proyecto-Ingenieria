@@ -2,13 +2,16 @@ import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticion
 import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
-import type { PendingPetitionDraft, PendingPetition } from "@/types/types";
+import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
 // import { useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import ListaDePeticionesVigentes from "@/components/peticiones/ListaDePeticionesVigentes";
 import ListaDePeticionesDeprecadas from "@/components/peticiones/ListaDePeticionesDeprecadas";
 import ListaDePeticionesCanceladasRechazadas from "@/components/peticiones/ListaDePeticionesCanceladasRechazadas";
+import PeticionesPendientes from "@/components/peticiones/PeticionesPendientes";
+import PeticionesCanceladas from "@/components/peticiones/PeticionesCanceladas";
+import PeticionesVigentes from "@/components/peticiones/PeticionesVigentes";
 
 interface PetitionsSummaryResponse {
   content: PendingPetitionDraft[];
@@ -23,103 +26,37 @@ export default function PetitionsPage() {
   const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
   const { getId } = useUser();
-  const [activeSection, setActiveSection] = useState("Pendientes");
+  const [activeSection, setActiveSection] = useState("");
 
-  // LO NUEVO
   const [match, params] = useRoute("/mis-peticiones/:estado");
-  const estado = match ? params.estado : "pendientes";
+  const estadoURL = match ? params.estado : "pendientes";
 
   useEffect(() => {
-    if (estado === "pendientes") handlePendingPetitionsFetch(0);
-    if (estado === "vigentes") handleApprovePetitionsFetch(0);
-    if (estado === "canceladas-rechazadas") handleRejectPetitionsFetch(0);
-  }, [estado]);
+    switch (estadoURL) {
+      case "pendientes":
+        setActiveSection("Pendientes");
 
-  const handlePendingPetitionsFetch = async (page: number = 0) => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `http://localhost:8081/peticion/owner/pendiente/${getId()}?page=${page}`
-      );
+        break;
+      case "vigentes":
+        setActiveSection("Vigentes");
+        break;
+      case "canceladas-rechazadas":
+        setActiveSection("Canceladas/Rechazadas");
 
-      if (!res.ok) {
-        if (res.status === 404) {
-          setData(null);
-        } else {
-          throw new Error(`Error HTTP: ${res.status}`);
-        }
-        return;
-      }
-
-      const json: PetitionsSummaryResponse = await res.json();
-      setData(json);
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
+        break;
     }
-  };
+  }, [estadoURL]);
 
-  const handleApprovePetitionsFetch = async (page: number = 0) => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `http://localhost:8081/peticion/owner/vigente/${getId()}?page=${page}`
-      );
-
-      if (!res.ok) {
-        if (res.status === 404) {
-          setData(null);
-        } else {
-          throw new Error(`Error HTTP: ${res.status}`);
-        }
-        return;
-      }
-
-      const json: PetitionsSummaryResponse = await res.json();
-      setData(json);
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRejectPetitionsFetch = async (page: number = 0) => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `http://localhost:8081/peticion/owner/cancelado/${getId()}?page=${page}`
-      );
-
-      if (!res.ok) {
-        if (res.status === 404) {
-          setData(null);
-        } else {
-          throw new Error(`Error HTTP: ${res.status}`);
-        }
-        return;
-      }
-
-      const json: PetitionsSummaryResponse = await res.json();
-      setData(json);
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getListForActiveSection = (content: PendingPetitionDraft[]) => {
+  const getListForActiveSection = () => {
     switch (activeSection) {
       case "Pendientes":
-        return <ListaDePeticionesPendientes resultados={content} />;
+        return <PeticionesPendientes></PeticionesPendientes>;
       case "Vigentes":
-        return <ListaDePeticionesVigentes resultados={content} />;
+        return <PeticionesVigentes></PeticionesVigentes>;
       case "Deprecadas":
-        return <ListaDePeticionesDeprecadas resultados={content} />;
+        return <div>No hay peticiones</div>;
       case "Canceladas/Rechazadas":
-        return <ListaDePeticionesCanceladasRechazadas resultados={content} />;
+        return <PeticionesCanceladas></PeticionesCanceladas>;
       default:
         return null;
     }
@@ -154,22 +91,7 @@ export default function PetitionsPage() {
             onClick={() => setLocation("/mis-peticiones/canceladas-rechazadas")}
           ></SectionSelectButton>
         </div>
-        {loading && <p>Cargando...</p>}
-        {!loading && data === null && (
-          <p className="text-white-500 mt-2">No hay peticiones.</p>
-        )}
-        {!loading && data && data.content.length > 0 && (
-          <div className="flex flex-col items-center ">
-            {getListForActiveSection(data.content)}
-            <div className="mt-4 bottom-6 sticky">
-              <Paginacion
-                paginaActual={data.number + 1}
-                totalPaginas={data.totalPages}
-                onPageChange={(page) => handlePendingPetitionsFetch(page - 1)}
-              />
-            </div>
-          </div>
-        )}
+        {getListForActiveSection()}
       </div>
     </div>
   );
