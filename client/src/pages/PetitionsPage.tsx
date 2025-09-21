@@ -23,7 +23,7 @@ export default function PetitionsPage() {
   const [activeSection, setActiveSection] = useState("Pendientes");
 
   // LO NUEVO
-  const [match, params] = useRoute("/peticiones/:estado");
+  const [match, params] = useRoute("/mis-peticiones/:estado");
   const estado = match ? params.estado : "pendientes";
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function PetitionsPage() {
             sectionName="Pendientes"
             activeSection={activeSection}
             setActive={setActiveSection}
-            onClick={() => setLocation("/peticiones/pendientes")}
+            onClick={() => setLocation("/mis-peticiones/pendientes")}
           ></SectionSelectButton>
           <SectionSelectButton
             sectionName="Vigentes"

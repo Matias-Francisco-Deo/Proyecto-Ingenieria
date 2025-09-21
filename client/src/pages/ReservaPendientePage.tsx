@@ -19,7 +19,6 @@ export default function ReservaPendientePage() {
   const id = params.get("id");
 
   useEffect(() => {
-    console.log(`http://localhost:8081/peticion/pendiente/${id}`);
     if (!id) return;
 
     const fetchInmueble = async () => {
@@ -204,7 +203,7 @@ export default function ReservaPendientePage() {
     if (response.ok) {
       setApprovalMessage("Petición aceptada");
 
-      location.href = "/peticiones/pendientes";
+      location.href = "/mis-peticiones/pendientes";
     }
 
     const approveResponse = (await response.json()) as ApproveResponse;
@@ -232,6 +231,6 @@ export default function ReservaPendientePage() {
       return;
     });
     if (response) setIsRejecting(false);
-    location.href = "/peticiones/pendientes";
+    location.href = "/mis-peticiones/pendientes";
   }
 }

@@ -34,7 +34,7 @@ export function Header({ ...props }: HeaderProps) {
         </Link>
 
         <Link
-          to={isAuthenticated ? "/peticiones" : "/signin"}
+          to={isAuthenticated ? "/mis-peticiones" : "/signin"}
           className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
         >
           Ver peticiones

@@ -27,11 +27,11 @@ export function AppRoutes() {
           <Route path="/signin" component={AuthPage} />
           <Route path="/alta-inmueble" component={PropertyPage} />
           <Route path="/publicacion" component={Publicacion} />
-          <Route path="/peticion" component={PeticionForm} />
+          <Route path="/hacer-reserva" component={PeticionForm} />
           <Route path="/peticion/pendiente" component={ReservaPendientePage} />
 
-          <Route path="/peticiones/:estado" component={PetitionsPage} />
-          <Route path="/peticiones" component={PetitionsPage} />
+          <Route path="/mis-peticiones/:estado" component={PetitionsPage} />
+          <Route path="/mis-peticiones" component={PetitionsPage} />
           {/* Rutas protegidas */}
           {/* <Route path="/home" component={HomePage} />
 
