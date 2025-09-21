@@ -26,5 +26,6 @@ export interface PeticionPendiente {
   requested_date_end: string; // con hora
   property_name: string;
   created_date: string;
+  event_date: string;
   error?: string;
 }

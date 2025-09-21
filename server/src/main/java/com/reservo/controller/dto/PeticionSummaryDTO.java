@@ -11,7 +11,8 @@ public record PeticionSummaryDTO(
         LocalTime requested_date_start,
         LocalTime requested_date_end,
         String property_name,
-        LocalDate created_date
+        LocalDate created_date,
+        LocalDate event_date
 ) {
     public static PeticionSummaryDTO desdeModelo(Peticion peticion) {
         return new PeticionSummaryDTO(
@@ -20,6 +21,8 @@ public record PeticionSummaryDTO(
                 peticion.getHoraInicio(),
                 peticion.getHoraFin(),
                 peticion.getInmueble().getName(),
-                peticion.getFechaEmision());
+                peticion.getFechaEmision(),
+                peticion.getFechaDelEvento()
+        );
     }
 }

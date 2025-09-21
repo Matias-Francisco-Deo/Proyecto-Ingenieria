@@ -23,6 +23,11 @@ export default function ListaDePeticionesPendientes({
               </p>
 
               <p>
+                <strong>Fecha del evento: </strong>
+                {petition.event_date}
+              </p>
+              
+              <p>
                 <strong>Empieza: </strong>
                 {petition.requested_date_start}
               </p>
