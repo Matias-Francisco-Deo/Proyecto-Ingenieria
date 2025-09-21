@@ -33,13 +33,13 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PeticionVencida.class)
-    public ResponseEntity<DTOResponseError> wrongCredentials(PeticionVencida ex) {
+    public ResponseEntity<DTOResponseError> deprecatedPetition(PeticionVencida ex) {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HorarioOcupado.class)
-    public ResponseEntity<DTOResponseError> wrongCredentials(HorarioOcupado ex) {
+    public ResponseEntity<DTOResponseError> horarioOcupado(HorarioOcupado ex) {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

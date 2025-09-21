@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
 import type { ApproveResponse, PendingPetition } from "@/types/types";
@@ -18,7 +18,7 @@ export default function ReservaPendientePage() {
   const id = params.get("id");
 
   useEffect(() => {
-    if (id) return;
+    if (!id) return;
 
     const fetchInmueble = async () => {
       try {
