@@ -1,14 +1,17 @@
-import ListaDePeticionesPendientes from "@/components/ListaDePeticionesPendientes";
+import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticionesPendientes";
 import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
-import type { PendingPetitionDraft } from "@/types/types";
+import type { PendingPetitionDraft, PeticionPendiente } from "@/types/types";
 import { useEffect, useState } from "react";
 // import { useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
+import ListaDePeticionesVigentes from "@/components/peticiones/ListaDePeticionesVigentes";
+import ListaDePeticionesDeprecadas from "@/components/peticiones/ListaDePeticionesDeprecadas";
+import ListaDePeticionesCanceladasRechazadas from "@/components/peticiones/ListaDePeticionesCanceladasRechazadas";
 
 interface PetitionsSummaryResponse {
-  content: PendingPetitionDraft[];
+  content: PeticionPendiente[];
   totalPages: number;
   number: number;
 }
@@ -23,7 +26,7 @@ export default function PetitionsPage() {
   const [activeSection, setActiveSection] = useState("Pendientes");
 
   // LO NUEVO
-  const [match, params] = useRoute("/mis-peticiones/:estado");
+  const [match, params] = useRoute("/peticiones/:estado");
   const estado = match ? params.estado : "pendientes";
 
   useEffect(() => {
@@ -55,6 +58,21 @@ export default function PetitionsPage() {
     }
   };
 
+  const getListForActiveSection = (content: PendingPetitionDraft[]) => {
+    switch (activeSection) {
+      case "Pendientes":
+        return <ListaDePeticionesPendientes resultados={content} />;
+      case "Vigentes":
+        return <ListaDePeticionesVigentes resultados={content} />;
+      case "Deprecadas":
+        return <ListaDePeticionesDeprecadas resultados={content} />;
+      case "Canceladas/Rechazadas":
+        return <ListaDePeticionesCanceladasRechazadas resultados={content} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex justify-center ">
       <div className="flex flex-col gap-4 p-4 ">
@@ -69,19 +87,19 @@ export default function PetitionsPage() {
             sectionName="Vigentes"
             activeSection={activeSection}
             setActive={setActiveSection}
-            onClick={() => {}}
+            onClick={() => setLocation("/mis-peticiones/vigentes")}
           ></SectionSelectButton>
           <SectionSelectButton
             sectionName="Deprecadas"
             activeSection={activeSection}
             setActive={setActiveSection}
-            onClick={() => {}}
+            onClick={() => setLocation("/mis-peticiones/deprecadas")}
           ></SectionSelectButton>
           <SectionSelectButton
             sectionName="Canceladas/Rechazadas"
             activeSection={activeSection}
             setActive={setActiveSection}
-            onClick={() => {}}
+            onClick={() => setLocation("/mis-peticiones/canceladas-rechazadas")}
           ></SectionSelectButton>
         </div>
         {loading && <p>Cargando...</p>}
@@ -90,7 +108,7 @@ export default function PetitionsPage() {
         )}
         {!loading && data && data.content.length > 0 && (
           <div className="flex flex-col items-center ">
-            <ListaDePeticionesPendientes resultados={data.content} />
+            {getListForActiveSection(data.content)}
             <div className="mt-4 bottom-6 sticky">
               <Paginacion
                 paginaActual={data.number + 1}
