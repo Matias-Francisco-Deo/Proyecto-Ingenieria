@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +45,7 @@ public class PeticionDAOTests {
     private Peticion peticionDeJorge;
     private Peticion peticionDeAlan;
     private Peticion peticionDeprecada;
+    private Peticion peticionDeprecadaDeVariosDias;
 
     @Autowired
     private InmuebleDAO inmuebleDAO;
@@ -69,6 +69,7 @@ public class PeticionDAOTests {
 //
         peticionDeAlan = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
         peticionDeprecada = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
+        peticionDeprecadaDeVariosDias = new Peticion(alan, inmueble, LocalDate.now().minusDays(10),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
         peticionDeAlan.setEstado(new Vigente());
 
     }
@@ -94,7 +95,19 @@ public class PeticionDAOTests {
 
         peticionDAO.save(peticionDeprecada);
 
-        assertTrue(peticionDAO.itsDeprecatedFromDate(peticionDeprecada.getId(), LocalDate.now()));
+        assertTrue(peticionDAO.itsDeprecatedFromDateAndTime(peticionDeprecada.getId(), LocalDate.now(), LocalTime.now()));
+    }
+
+    @Test
+    void unaPeticionDeVariosDiasAtrasSeDeprecaHoy() {
+        usuarioDAO.save(alan);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+
+        peticionDAO.save(peticionDeprecadaDeVariosDias);
+
+        assertTrue(peticionDAO.itsDeprecatedFromDateAndTime(peticionDeprecadaDeVariosDias.getId(), LocalDate.now(), LocalTime.now()));
     }
 
     @Test
@@ -106,7 +119,7 @@ public class PeticionDAOTests {
 
         peticionDAO.save(peticionDeAlan);
 
-        assertFalse(peticionDAO.itsDeprecatedFromDate(peticionDeAlan.getId(), LocalDate.now()));
+        assertFalse(peticionDAO.itsDeprecatedFromDateAndTime(peticionDeAlan.getId(), LocalDate.now(), LocalTime.now()));
     }
 
     @Test
@@ -120,7 +133,7 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan.getInmueble().getId(), peticionDeAlan.getHoraInicio(), peticionDeAlan.getHoraFin()));
+        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan.getInmueble().getId(), peticionDeAlan.getFecha(), peticionDeAlan.getHoraInicio(), peticionDeAlan.getHoraFin()));
     }
 
     @Test
@@ -135,11 +148,11 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
+        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFecha(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
     }
 
     @Test
-    void unaPeticionYaFueAceptadaParaEseRangoHorarioTerminaEnMismoHorarioEnQueEmpiezaElOtro() {
+    void unaPeticionYaFueAceptadaParaEseRangoHorarioTerminaEnMismoHorarioEnQueEmpiezaElOtroNoOcurreNada() {
         Peticion peticionDeAlan2 = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(30), LocalTime.now().plusMinutes(40), 100D);
         usuarioDAO.save(alan);
         usuarioDAO.save(jorge);
@@ -150,7 +163,7 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
+        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFecha(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
     }
 
     @Test
@@ -162,7 +175,7 @@ public class PeticionDAOTests {
 
         peticionDAO.save(peticionDeprecada);
 
-        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeprecada.getInmueble().getId(), peticionDeprecada.getHoraInicio(), peticionDeprecada.getHoraFin()));
+        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeprecada.getInmueble().getId(), peticionDeprecada.getFecha(), peticionDeprecada.getHoraInicio(), peticionDeprecada.getHoraFin()));
     }
 
     @Test
