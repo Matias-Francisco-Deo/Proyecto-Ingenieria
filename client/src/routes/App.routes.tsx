@@ -1,25 +1,24 @@
 import { MainLayout } from "../layouts/MainLayout";
 import { Suspense, lazy } from "react";
 import { Route, Switch } from "wouter";
-// import { ProtectedRoute } from "./ProtectedRoute";
 
 // Pages
 const HomePage = lazy(() => import("../pages/HomePage"));
-// const GifsDetails = lazy(() => import("../pages/GifDetails"));
-// const SearchPage = lazy(() => import("../pages/SearchPage"));
+
 // const Page404 = lazy(() => import("../pages/Page404"));
-// const UploadPage = lazy(() => import("../pages/UploadPage"));
-// const LoginPage = lazy(() => import("../pages/LoginPage"));
+
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/PeticionForm"));
+const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const ReservaPendientePage = lazy(
   () => import("../pages/ReservaPendientePage")
 );
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
+
   return (
     <MainLayout>
       <Suspense fallback={<div>Loading...</div>}>
@@ -31,6 +30,13 @@ export function AppRoutes() {
           <Route path="/publicacion" component={Publicacion} />
           <Route path="/peticion" component={PeticionForm} />
           <Route path="/peticion/pendiente" component={ReservaPendientePage} />
+                    
+                    <Route
+                        path="/peticiones/:estado"
+                        component={PetitionsPage} />
+                    <Route
+                        path="/peticiones"
+                        component={PetitionsPage} />
           {/* Rutas protegidas */}
           {/* <Route path="/home" component={HomePage} />
 
@@ -42,7 +48,13 @@ export function AppRoutes() {
           <ProtectedRoute path="/upload" component={UploadPage} /> */}
 
           {/* Ruta 404 */}
+          {/* Ruta 404 */}
 
+          <Route component={Page404} />
+        </Switch>
+      </Suspense>
+    </MainLayout>
+  );
           <Route component={Page404} />
         </Switch>
       </Suspense>

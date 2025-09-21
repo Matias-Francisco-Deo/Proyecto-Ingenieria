@@ -8,6 +8,8 @@ import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +55,26 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(horarios);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PeticionResponseDTO> findPeticionById(@PathVariable Long id){
+        if (this.peticionService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
+        Peticion peticion = peticionService.findById(id).get();
+        return ResponseEntity.ok(PeticionResponseDTO.desdeModelo(peticion));
+    }
+
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<Page<PeticionSummaryDTO>> findAllByOwnerId(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<Peticion> findById = this.peticionService.findAllByOwnerId(id, PageRequest.of(page, 10));
+
+        if (findById.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<PeticionSummaryDTO> peticiones = findById.map(PeticionSummaryDTO::desdeModelo);
+
+        return ResponseEntity.ok(peticiones);
+    }
     @GetMapping("/pendiente/{id}")
     public ResponseEntity<PeticionPendienteResponseDTO> getPeticionById(@PathVariable Long id) {
         Optional<Peticion> peticion = this.peticionService.findById(id);

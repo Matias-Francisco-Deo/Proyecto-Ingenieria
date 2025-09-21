@@ -19,6 +19,17 @@ export interface Inmueble {
   error?: string;
 }
 
+export interface PeticionPendiente {
+  id: number;
+  client_name: string;
+  requested_date_start: string; // con hora
+  requested_date_end: string; // con hora
+  property_name: string;
+  created_date: string;
+  event_date: string;
+  error?: string;
+}
+
 type PendingPetition = {
   id: number;
   name: string;

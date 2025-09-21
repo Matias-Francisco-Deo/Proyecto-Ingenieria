@@ -147,6 +147,9 @@ public class PeticionServiceImplTest {
 
         inmuebleService.create(inmueble, emptyImages);
 
+//        peticion.setFechaDelEvento(LocalDate.now().minusDays(1));
+//        peticion.setHoraInicio(LocalTime.now().minusMinutes(30));
+//        peticion.setHoraFin(LocalTime.now().plusMinutes(30));
         peticionDeJorge.setFecha(LocalDate.now().minusDays(1));
         peticionDeJorge.setHoraInicio(LocalTime.now().minusMinutes(30));
         peticionDeJorge.setHoraFin(LocalTime.now().plusMinutes(30));

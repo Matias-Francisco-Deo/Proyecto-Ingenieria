@@ -2,37 +2,36 @@
 // import { useQuery } from "@tanstack/react-query";
 
 export function useUser() {
-    const getKey = () => localStorage.getItem("key");
-    const getUsername = () => localStorage.getItem("username");
-    const getId = () => Number(localStorage.getItem("userId"));
+  const getKey = () => localStorage.getItem("key");
+  const getUsername = () => localStorage.getItem("username");
+  const getId = () => Number(localStorage.getItem("userId"));
 
-    const setKey = (key: string) => localStorage.setItem("key", key);
-    const setUsername = (username: string) =>
-        localStorage.setItem("username", username);
+  const setKey = (key: string) => localStorage.setItem("key", key);
+  const setUsername = (username: string) =>
+    localStorage.setItem("username", username);
 
-    const setId = (id: number) =>
-        localStorage.setItem("userId", id.toString());
+  const setId = (id: number) => localStorage.setItem("userId", id.toString());
 
-    //   const { data } = useQuery<UserInfo>({
-    //     queryKey: ["me"],
-    //     queryFn: () => getUser(getKey() || ""), // Evitar pasar `undefined`
-    //   });
+  //   const { data } = useQuery<UserInfo>({
+  //     queryKey: ["me"],
+  //     queryFn: () => getUser(getKey() || ""), // Evitar pasar `undefined`
+  //   });
 
-    //   const getUserInfo = async (key: string | null): Promise<UserInfo> => {
-    //     if (!key) return { user_name: "Guest", key: "" };
-    //     const resp = await fetch(
-    //       `http://localhost:8081/auth?username=${getUsername()}&pass=${}`
-    //     );
-    //     return resp.json();
-    //   };
+  //   const getUserInfo = async (key: string | null): Promise<UserInfo> => {
+  //     if (!key) return { user_name: "Guest", key: "" };
+  //     const resp = await fetch(
+  //       `http://localhost:8081/auth?username=${getUsername()}&pass=${}`
+  //     );
+  //     return resp.json();
+  //   };
 
-    return {
-        // avatar: data?.avatar,
-        setKey,
-        getKey,
-        setUsername,
-        getUsername,
-        setId,
-        getId
-    };
+  return {
+    // avatar: data?.avatar,
+    setKey,
+    getKey,
+    setUsername,
+    getUsername,
+    setId,
+    getId,
+  };
 }

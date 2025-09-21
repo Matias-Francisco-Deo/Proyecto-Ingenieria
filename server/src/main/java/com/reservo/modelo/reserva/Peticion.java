@@ -35,7 +35,7 @@ public class Peticion {
     private Double price;
 
     @Column(nullable = false)
-    private LocalDate fecha;
+    private LocalDate fechaDelEvento;
 
 
     @Column(nullable = false)
@@ -44,6 +44,8 @@ public class Peticion {
     @Column(nullable = false)
     private LocalTime horaFin;
 
+    @Column(nullable = false)
+    private LocalDate fechaEmision;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "estadoId")
@@ -54,16 +56,17 @@ public class Peticion {
 
     private PoliticasDeCancelacion politicaCancelacion;
 
-    public Peticion(Usuario cliente,Inmueble inmueble,LocalDate Fecha,LocalTime horaInicio
+    public Peticion(Usuario cliente,Inmueble inmueble,LocalDate fechaDelEvento,LocalTime horaInicio
                     ,LocalTime horaFin,Double price){
         this.cliente = cliente;
         this.inmueble = inmueble;
         this.price = price;
-        this.fecha = Fecha;
+        this.fechaDelEvento = fechaDelEvento;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.estado = new Pendiente() ;
         this.politicaCancelacion = inmueble.getCancellation();
+        this.fechaEmision = LocalDate.now();
     }
 
     public void aprobar(){
