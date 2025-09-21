@@ -9,28 +9,48 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
-const SearchPage = lazy(() => import("../pages/SearchPropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/PeticionForm"));
 const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
-  return (
-    <MainLayout>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/home" component={HomePage} />
-          <Route path="/signin" component={AuthPage} />
-          <Route path="/alta-inmueble" component={PropertyPage} />
-          <Route path="/buscador" component={SearchPage} />
-          <Route path="/publicacion" component={Publicacion} />
-          <Route path="/peticion" component={PeticionForm} />
-          <Route path="/peticiones/:estado" component={PetitionsPage} />
-          <Route path="/peticiones" component={PetitionsPage} />
-          {/* Rutas protegidas */}
-          {/* <Route path="/home" component={HomePage} />
+
+    return (
+        <MainLayout>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                    <Route
+                        path="/"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/home"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/signin"
+                        component={AuthPage}
+                    />
+                    <Route
+                        path="/alta-inmueble"
+                        component={PropertyPage}
+                    />
+                    <Route
+                        path="/publicacion" 
+                        component={Publicacion}/>
+                    <Route 
+                        path="/peticion"
+                        component={PeticionForm} />
+                    
+                    <Route
+                        path="/peticiones/:estado"
+                        component={PetitionsPage} />
+                    <Route
+                        path="/peticiones"
+                        component={PetitionsPage} />
+                    {/* Rutas protegidas */}
+                    {/* <Route path="/home" component={HomePage} />
 
           <Route path="/search/:query?" component={SearchPage} />
           <Route path="/gif/:id" component={GifsDetails} />
