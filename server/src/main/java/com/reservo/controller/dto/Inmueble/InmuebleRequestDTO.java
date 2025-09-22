@@ -8,6 +8,7 @@ import com.reservo.modelo.user.Usuario;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public record InmuebleRequestDTO(
         String name,

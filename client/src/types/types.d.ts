@@ -73,6 +73,7 @@ export interface Inmueble {
   start: string;
   end: string;
   cancellation: string;
+  availableDays: string[];
 }
 
 export interface HorarioDTO {

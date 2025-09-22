@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import BotonesCarrusel from "./BotonesCarrusel";
 
-type Props = { onDaySelect?: (date: Date) => void };
+type Props = { 
+  onDaySelect?: (date: Date) => void;
+  availableDays?: string[]; 
+};
 
-export default function CalendarioCarrusel({ onDaySelect }: Props) {
+export default function CalendarioCarrusel({ onDaySelect, availableDays }: Props) {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [isSelectingDate, setIsSelectingDate] = useState(false);
@@ -13,18 +16,30 @@ export default function CalendarioCarrusel({ onDaySelect }: Props) {
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const diasSemana = [
+    "DOMINGO",
+    "LUNES",
+    "MARTES",
+    "MIERCOLES",
+    "JUEVES",
+    "VIERNES",
+    "SABADO",
+  ];
+  
   const days = Array.from({ length: 365 }, (_, i) => {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     return d;
-  });
-
+  }).filter(d => 
+    !availableDays || availableDays.includes(diasSemana[d.getDay()])
+  );
+  
   const months = [
     "Enero",
     "Febrero",
     "Marzo",
-    "Mayo",
     "Abril",
+    "Mayo",
     "Junio",
     "Julio",
     "Agosto",
@@ -37,10 +52,12 @@ export default function CalendarioCarrusel({ onDaySelect }: Props) {
   const years = [today.getFullYear(), today.getFullYear() + 1];
 
   const scrollToDay = (index: number) => {
-    containerRef.current?.children[index].scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-    });
+    if (index >= 0 && containerRef.current?.children[index]) {
+      containerRef.current.children[index].scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+      });
+    }
   };
 
   const handleSelectDay = (day: Date) => {
@@ -51,15 +68,15 @@ export default function CalendarioCarrusel({ onDaySelect }: Props) {
 
   const handleSelectMonth = (monthIndex: number) => {
     monthIndex = monthIndex + 1;
-    const currentMonth = today.getMonth() + 1;
     monthIndex =
       selectedYear === today.getFullYear()
         ? monthIndex + today.getMonth()
         : monthIndex;
-    const day = getDayOfMonthSelection(currentMonth, monthIndex);
 
-    const date = new Date(`${selectedYear}-${monthIndex}-${day}`);
-
+    const day = getDayOfMonthSelection(monthIndex);
+    
+    const date = new Date(selectedYear, monthIndex-1, day);
+    
     handleSelectDay(date);
     setIsSelectingDate(false);
   };
@@ -184,11 +201,15 @@ export default function CalendarioCarrusel({ onDaySelect }: Props) {
     </div>
   );
 
-  function getDayOfMonthSelection(currentMonth: number, monthIndex: number) {
-    let day = 1;
-    if (today.getFullYear() === selectedYear && currentMonth === monthIndex)
-      day = today.getDate();
-    console.log(day, currentMonth, monthIndex);
-    return day;
+  function getDayOfMonthSelection(monthIndex: number) {
+    // Filtrar todos los días disponibles del mes seleccionado y año
+    // console.log(days[0])
+    const availableDaysInMonth = days.filter(
+      (d) => d.getFullYear() === selectedYear && d.getMonth() + 1 === monthIndex
+    );
+    
+    console.log(availableDaysInMonth[0].getDate());
+    // Retornar el primer día disponible del mes
+    return availableDaysInMonth[0].getDate();
   }
 }
