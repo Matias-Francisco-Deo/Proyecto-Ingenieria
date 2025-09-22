@@ -1,14 +1,8 @@
 import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticionesPendientes";
 import Paginacion from "@/components/Paginacion";
-import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
 import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
-// import { useEffect } from "react";
-import { useLocation, useRoute } from "wouter";
-import ListaDePeticionesVigentes from "@/components/peticiones/ListaDePeticionesVigentes";
-import ListaDePeticionesDeprecadas from "@/components/peticiones/ListaDePeticionesDeprecadas";
-import ListaDePeticionesCanceladasRechazadas from "@/components/peticiones/ListaDePeticionesCanceladasRechazadas";
 
 export default function PeticionesPendientes() {
   interface PetitionsSummaryResponse {

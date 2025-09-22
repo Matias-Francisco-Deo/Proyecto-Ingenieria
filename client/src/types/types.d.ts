@@ -22,6 +22,8 @@ export interface Inmueble {
 export interface PendingPetitionDraft {
   id: number;
   client_name: string;
+  client_email: string;
+  price: number;
   requested_date_start: string; // con hora
   requested_date_end: string; // con hora
   property_name: string;

@@ -9,6 +9,8 @@ import java.time.LocalTime;
 public record PeticionSummaryDTO(
         Long id,
         String client_name,
+        String client_email,
+        Double price,
         LocalTime requested_date_start,
         LocalTime requested_date_end,
         String property_name,
@@ -19,6 +21,8 @@ public record PeticionSummaryDTO(
         return new PeticionSummaryDTO(
                 peticion.getId(),
                 peticion.getCliente().getName(),
+                peticion.getCliente().getEmail(),
+                peticion.getPrice(),
                 peticion.getHoraInicio(),
                 peticion.getHoraFin(),
                 peticion.getInmueble().getName(),

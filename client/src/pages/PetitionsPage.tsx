@@ -1,31 +1,12 @@
-import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticionesPendientes";
-import Paginacion from "@/components/Paginacion";
 import SectionSelectButton from "@/components/SectionSelectButton";
-import { useUser } from "@/hooks/useUser";
-import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
-// import { useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
-import ListaDePeticionesVigentes from "@/components/peticiones/ListaDePeticionesVigentes";
-import ListaDePeticionesDeprecadas from "@/components/peticiones/ListaDePeticionesDeprecadas";
-import ListaDePeticionesCanceladasRechazadas from "@/components/peticiones/ListaDePeticionesCanceladasRechazadas";
 import PeticionesPendientes from "@/components/peticiones/PeticionesPendientes";
 import PeticionesCanceladas from "@/components/peticiones/PeticionesCanceladas";
 import PeticionesVigentes from "@/components/peticiones/PeticionesVigentes";
 
-interface PetitionsSummaryResponse {
-  content: PendingPetitionDraft[];
-  totalPages: number;
-  number: number;
-}
-
 export default function PetitionsPage() {
-  const [data, setData] = useState<
-    PetitionsSummaryResponse | null | undefined
-  >();
-  const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
-  const { getId } = useUser();
   const [activeSection, setActiveSection] = useState("");
 
   const [match, params] = useRoute("/mis-peticiones/:estado");

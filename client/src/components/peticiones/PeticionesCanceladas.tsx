@@ -1,11 +1,8 @@
-import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticionesPendientes";
 import Paginacion from "@/components/Paginacion";
-import SectionSelectButton from "@/components/SectionSelectButton";
 import { useUser } from "@/hooks/useUser";
 import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
 import ListaDePeticionesCanceladasRechazadas from "./ListaDePeticionesCanceladasRechazadas";
-// import { useEffect } from "react";
 
 export default function PeticionesCanceladas() {
   interface PetitionsSummaryResponse {

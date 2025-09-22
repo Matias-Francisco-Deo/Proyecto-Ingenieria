@@ -1,9 +1,7 @@
 import Paginacion from "@/components/Paginacion";
-
 import { useUser } from "@/hooks/useUser";
 import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
-
 import ListaDePeticionesVigentes from "@/components/peticiones/ListaDePeticionesVigentes";
 
 export default function PeticionesVigentes() {
