@@ -1,6 +1,9 @@
 package com.reservo.controller.dto.Inmueble;
 
+import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
+
+import java.util.List;
 
 public record InmuebleResponseDTO(
         Integer id,
@@ -14,8 +17,8 @@ public record InmuebleResponseDTO(
         String end,
         String cancellation,
         String ownerName,
-        //Long ownerId,
-        String ownerEmail
+        String ownerEmail,
+        List<DiasDeLaSemana> availableDays
 ) {
     public static InmuebleResponseDTO desdeModelo(Inmueble prop) {
         return new InmuebleResponseDTO(
@@ -26,7 +29,8 @@ public record InmuebleResponseDTO(
             prop.getCancellation().toString(),
             prop.getOwner().getName(),
             //prop.getOwner().getId(),
-            prop.getOwner().getEmail()
+            prop.getOwner().getEmail(),
+            prop.getAvailableDays()
         );
     }
 }

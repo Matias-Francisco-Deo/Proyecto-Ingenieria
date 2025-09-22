@@ -45,6 +45,7 @@ export default function PeticionForm() {
     fetchInmueble();
   }, [id]);
 
+
   // Ajustar alto del contenedor de horarios según info del inmueble
 
   useLayoutEffect(() => {
@@ -178,7 +179,9 @@ export default function PeticionForm() {
       <h2 className="text-3xl font-bold mb-4 text-center">Elija su horario</h2>
 
       <div className="w-[80%]">
-        <CalendarioCarrusel onDaySelect={setSelectedDate} />
+        <CalendarioCarrusel
+          onDaySelect={setSelectedDate}
+          availableDays={inmueble.availableDays ?? []} />
       </div>
 
       <div className="mt-8 flex w-[80%] gap-6 min-h-[55vh]">
