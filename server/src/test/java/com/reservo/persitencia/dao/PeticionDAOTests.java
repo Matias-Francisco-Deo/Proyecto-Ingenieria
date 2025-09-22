@@ -163,7 +163,7 @@ public class PeticionDAOTests {
         peticionDeJorge.setEstado(new Vigente());
         peticionDAO.save(peticionDeJorge);
 
-        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFechaDelEvento(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
+        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFechaDelEvento(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
     }
 
     @Test

@@ -98,6 +98,7 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public void reject(RechazoDTO rechazoDTO) {
         if (peticionDAO.findVigenteById(rechazoDTO.peticionId()).isPresent()) throw new PeticionYaVigente("La petición ya está vigente.");
+        if (peticionDAO.itsDeprecatedFromDateAndTime(rechazoDTO.peticionId(), LocalDate.now(), LocalTime.now())) throw new PeticionVencida("La petición esta vencida.");
         if (!peticionDAO.isPetitionOfOwner(rechazoDTO.peticionId(), rechazoDTO.ownerId())) return;
 
         Peticion peticion = peticionDAO.findPendienteById(rechazoDTO.peticionId()).get(); // no debería tirar error porque el check de arriba hace return si no existe también

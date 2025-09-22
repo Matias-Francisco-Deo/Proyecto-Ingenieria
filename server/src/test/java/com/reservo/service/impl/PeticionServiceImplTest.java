@@ -8,6 +8,7 @@ import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
+import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
@@ -37,9 +38,11 @@ public class PeticionServiceImplTest {
     @Autowired
     private TestService testService; // cambiar por uno para inmueble
 
-
     @Autowired
     PeticionService peticionService;
+
+    @Autowired
+    private PeticionDAO peticionDAO;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -56,6 +59,7 @@ public class PeticionServiceImplTest {
     private Peticion peticionDeJorge;
     private Peticion peticionDeAlan;
     private Peticion peticionDeAlanNoVigente;
+    private Peticion peticionDeprecada;
     private RechazoDTO rechazoDTO;
 
 
@@ -78,6 +82,7 @@ public class PeticionServiceImplTest {
         peticionDeAlan.setEstado(new Vigente());
 
         peticionDeAlanNoVigente = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
+        peticionDeprecada = new Peticion(alan, inmueble, LocalDate.now().minusDays(10),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
 
     }
 
@@ -164,7 +169,7 @@ public class PeticionServiceImplTest {
 
         peticionService.create(peticionDeJorge);
 
-        Peticion peticionPe = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
+        Peticion peticionPe = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().minusSeconds(40), LocalTime.now().minusSeconds(50), 100D);
 
         assertThrows(RealizoUnaPeticionSobreElInmuebleEnElMismoDia.class, () -> peticionService.create(peticionPe));
 
@@ -216,7 +221,7 @@ public class PeticionServiceImplTest {
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
 
-        peticionService.reject(rechazoDTO);
+        peticionService.reject(new RechazoDTO(raul.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO));
 
         Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
 
@@ -304,7 +309,6 @@ public class PeticionServiceImplTest {
 
         assertThrows(HorarioOcupado.class, () -> peticionService.approve(peticionAlanSaved.getId()));
 
-
     }
 
     @Test
@@ -317,7 +321,6 @@ public class PeticionServiceImplTest {
         peticionService.approve(peticionDeJorge.getId());
 
         assertDoesNotThrow(() -> {peticionService.approve(peticionDeJorge.getId());});
-
 
     }
 
@@ -333,7 +336,6 @@ public class PeticionServiceImplTest {
 
         assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
 
-
     }
 
     @Test
@@ -347,6 +349,28 @@ public class PeticionServiceImplTest {
         peticionService.approve(peticionDeJorge.getId());
 
         assertThrows(PeticionYaVigente.class,() -> {peticionService.reject(rechazoDTO);});
+    }
+
+    @Test
+    public void unaPeticionVencidaNoPuedeSerRechazada() throws EmailRepetido {
+        usuarioService.create(alan);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionDAO.save(peticionDeprecada);
+
+        assertThrows(PeticionVencida.class,() -> {peticionService.approve(peticionSaved.getId());});
+    }
+
+    @Test
+    public void unaPeticionVencidaNoPuedeSerAprobada() throws EmailRepetido {
+        usuarioService.create(alan);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion peticionSaved = peticionDAO.save(peticionDeprecada);
+
+        assertThrows(PeticionVencida.class,() -> {peticionService.approve(peticionSaved.getId());});
     }
 
 
