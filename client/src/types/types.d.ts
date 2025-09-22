@@ -32,6 +32,20 @@ export interface PendingPetitionDraft {
   error?: string;
 }
 
+export interface CancelledRejectedPetitionDraft {
+  id: number;
+  client_name: string;
+  client_email: string;
+  price: number;
+  requested_date_start: string; // con hora
+  requested_date_end: string; // con hora
+  property_name: string;
+  created_date: string;
+  event_date: string;
+  rejection_motive?: string;
+  error?: string;
+}
+
 export interface PendingPetition {
   id: number;
   name: string;

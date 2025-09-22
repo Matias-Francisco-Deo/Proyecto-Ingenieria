@@ -1,8 +1,8 @@
-import type { PendingPetitionDraft } from "@/types/types";
+import type { CancelledRejectedPetitionDraft } from "@/types/types";
 import { useState } from "react";
 
 interface ListaResultadosProps {
-  resultados: PendingPetitionDraft[];
+  resultados: CancelledRejectedPetitionDraft[];
 }
 
 export default function ListaDePeticionesCanceladas({
@@ -46,12 +46,21 @@ export default function ListaDePeticionesCanceladas({
               <div className="mt-3 space-y-2 bg-gray-800 rounded-lg p-3">
                 <div className="flex justify-between text-sm text-gray-200">
                   <span>{petition.client_email}</span>
-                  <span>${petition.price}</span>
+                  <span>Precio: ${petition.price}</span>
                   <span>{petition.event_date}</span>
                   <span>
-                    {petition.requested_date_start} - {petition.requested_date_end}
+                    {petition.requested_date_start} -{" "}
+                    {petition.requested_date_end}
                   </span>
                 </div>
+                {petition?.rejection_motive ? (
+                  <div>
+                    <span className="font-bold">{"Motivo de rechazo: "}</span>
+                    <span>{petition?.rejection_motive}</span>
+                  </div>
+                ) : (
+                  <div>No se especifican motivos de cancelación/rechazo.</div>
+                )}
               </div>
             )}
           </li>
