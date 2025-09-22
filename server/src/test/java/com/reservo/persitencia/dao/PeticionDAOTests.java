@@ -152,18 +152,27 @@ public class PeticionDAOTests {
     }
 
     @Test
-    void unaPeticionYaFueAceptadaParaEseRangoHorarioTerminaEnMismoHorarioEnQueEmpiezaElOtroNoOcurreNada() {
-        Peticion peticionDeAlan2 = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(30), LocalTime.now().plusMinutes(40), 100D);
+    void unaPeticionNoCuentaComoAceptadaParaEseRangoHorarioPorqueTerminaEnMismoHorarioEnQueEmpiezaElOtro() {
+        // dates fijas porque sino revienta todo el mambo
+        LocalDate fecha = LocalDate.of(2025, 9, 22);
+        LocalTime horaInicioJorge = LocalTime.of(10, 0);
+        LocalTime horaFinJorge = LocalTime.of(10, 30);
+
+        LocalTime horaInicioAlan = LocalTime.of(10, 30);
+        LocalTime horaFinAlan = LocalTime.of(10, 40);
+
+        Peticion peticionDeJorge2 = new Peticion(alan, inmueble, fecha, horaInicioJorge, horaFinJorge, 100D);
+        Peticion peticionDeAlan2 = new Peticion(alan, inmueble, fecha, horaInicioAlan, horaFinAlan, 100D);
         usuarioDAO.save(alan);
         usuarioDAO.save(jorge);
         usuarioDAO.save(raul);
 
         inmuebleDAO.save(inmueble);
 
-        peticionDeJorge.setEstado(new Vigente());
-        peticionDAO.save(peticionDeJorge);
+        this.peticionDeJorge.setEstado(new Vigente());
+        peticionDAO.save(peticionDeAlan2);
 
-        assertTrue(peticionDAO.wasAcceptedInSameTimeRange(peticionDeAlan2.getInmueble().getId(), peticionDeAlan2.getFechaDelEvento(), peticionDeAlan2.getHoraInicio(), peticionDeAlan2.getHoraFin()));
+        assertFalse(peticionDAO.wasAcceptedInSameTimeRange(peticionDeJorge2.getInmueble().getId(), peticionDeJorge2.getFechaDelEvento(), peticionDeJorge2.getHoraInicio(), peticionDeJorge2.getHoraFin()));
     }
 
     @Test

@@ -33,10 +33,10 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public Peticion create(Peticion peticion) {
         verificarDisponibilidad(peticion);
+        verificarSiYaSeRealizoLaPeticion(peticion);
         verificarSiEsDuenioDeLaPropiedad(peticion);
         verificarSiOrdenDeHorarioDeLaPeticion(peticion);
         verificarSeDentroDelRango(peticion);
-        verificarSiYaSeRealizoLaPeticion(peticion);
         verificarSiEsUnViajeroDelTiempo(peticion);
         return peticionDAO.save(peticion);
     }
