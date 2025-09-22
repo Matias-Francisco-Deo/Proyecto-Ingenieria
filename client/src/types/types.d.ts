@@ -59,6 +59,28 @@ export interface PendingPetition {
   client_email: string;
 }
 
-type ApproveResponse = {
+export interface ApproveResponse {
   error?: string;
-};
+}
+
+export interface Inmueble {
+  id: number;
+  name: string;
+  description: string;
+  ubication: string;
+  price: number; // precio por hora
+  condition: string;
+  start: string;
+  end: string;
+  cancellation: string;
+}
+
+export interface HorarioDTO {
+  horaInicio: string;
+  horaFin: string;
+}
+
+export interface MappedHorarioDTO {
+  horaInicio: number;
+  horaFin: number;
+}

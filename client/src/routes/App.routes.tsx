@@ -10,7 +10,7 @@ const HomePage = lazy(() => import("../pages/HomePage"));
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
-const PeticionForm = lazy(() => import("../pages/PeticionForm"));
+const PeticionForm = lazy(() => import("../pages/HacerReservaPage"));
 const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const ReservaPendientePage = lazy(
   () => import("../pages/ReservaPendientePage")

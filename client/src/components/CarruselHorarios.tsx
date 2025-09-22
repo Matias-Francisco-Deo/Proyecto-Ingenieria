@@ -1,18 +1,12 @@
+import type { MappedHorarioDTO } from "@/types/types";
 import { useState, useEffect } from "react";
 
-
-type HorarioDTO = {
+type CarruselHorariosProps = {
   horaInicio: number;
   horaFin: number;
-};
-
-
-type CarruselHorariosProps = {
-  horaInicio: number; 
-  horaFin: number;    
   onSelectHorarios?: (seleccionadas: number[]) => void; // callback para devolver selección
-  horariosOcupados?: HorarioDTO[]; 
-  selectedDate?: Date; 
+  horariosOcupados?: MappedHorarioDTO[];
+  selectedDate?: Date;
 };
 
 export default function CarruselHorarios({
@@ -22,11 +16,9 @@ export default function CarruselHorarios({
   horariosOcupados = [],
   selectedDate,
 }: CarruselHorariosProps) {
-
   const [seleccionadas, setSeleccionadas] = useState<number[]>([]);
 
   const [horasDisponibles, setHorasDisponibles] = useState<number[]>([]);
-
 
   // Reiniciar selección cuando cambia la fecha seleccionada
 
@@ -35,14 +27,15 @@ export default function CarruselHorarios({
     onSelectHorarios?.([]);
   }, [selectedDate]);
 
-  // Lista de todas las horas 
+  // Lista de todas las horas
   const todasHoras: number[] = [];
   for (let h = horaInicio; h < horaFin; h++) todasHoras.push(h);
 
   // Función para saber si un horario está ocupado
   const estaOcupada = (hora: number) =>
-    horariosOcupados.some((dto) => hora >= dto.horaInicio && hora < dto.horaFin);
-
+    horariosOcupados.some(
+      (dto) => hora >= dto.horaInicio && hora < dto.horaFin
+    );
 
   // Calcular horarios disponibles según seleccionadas, ocupadas y hora actual
 
@@ -60,7 +53,6 @@ export default function CarruselHorarios({
       if (isHoy) {
         disponibles = disponibles.filter((h) => h > ahora.getHours());
       }
-
 
       // Lógica si hay 1 horario seleccionado
 
@@ -84,7 +76,8 @@ export default function CarruselHorarios({
 
         // Agregamos finPosible si no está bloqueado
         if (!disponibles.includes(finPosible) && finPosible < horaFin) {
-          if (!isHoy || finPosible > ahora.getHours()) disponibles.push(finPosible);
+          if (!isHoy || finPosible > ahora.getHours())
+            disponibles.push(finPosible);
         }
 
         // Si no hay bloqueos en medio, agregamos horaFin
@@ -98,7 +91,6 @@ export default function CarruselHorarios({
         // Eliminamos duplicados y ordenamos
         disponibles = Array.from(new Set(disponibles)).sort((a, b) => a - b);
       }
-
 
       // Lógica si hay 2 horarios seleccionados
 
@@ -117,10 +109,8 @@ export default function CarruselHorarios({
       }
     }
 
-
     setHorasDisponibles(disponibles.sort((a, b) => a - b));
   }, [seleccionadas, horariosOcupados, selectedDate]);
-
 
   // Función para seleccionar o deseleccionar horarios
 
@@ -138,13 +128,12 @@ export default function CarruselHorarios({
       // Si no estaba seleccionado, agregamos hasta 2
       nuevas = [...seleccionadas, hora];
     } else {
-      return; 
+      return;
     }
 
     setSeleccionadas(nuevas);
-    onSelectHorarios?.(nuevas); 
+    onSelectHorarios?.(nuevas);
   };
-
 
   return (
     <div className="flex flex-col gap-3 w-full h-full overflow-y-auto scrollbar-hide pr-2">
@@ -153,15 +142,19 @@ export default function CarruselHorarios({
       `}</style>
 
       {todasHoras.concat(horaFin).map((hora) => {
-        const isSelected = seleccionadas.includes(hora); 
-        const isDisabled = !horasDisponibles.includes(hora) && !isSelected; 
+        const isSelected = seleccionadas.includes(hora);
+        const isDisabled = !horasDisponibles.includes(hora) && !isSelected;
 
         return (
           <div
             key={hora}
             onClick={() => !isDisabled && toggleSeleccion(hora)}
             className={`rounded-lg py-6 text-center font-bold text-lg w-full cursor-pointer transition-colors
-              ${isSelected ? "bg-white text-black" : "bg-gray-600 hover:bg-gray-500 text-white"}
+              ${
+                isSelected
+                  ? "bg-white text-black"
+                  : "bg-gray-600 hover:bg-gray-500 text-white"
+              }
               ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
           >
             {hora}:00 hs

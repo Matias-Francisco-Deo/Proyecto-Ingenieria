@@ -2,36 +2,20 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import CalendarioCarrusel from "../components/CalendarioCarrusel";
 import CarruselHorarios from "../components/CarruselHorarios";
 import { useUser } from "../hooks/useUser";
-
-
-type Inmueble = {
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number; // precio por hora
-  condition: string;
-  start: string;
-  end: string;
-  cancellation: string;
-};
-
-type HorarioDTO = {
-  horaInicio: number;
-  horaFin: number;
-};
-
+import type { HorarioDTO, Inmueble, MappedHorarioDTO } from "@/types/types";
 
 export default function PeticionForm() {
-
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); 
-  const [inmueble, setInmueble] = useState<Inmueble | null>(null); 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [inmueble, setInmueble] = useState<Inmueble | null>(null);
   const [loading, setLoading] = useState(true);
-  const [horariosSeleccionados, setHorariosSeleccionados] = useState<number[]>([]); 
-  const [horariosOcupados, setHorariosOcupados] = useState<HorarioDTO[]>([]);
+  const [horariosSeleccionados, setHorariosSeleccionados] = useState<number[]>(
+    []
+  );
+  const [horariosOcupados, setHorariosOcupados] = useState<MappedHorarioDTO[]>(
+    []
+  );
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
-
 
   const horariosRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -40,9 +24,6 @@ export default function PeticionForm() {
   const { getId } = useUser();
   const searchParams = new URLSearchParams(window.location.search);
   const id = searchParams.get("id");
-
-
-
 
   useEffect(() => {
     if (!id) return;
@@ -64,20 +45,17 @@ export default function PeticionForm() {
     fetchInmueble();
   }, [id]);
 
-
   // Ajustar alto del contenedor de horarios según info del inmueble
 
   useLayoutEffect(() => {
     if (infoRef.current) setAltoHorarios(infoRef.current.clientHeight);
   }, [inmueble]);
 
-
   // Reiniciar selección de horarios al cambiar la fecha
 
   useEffect(() => {
     setHorariosSeleccionados([]);
   }, [selectedDate]);
-
 
   // Fetch de horarios ocupados según fecha seleccionada
 
@@ -97,7 +75,7 @@ export default function PeticionForm() {
         if (!res.ok) throw new Error("Error al traer horarios ocupados");
 
         const data = await res.json();
-        const ocupados: HorarioDTO[] = data.map((h: any) => ({
+        const ocupados: MappedHorarioDTO[] = data.map((h: HorarioDTO) => ({
           horaInicio: parseInt(h.horaInicio.split(":")[0], 10),
           horaFin: parseInt(h.horaFin.split(":")[0], 10),
         }));
@@ -111,10 +89,8 @@ export default function PeticionForm() {
     fetchHorariosOcupados();
   }, [selectedDate, inmueble]);
 
-
   if (loading) return <p className="text-white">Cargando...</p>;
   if (!inmueble) return <p className="text-white">Inmueble no encontrado</p>;
-
 
   // Cálculo de horas disponibles
 
@@ -122,15 +98,18 @@ export default function PeticionForm() {
   const fin = parseInt(inmueble.end.split(":")[0], 10) || 20;
 
   const inicioSeleccion =
-    horariosSeleccionados.length > 0 ? Math.min(...horariosSeleccionados) : null;
+    horariosSeleccionados.length > 0
+      ? Math.min(...horariosSeleccionados)
+      : null;
   const finSeleccion =
-    horariosSeleccionados.length > 1 ? Math.max(...horariosSeleccionados) : null;
+    horariosSeleccionados.length > 1
+      ? Math.max(...horariosSeleccionados)
+      : null;
 
   const precioTotal =
     inicioSeleccion !== null && finSeleccion !== null
       ? (finSeleccion - inicioSeleccion) * inmueble.price
       : 0;
-
 
   // Función para reiniciar componentes (carrusel e info)
 
@@ -139,11 +118,10 @@ export default function PeticionForm() {
     setSelectedDate((prev) => (prev ? new Date(prev) : null)); // refresca carrusel
   };
 
-
   const handleEnviar = async () => {
     if (!selectedDate || inicioSeleccion === null || finSeleccion === null) {
       setMessage("Seleccione un día y un rango de horarios válido");
-      resetComponents(); 
+      resetComponents();
       setTimeout(() => setMessage(""), 5000); // limpiar mensaje después de 4s
       return;
     }
@@ -154,8 +132,12 @@ export default function PeticionForm() {
       const userId = getId();
       if (!userId) throw new Error("Usuario no logueado");
 
-      const horaInicioLocalTime = `${inicioSeleccion.toString().padStart(2, "0")}:00:00`;
-      const horaFinLocalTime = `${finSeleccion.toString().padStart(2, "0")}:00:00`;
+      const horaInicioLocalTime = `${inicioSeleccion
+        .toString()
+        .padStart(2, "0")}:00:00`;
+      const horaFinLocalTime = `${finSeleccion
+        .toString()
+        .padStart(2, "0")}:00:00`;
 
       const payload = {
         userId,
@@ -180,7 +162,7 @@ export default function PeticionForm() {
       setMessage("✅ Petición enviada exitosamente!");
       resetComponents(); // reiniciamos componentes sin borrar mensaje
       setTimeout(() => setMessage(""), 4000);
-
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
       setMessage(err.message || "Error al enviar la petición");
@@ -191,19 +173,15 @@ export default function PeticionForm() {
     }
   };
 
-
   return (
     <div className="flex flex-col items-center text-white">
       <h2 className="text-3xl font-bold mb-4 text-center">Elija su horario</h2>
-
 
       <div className="w-[80%]">
         <CalendarioCarrusel onDaySelect={setSelectedDate} />
       </div>
 
-
       <div className="mt-8 flex w-[80%] gap-6 min-h-[55vh]">
-
         <div
           ref={horariosRef}
           className="w-1/2 bg-gray-800 rounded-xl p-4 overflow-y-auto scrollbar-hide"
@@ -218,30 +196,34 @@ export default function PeticionForm() {
           />
         </div>
 
-
         <div
           ref={infoRef}
-          className="w-1/2 bg-gray-700 rounded-xl p-4 flex flex-col justify-between"
+          className="w-1/2 bg-gray-700 rounded-xl p-4 flex flex-col justify-between "
         >
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-3xl font-extrabold">{inmueble.name}</h3>
-              <p className="text-2xl font-bold text-amber-400">Total: ${precioTotal}</p>
+              <p className="text-2xl font-bold text-amber-400">
+                Total: ${precioTotal}
+              </p>
             </div>
             <p className="text-lg font-semibold">
-              Localidad: <span className="font-normal">{inmueble.ubication}</span>
+              Localidad:{" "}
+              <span className="font-normal">{inmueble.ubication}</span>
             </p>
             <p className="text-lg font-semibold">
-              Condiciones: <span className="font-normal">{inmueble.condition}</span>
+              Condiciones:{" "}
+              <span className="font-normal">{inmueble.condition}</span>
             </p>
             <p className="text-lg font-semibold">
-              Política de cancelación: <span className="font-normal">{inmueble.cancellation}</span>
+              Política de cancelación:{" "}
+              <span className="font-normal">{inmueble.cancellation}</span>
             </p>
             <p className="text-lg font-semibold">
-              Descripción: <span className="font-normal">{inmueble.description}</span>
+              Descripción:{" "}
+              <span className="font-normal">{inmueble.description}</span>
             </p>
           </div>
-
 
           {horariosSeleccionados.length > 0 && (
             <div className="flex justify-between font-bold text-lg text-white mt-4 mb-2">
@@ -249,7 +231,6 @@ export default function PeticionForm() {
               {finSeleccion !== null && <span>Fin: {finSeleccion}:00 hs</span>}
             </div>
           )}
-
 
           <div className="flex flex-col items-center gap-2">
             <button
@@ -260,7 +241,13 @@ export default function PeticionForm() {
               {sending ? "Enviando..." : "Enviar"}
             </button>
             {message && (
-              <p className={`text-sm ${message.includes("exitosamente") ? "text-green-400" : "text-red-500"}`}>
+              <p
+                className={`text-sm ${
+                  message.includes("exitosamente")
+                    ? "text-green-400"
+                    : "text-red-500"
+                }`}
+              >
                 {message}
               </p>
             )}
