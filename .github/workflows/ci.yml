@@ -56,6 +56,6 @@ jobs:
         working-directory: client
 
       - name: Build frontend
-        run: npm run build
+        run: npm run nottscbuild
         working-directory: client
 
