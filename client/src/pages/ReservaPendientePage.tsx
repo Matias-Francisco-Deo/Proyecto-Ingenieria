@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
-import type { ApproveResponse, PendingPetition } from "@/types/types";
+import type { ErrorResponse, PendingPetition } from "@/types/types";
 
 export default function ReservaPendientePage() {
   const [petition, setPetition] = useState<PendingPetition | null>(null);
@@ -201,12 +201,12 @@ export default function ReservaPendientePage() {
     if (!response) return;
 
     if (response.ok) {
-      setApprovalMessage("Petición aceptada");
+      setApprovalMessage("Petición aceptada.");
 
       location.href = "/mis-peticiones/pendientes";
     }
 
-    const approveResponse = (await response.json()) as ApproveResponse;
+    const approveResponse = (await response.json()) as ErrorResponse;
 
     if (approveResponse.error) {
       setGeneralError(approveResponse.error);
@@ -230,7 +230,24 @@ export default function ReservaPendientePage() {
       setRejError("No se pudo concretar la operación.");
       return;
     });
-    if (response) setIsRejecting(false);
-    location.href = "/mis-peticiones/pendientes";
+
+    if (!response) return;
+
+    console.log(response);
+
+    if (response.ok) {
+      setApprovalMessage("Rechazo exitoso.");
+
+      location.href = "/mis-peticiones/pendientes";
+    }
+
+    const rejectErrorResponse = (await response.json()) as ErrorResponse;
+
+    console.log(rejectErrorResponse);
+
+    if (rejectErrorResponse.error) {
+      setRejError(rejectErrorResponse.error);
+      return;
+    }
   }
 }

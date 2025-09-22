@@ -243,6 +243,56 @@ public class PeticionDAOTests {
     }
 
     @Test
+    void seBuscaUnaPeticionYaAprobada() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+        peticionDeJorge.setEstado(new Vigente());
+
+        peticionDAO.save(peticionDeJorge);
+
+        assertTrue(peticionDAO.findVigenteById(peticionDeJorge.getId()).isPresent());
+    }
+
+    @Test
+    void seBuscaUnaPeticionYaRechazada() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+        peticionDeJorge.setEstado(new Cancelado());
+
+        peticionDAO.save(peticionDeJorge);
+
+        assertTrue(peticionDAO.findRejectedById(peticionDeJorge.getId()).isPresent());
+    }
+
+    @Test
+    void seBuscaUnaPeticionYaAprobadaPeroEstabaPendiente() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+
+        peticionDAO.save(peticionDeJorge);
+
+        assertFalse(peticionDAO.findVigenteById(peticionDeJorge.getId()).isPresent());
+    }
+
+    @Test
+    void seBuscaUnaPeticionYaRechazadaPeroEstabaPendiente() {
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(raul);
+
+        inmuebleDAO.save(inmueble);
+
+        peticionDAO.save(peticionDeJorge);
+
+        assertFalse(peticionDAO.findRejectedById(peticionDeJorge.getId()).isPresent());
+    }
+
+    @Test
     void unaPeticionRechazadaNoSeBuscaComoPendiente() {
         usuarioDAO.save(jorge);
         usuarioDAO.save(raul);

@@ -319,8 +319,6 @@ public class PeticionServiceImplTest {
         assertDoesNotThrow(() -> {peticionService.approve(peticionDeJorge.getId());});
 
 
-
-
     }
 
     @Test
@@ -336,12 +334,10 @@ public class PeticionServiceImplTest {
         assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
 
 
-
-
     }
 
     @Test
-    public void unaPeticionNoPuedeSerRechazadaYLuegoAceptada() throws EmailRepetido {
+    public void unaPeticionNoPuedeSerRechazadaLuegoDeSerAceptada() throws EmailRepetido {
         usuarioService.create(jorge);
         usuarioService.create(raul);
         inmuebleService.create(inmueble, emptyImages);
@@ -350,7 +346,7 @@ public class PeticionServiceImplTest {
         RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
         peticionService.approve(peticionDeJorge.getId());
 
-        assertDoesNotThrow(() -> {peticionService.reject(rechazoDTO);});
+        assertThrows(PeticionYaVigente.class,() -> {peticionService.reject(rechazoDTO);});
     }
 
 

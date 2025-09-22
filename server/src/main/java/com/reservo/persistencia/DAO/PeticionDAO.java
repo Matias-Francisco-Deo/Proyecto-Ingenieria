@@ -52,6 +52,12 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
     @Query("select count(p) > 0 from Peticion p where p.inmueble.id = :inmuebleId and TYPE(p.estado) = Vigente and p.fechaDelEvento = :fecha and (p.horaInicio < :horaFin and p.horaFin > :horaInicio)" )
     boolean wasAcceptedInSameTimeRange(@Param("inmuebleId") Long id,@Param("fecha") LocalDate fecha, @Param("horaInicio") LocalTime horaInicio, @Param("horaFin") LocalTime horaFin);
 
+    @Query("select p from Peticion p where p.id = :peticionId and TYPE(p.estado) = Vigente" )
+    Optional<Peticion> findVigenteById(@Param("peticionId") Long peticionId);
+
+    @Query("select p from Peticion p where p.id = :peticionId and TYPE(p.estado) = Cancelado " )
+    Optional<Peticion> findRejectedById(@Param("peticionId") Long peticionId);
+
     @Query("select p from Peticion p where p.id = :peticionId and TYPE(p.estado) = Pendiente" )
     Optional<Peticion> findPendienteById(@Param("peticionId") Long peticionId);
 }

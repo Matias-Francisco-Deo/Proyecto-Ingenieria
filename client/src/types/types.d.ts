@@ -59,7 +59,7 @@ export interface PendingPetition {
   client_email: string;
 }
 
-export interface ApproveResponse {
+export interface ErrorResponse {
   error?: string;
 }
 
