@@ -210,10 +210,20 @@ export default function PeticionForm() {
                 Total: ${precioTotal}
               </p>
             </div>
-            <p className="text-lg font-semibold">
-              Localidad:{" "}
-              <span className="font-normal">{inmueble.ubication}</span>
-            </p>
+            <div className="flex gap-6 text-lg">
+              <div className="flex items-center gap-1">
+                <span className="font-semibold">Localidad:</span>
+                <span className="font-normal">{inmueble.ubication}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="font-semibold">Calle:</span>
+                <span className="font-normal">{inmueble.street}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="font-semibold">Altura:</span>
+                <span className="font-normal">{inmueble.number}</span>
+              </div>
+            </div>
             <p className="text-lg font-semibold">
               Condiciones:{" "}
               <span className="font-normal">{inmueble.condition}</span>

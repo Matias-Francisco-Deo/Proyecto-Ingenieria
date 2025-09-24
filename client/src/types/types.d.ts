@@ -57,6 +57,8 @@ export interface PendingPetition {
   capacity: number;
   client_name: string;
   client_email: string;
+  street: string;
+  number: number;
 }
 
 export interface ErrorResponse {
@@ -74,6 +76,8 @@ export interface Inmueble {
   end: string;
   cancellation: string;
   availableDays: string[];
+  street: string;
+  number: number;
 }
 
 export interface HorarioDTO {
