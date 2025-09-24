@@ -178,7 +178,7 @@ export default function CancelarReservaPage() {
           <button
             type="button"
             onClick={() => setIsCancelling(false)}
-            className="hover:cursor-pointer absolute top-0 right-0 bg-red-950 hover:bg-red-800 text-white rounded-full w-10 h-10 flex items-center justify-center text-xs"
+            className="hover:cursor-pointer absolute -top-3 -right-3 bg-black hover:bg-red-800 text-white rounded-full border-2 border-amber-400 w-10 h-10 flex items-center justify-center text-xs"
           >
             X
           </button>
