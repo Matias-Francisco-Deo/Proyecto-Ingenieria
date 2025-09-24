@@ -1,6 +1,8 @@
 package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.reserva.estadosReservas.Pendiente;
+import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.service.exception.peticion.*;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
@@ -138,6 +140,11 @@ public class PeticionServiceImpl implements PeticionService {
 
     @Override
     public Page<Peticion> findAllReservasPendientesByUserId(Long userId, Pageable page) {
-        return peticionDAO.findAllReservasPendientes(userId, page);
+        return peticionDAO.findAllReservasByEstado(userId, page, Pendiente.class);
+    }
+
+    @Override
+    public Page<Peticion> findAllReservasVigentesByUserId(Long userId, Pageable page) {
+        return peticionDAO.findAllReservasByEstado(userId, page, Vigente.class);
     }
 }

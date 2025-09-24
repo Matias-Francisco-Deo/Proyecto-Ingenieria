@@ -1,6 +1,7 @@
 package com.reservo.controller;
 
 import com.reservo.controller.dto.Reservas.ReservaPendienteDTO;
+import com.reservo.controller.dto.Reservas.ReservaVigenteDTO;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.service.PeticionService;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,18 @@ public final class ReservaControllerREST {
         if(reservaPage.isEmpty()) return ResponseEntity.status(404).body(null);
 
         Page<ReservaPendienteDTO> reservas = reservaPage.map(ReservaPendienteDTO::desdeModelo);
+
+        return ResponseEntity.ok(reservas);
+    }
+    @GetMapping("/vigentes/{id}")
+    public ResponseEntity<Page<ReservaVigenteDTO>> findAllReservasVigentesByUserId
+            (@PathVariable Long id,
+             @RequestParam(defaultValue = "0") int page){
+        Page<Peticion> reservaPage = peticionService.findAllReservasVigentesByUserId(id, PageRequest.of(page, 10));
+
+        if(reservaPage.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<ReservaVigenteDTO> reservas = reservaPage.map(ReservaVigenteDTO::desdeModelo);
 
         return ResponseEntity.ok(reservas);
     }

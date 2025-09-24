@@ -7,12 +7,13 @@ import java.time.LocalTime;
 
 public record ReservaPendienteDTO(
         Long id,
-        String name,
+        String nameInmueble,
         LocalDate dateEvento,
         LocalTime horaInicio,
         LocalTime horaFin,
         LocalDate dateEmision,
-        String email
+        String email,
+        String nameOwner
 ){
     public static ReservaPendienteDTO desdeModelo(Peticion prop) {
         return new ReservaPendienteDTO(
@@ -22,7 +23,8 @@ public record ReservaPendienteDTO(
                 prop.getHoraInicio(),
                 prop.getHoraFin(),
                 prop.getFechaEmision(),
-                prop.getInmueble().getOwner().getEmail()
+                prop.getInmueble().getOwner().getEmail(),
+                prop.getInmueble().getOwner().getName()
         );
     }
 }

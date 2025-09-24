@@ -23,5 +23,7 @@ public interface PeticionService {
     Page<Peticion> findAllApproveByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllRejectByOwnerId(Long id, Pageable pageable);
 
-    Page<Peticion> findAllReservasPendientesByUserId(Long id, Pageable page);
+    Page<Peticion> findAllReservasPendientesByUserId(Long userId, Pageable page);
+
+    Page<Peticion> findAllReservasVigentesByUserId(Long userId, Pageable page);
 }
