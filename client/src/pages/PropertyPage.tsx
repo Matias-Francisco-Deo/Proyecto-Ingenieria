@@ -146,6 +146,27 @@ export default function createPropertyPage() {
       resetBlankError();
       return;
     }
+    
+    let hasNumberErrorFlag = false; 
+
+    if (+propertyPrice.value <= 0) { 
+      setHasPriceError(true); 
+      hasNumberErrorFlag = true; 
+    }
+    if (+propertyCapacity.value <= 0) { 
+      setHasCapacityError(true);
+      hasNumberErrorFlag = true; 
+    }
+    if (+propertyNumber.value <= 0) { 
+      setHasNumberError(true);
+      hasNumberErrorFlag = true; 
+    }
+
+    if (hasNumberErrorFlag) { 
+      setGeneralErrorMessage("La altura, el precio y la capacidad deben ser valores mayores a 0"); 
+
+      return; 
+    }
 
     const formData = new FormData();
 
@@ -206,7 +227,7 @@ export default function createPropertyPage() {
         setHasStreetError(true); 
       }
       if (propertyNumberIsBlank) {
-         setHasNumberError(true); 
+        setHasNumberError(true); 
         }
       if (propertyImageIsBlank) {
         setHasImageError(true);
@@ -339,6 +360,11 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="number"
+                  onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                      e.preventDefault();
+                    }
+                  }}
                   className={`${
                     hasNumberError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
@@ -397,6 +423,11 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="price"
+                  onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                      e.preventDefault();
+                    }
+                  }}
                   className={`${
                     hasPriceError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
@@ -471,6 +502,11 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="capacity"
+                  onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                      e.preventDefault();
+                    }
+                  }}
                   className={`${
                     hasCapacityError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
