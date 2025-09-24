@@ -96,3 +96,14 @@ export interface ReservasPendientesDTO {
     email: string;
     nameOwner: string;
 }
+
+export interface ReservasVigentesDTO {
+    id: Long;
+    nameInmueble: string;
+    dateEvento: string;
+    horaInicio: string;
+    horaFin: string;
+    dateEmision: string;
+    email: string;
+    nameOwner: string;
+}

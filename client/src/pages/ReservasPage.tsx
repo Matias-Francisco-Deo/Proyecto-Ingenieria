@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
 import ReservasPendientes from "@/components/reservas/ReservasPendientes";
 // import ReservasCanceladas from "@/components/reservas/ReservasCanceladas";
-//import ReservasVigentes from "@/components/reservas/ReservasVigentes";
+import ReservasVigentes from "@/components/reservas/ReservasVigentes";
 
 export default function ReservasPage() {
     const [, setLocation] = useLocation();
@@ -30,9 +30,9 @@ export default function ReservasPage() {
         switch (activeSection) {
             case "Pendientes":
                 return <ReservasPendientes />;
-            /*case "Vigentes":
+            case "Vigentes":
                 return <ReservasVigentes />;
-            case "Deprecadas":
+            /*case "Deprecadas":
                 return <div>No hay reservas</div>;
             case "Canceladas/Rechazadas":
                 return <ReservasCanceladas />;*/
