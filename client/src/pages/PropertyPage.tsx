@@ -365,7 +365,7 @@ export default function createPropertyPage() {
                       e.preventDefault();
                     }
                   }}
-                  className={`${
+                  className={`no-spin${
                     hasNumberError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
@@ -428,7 +428,7 @@ export default function createPropertyPage() {
                       e.preventDefault();
                     }
                   }}
-                  className={`${
+                  className={`no-spin${
                     hasPriceError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
@@ -453,9 +453,10 @@ export default function createPropertyPage() {
                     id="start-event"
                     name="start-event"
                     type="time"
+                    step="3600"
                     required
                     autoComplete="start-event"
-                    className={`${
+                    className={`no-time-picker${//clase que quita el picker de horario del input
                       hasStartTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                   />
@@ -471,9 +472,10 @@ export default function createPropertyPage() {
                     id="end-event"
                     name="end-event"
                     type="time"
+                    step="3600"
                     required
                     autoComplete="end-event"
-                    className={`${
+                    className={`no-time-picker${//clase que quita el picker de horario del input
                       hasEndTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                   />
@@ -507,7 +509,7 @@ export default function createPropertyPage() {
                       e.preventDefault();
                     }
                   }}
-                  className={`${
+                  className={`no-spin${
                     hasCapacityError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />

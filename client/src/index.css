@@ -22,7 +22,30 @@ img {
 textarea {
   field-sizing: content;
 }
+/*clases que eliminan pickers*/
+.no-time-picker::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
 
+.no-time-picker::-webkit-inner-spin-button,
+.no-time-picker::-webkit-clear-button {
+  display: none;
+  overscroll-behavior: contain;
+}
+
+/* Quitar flechas en inputs number */
+.no-spin::-webkit-inner-spin-button,
+.no-spin::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spin {
+  -moz-appearance: textfield; /* Firefox */
+  overscroll-behavior: contain;
+}
+/*--------------------*/
 .tag-input {
   width: 22ch;
 }
