@@ -6,8 +6,8 @@ import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
-import com.reservo.service.exception.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,5 +134,10 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public Page<Peticion> findAllRejectByOwnerId(Long userId, Pageable pageable) {
         return peticionDAO.findAllRejectByOwnerId(userId, pageable);
+    }
+
+    @Override
+    public Page<Peticion> findAllReservasPendientesByUserId(Long userId, Pageable page) {
+        return peticionDAO.findAllReservasPendientes(userId, page);
     }
 }

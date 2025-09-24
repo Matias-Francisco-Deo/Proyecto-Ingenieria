@@ -2,6 +2,7 @@ package com.reservo.service;
 
 import com.reservo.modelo.reserva.Peticion;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 
@@ -21,4 +22,6 @@ public interface PeticionService {
     Page<Peticion> findAllPendientByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllApproveByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllRejectByOwnerId(Long id, Pageable pageable);
+
+    Page<Peticion> findAllReservasPendientesByUserId(Long id, Pageable page);
 }
