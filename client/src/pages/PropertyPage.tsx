@@ -17,6 +17,8 @@ export default function createPropertyPage() {
   const [hasNameError, setHasNameError] = useState(false);
   const [hasDescriptionError, setHasDescriptionError] = useState(false);
   const [hasUbicationError, setHasUbicationError] = useState(false);
+  const [hasStreetError, setHasStreetError] = useState(false);
+  const [hasNumberError, setHasNumberError] = useState(false);
   const [hasPriceError, setHasPriceError] = useState(false);
   const [hasCapacityError, setHasCapacityError] = useState(false);
   const [hasConditionsError, setHasConditionsError] = useState(false);
@@ -87,6 +89,8 @@ export default function createPropertyPage() {
     const propertyUbication = form.elements.namedItem(
       "ubication"
     ) as HTMLInputElement;
+    const propertyStreet = form.elements.namedItem("street") as HTMLInputElement;
+    const propertyNumber = form.elements.namedItem("number") as HTMLInputElement;
     // const propertyImage = form.elements.namedItem("images") as HTMLInputElement;
     const propertyPrice = form.elements.namedItem("price") as HTMLInputElement;
     const propertyStartTime = form.elements.namedItem(
@@ -108,6 +112,8 @@ export default function createPropertyPage() {
     const propertyNameIsBlank = propertyName.value == "";
     const propertyDescIsBlank = propertyDesc.value == "";
     const propertyUbicationIsBlank = propertyUbication.value == "";
+    const propertyStreetIsBlank = propertyStreet.value == "";
+    const propertyNumberIsBlank = propertyNumber.value == "";
     const propertyImageIsBlank = selectedFiles.length === 0;
     const propertyPriceIsBlank = propertyPrice.value == "";
     const propertyStartTimeIsBlank = propertyStartTime.value == "";
@@ -126,6 +132,8 @@ export default function createPropertyPage() {
       propertyNameIsBlank ||
       propertyDescIsBlank ||
       propertyUbicationIsBlank ||
+      propertyStreetIsBlank ||
+      propertyNumberIsBlank ||
       propertyImageIsBlank ||
       propertyPriceIsBlank ||
       propertyStartTimeIsBlank ||
@@ -154,6 +162,8 @@ export default function createPropertyPage() {
       condition: propertyConditions.value,
       cancellation: propertyCancellation.value,
       userId: userId,
+      street: propertyStreet.value, 
+      number: propertyNumber.value, 
     };
     formData.append(
       "property",
@@ -192,6 +202,12 @@ export default function createPropertyPage() {
       if (propertyUbicationIsBlank) {
         setHasUbicationError(true);
       }
+      if (propertyStreetIsBlank) { 
+        setHasStreetError(true); 
+      }
+      if (propertyNumberIsBlank) {
+         setHasNumberError(true); 
+        }
       if (propertyImageIsBlank) {
         setHasImageError(true);
       }
@@ -293,6 +309,39 @@ export default function createPropertyPage() {
                   className={`${
                     hasUbicationError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                />
+              </div>
+            </div>
+
+            <div className="mt-2 flex gap-2">
+              <div className="flex-[0.7]">
+                <label htmlFor="street" className="block font-medium text-sm/6">
+                  Calle
+                </label>
+                <input
+                  id="street"
+                  name="street"
+                  type="text"
+                  required
+                  autoComplete="street"
+                  className={`${
+                    hasStreetError ? "inputError" : ""
+                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                />
+              </div>
+              <div className="flex-[0.3]">
+                <label htmlFor="number" className="block font-medium text-sm/6">
+                  Altura
+                </label>
+                <input
+                  id="number"
+                  name="number"
+                  type="number"
+                  required
+                  autoComplete="number"
+                  className={`${
+                    hasNumberError ? "inputError" : ""
+                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
               </div>
             </div>
@@ -501,6 +550,8 @@ export default function createPropertyPage() {
       setHasNameError(false);
       setHasDescriptionError(false);
       setHasUbicationError(false);
+      setHasStreetError(false);
+      setHasNumberError(false);
       setHasImageError(false);
       setHasPriceError(false);
       setHasStartTimeError(false);

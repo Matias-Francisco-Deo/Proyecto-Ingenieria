@@ -18,7 +18,9 @@ public record InmuebleResponseDTO(
         String cancellation,
         String ownerName,
         String ownerEmail,
-        List<DiasDeLaSemana> availableDays
+        List<DiasDeLaSemana> availableDays,
+        String street,
+        Integer number
 ) {
     public static InmuebleResponseDTO desdeModelo(Inmueble prop) {
         return new InmuebleResponseDTO(
@@ -30,7 +32,9 @@ public record InmuebleResponseDTO(
             prop.getOwner().getName(),
             //prop.getOwner().getId(),
             prop.getOwner().getEmail(),
-            prop.getAvailableDays()
+            prop.getAvailableDays(),
+            prop.getCalle(),
+            prop.getAltura()
         );
     }
 }
