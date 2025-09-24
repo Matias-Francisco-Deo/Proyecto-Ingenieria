@@ -30,7 +30,7 @@ export function Header({ ...props }: HeaderProps) {
           to={isAuthenticated ? "/alta-inmueble" : "/signin"}
           className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
         >
-          Dar de alta un sitio
+          Dar de alta una propiedad
         </Link>
 
         <Link
@@ -46,14 +46,14 @@ export function Header({ ...props }: HeaderProps) {
           onClick={logout}
           className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
         >
-          Logout
+          Cerrar Sesión
         </button>
       ) : (
         <Link
           to="/signin"
           className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
         >
-          Sign In / Login
+          Iniciar Sesión
         </Link>
       )}
     </header>

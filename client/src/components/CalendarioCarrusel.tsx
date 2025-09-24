@@ -114,6 +114,11 @@ export default function CalendarioCarrusel({ onDaySelect, availableDays }: Props
     month: "long",
     year: "numeric",
   });
+
+  function capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   const dayNameFormatter = new Intl.DateTimeFormat("es-ES", {
     weekday: "short",
   });
@@ -158,7 +163,7 @@ export default function CalendarioCarrusel({ onDaySelect, availableDays }: Props
         </div>
         <button onClick={() => setIsSelectingDate(true)}>
           <h2 className="text-xl font-bold cursor-pointer hover:text-amber-500">
-            {monthYearFormatter.format(selectedDate)}
+            {capitalize(monthYearFormatter.format(selectedDate))}
           </h2>
         </button>
       </div>
