@@ -61,6 +61,6 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
     @Query("select p from Peticion p where p.id = :peticionId and TYPE(p.estado) = Pendiente" )
     Optional<Peticion> findPendienteById(@Param("peticionId") Long peticionId);
 
-    @Query("FROM Peticion p WHERE p.cliente_id = :userId AND TYPE(p.estado) = Pendiente")
+    @Query("FROM Peticion p WHERE p.cliente.id= :userId AND TYPE(p.estado) = Pendiente ORDER BY p.fechaDelEvento asc")
     Page<Peticion> findAllReservasPendientes(@Param("userId") Long userId, Pageable page);
 }

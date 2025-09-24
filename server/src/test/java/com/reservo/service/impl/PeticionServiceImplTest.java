@@ -1,5 +1,6 @@
 package com.reservo.service.impl;
 
+import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
@@ -20,10 +21,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +65,7 @@ public class PeticionServiceImplTest {
     private Peticion peticionDeAlanNoVigente;
     private Peticion peticionDeprecada;
     private RechazoDTO rechazoDTO;
-
+    private List<DiasDeLaSemana> emptyDays;
 
     @BeforeEach
     public void setUp() {
@@ -71,10 +75,12 @@ public class PeticionServiceImplTest {
         alan = new Usuario("alan", "aa21", "alan@yahoo.com.ar");
         raul = new Usuario("alan", "aa21", "raul@yahoo.com.ar");
 
+        emptyDays = Collections.emptyList();
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987, raul);
 
+        inmueble.setAvailableDays(Collections.emptyList());
         emptyImages = Collections.emptyList();
 
         peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
@@ -373,7 +379,23 @@ public class PeticionServiceImplTest {
         assertThrows(PeticionVencida.class,() -> {peticionService.approve(peticionSaved.getId());});
     }
 
+    @Test
+    public void obtengoTodasLasReservasPendientes() throws EmailRepetido {
+        Usuario usuarioSaved =  usuarioService.create(jorge);
+        usuarioService.create(raul);
 
+        inmuebleService.create(inmueble, emptyImages);
+
+        Peticion reservaSaved = peticionDAO.save(peticionDeJorge);
+
+        Page<Peticion> pagina1 = peticionDAO.findAllReservasPendientes(usuarioSaved.getId(), PageRequest.of(0, 10));
+
+        pagina1.getContent().forEach(
+                reserva -> {
+                    assertSame(reserva.getId(), reservaSaved.getId());
+                }
+        );
+    }
 
 
     @AfterEach

@@ -22,7 +22,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/peticion")
-public class PeticionControllerREST {
+public final class PeticionControllerREST {
     private final PeticionService peticionService;
     private final UsuarioService usuarioService;
     private final InmuebleService inmuebleService;

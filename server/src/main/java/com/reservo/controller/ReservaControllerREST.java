@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/mis-reservas")
-public class ReservaControllerREST {
+public final class ReservaControllerREST {
     private final PeticionService peticionService;
 
     public ReservaControllerREST(PeticionService peticionService) {
         this.peticionService = peticionService;
     }
 
-    @GetMapping("/mis-reservas/pendientes/{id}")
+    @GetMapping("/pendientes/{id}")
     public ResponseEntity<Page<ReservaPendienteDTO>> findAllReservasPendientesByUserId
             (@PathVariable Long id,
              @RequestParam(defaultValue = "0") int page){

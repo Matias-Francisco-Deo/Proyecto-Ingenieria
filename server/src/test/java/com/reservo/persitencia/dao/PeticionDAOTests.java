@@ -15,6 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -66,7 +68,6 @@ public class PeticionDAOTests {
         emptyImages = Collections.emptyList();
 
         peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
-//
         peticionDeAlan = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
         peticionDeprecada = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
         peticionDeprecadaDeVariosDias = new Peticion(alan, inmueble, LocalDate.now().minusDays(10),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
@@ -328,6 +329,8 @@ public class PeticionDAOTests {
 
         assertFalse(peticionDAO.findPendienteById(peticionDeJorge.getId()).isEmpty());
     }
+
+
 
 
     @AfterEach
