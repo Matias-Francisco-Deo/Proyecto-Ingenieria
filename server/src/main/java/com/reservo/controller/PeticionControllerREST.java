@@ -145,4 +145,11 @@ public class PeticionControllerREST {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/cancelar")
+    public ResponseEntity<Object> cancel(@RequestBody CancelacionDTO cancelacionDTO) {
+        peticionService.cancel(cancelacionDTO);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

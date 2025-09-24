@@ -55,10 +55,14 @@ export interface PendingPetition {
   date_start: string;
   date_end: string;
   capacity: number;
+  owner_name:string;
+  owner_email: string;
   client_name: string;
   client_email: string;
   street: string;
   number: number;
+  status: string;
+  cancellationPolicy:string;
 }
 
 export interface ErrorResponse {
