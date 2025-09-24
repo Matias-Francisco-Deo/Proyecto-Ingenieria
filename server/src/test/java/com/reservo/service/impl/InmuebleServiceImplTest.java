@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -50,35 +49,22 @@ public class InmuebleServiceImplTest {
     @BeforeEach
     public void setUp() {
 
+        emptyDays = Collections.emptyList();
+
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         juan = new Usuario("juan", "aa22", "juan@yahoo.com.ar");
-        emptyDays = new ArrayList<>(List.of(
-                DiasDeLaSemana.LUNES,
-                DiasDeLaSemana.MARTES,
-                DiasDeLaSemana.MIERCOLES,
-                DiasDeLaSemana.JUEVES,
-                DiasDeLaSemana.VIERNES,
-                DiasDeLaSemana.SABADO,
-                DiasDeLaSemana.DOMINGO
-        ));
 
         inmueble1 = new Inmueble(
-                "Plaza", "Es una plaza linda", 200d, "Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30),
-                emptyDays, // días disponibles
-                PoliticasDeCancelacion.SIN_RETRIBUCION,
-                new ArrayList<>(), // imágenes
-                jorge // dueño
-        );
+                "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+
         inmueble2 = new Inmueble(
-                "Quincho", "Es un lugar espacioso", 200d, "Quilmes", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30),
-                emptyDays,
-                PoliticasDeCancelacion.SIN_RETRIBUCION,
-                new ArrayList<>(),
-                juan
-        );
+                "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
+                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION,"pelegrini",123);
+
         emptyImages = Collections.emptyList();
+        inmueble1.setAvailableDays(Collections.emptyList());
+        inmueble2.setAvailableDays(Collections.emptyList());
     }
 
     @Test
@@ -133,13 +119,9 @@ public class InmuebleServiceImplTest {
         //  Setup
         for (int i = 0; i < 10; i++) {
             Inmueble inm = new Inmueble(
-                    "Plaza", "Es una plaza linda", 200d, "Berazategui", 100, "No romper nada",
-                    LocalTime.of(12, 30), LocalTime.of(14, 30),
-                    emptyDays, // días disponibles
-                    PoliticasDeCancelacion.SIN_RETRIBUCION,
-                    new ArrayList<>(), // imágenes
-                    jorge // dueño
-            );
+                    "Plaza"+i, "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
+                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+            inm.setAvailableDays(Collections.emptyList());
             inmuebleService.create(inm, emptyImages);
         }
 
