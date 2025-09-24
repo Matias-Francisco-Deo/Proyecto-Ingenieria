@@ -61,11 +61,11 @@ export function AppRoutes() {
                         component={PetitionsPage}
                     />
                     <Route
-                        path="/mis-reservas/:estado"
+                        path="/reservas/:estado"
                         component={ReservasPage}
                     />
                     <Route
-                        path="/mis-reservas"
+                        path="/reservas"
                         component={ReservasPage}
                     />
                     {/* Rutas protegidas */}

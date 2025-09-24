@@ -49,26 +49,26 @@ export default function ReservasPage() {
                         sectionName="Pendientes"
                         activeSection={activeSection}
                         setActive={setActiveSection}
-                        onClick={() => setLocation("/mis-reservas/pendientes")}
+                        onClick={() => setLocation("/reservas/pendientes")}
                     />
                     <SectionSelectButton
                         sectionName="Vigentes"
                         activeSection={activeSection}
                         setActive={setActiveSection}
-                        onClick={() => setLocation("/mis-reservas/vigentes")}
+                        onClick={() => setLocation("/reservas/vigentes")}
                     />
                     <SectionSelectButton
                         sectionName="Deprecadas"
                         activeSection={activeSection}
                         setActive={setActiveSection}
-                        onClick={() => setLocation("/mis-reservas/deprecadas")}
+                        onClick={() => setLocation("/reservas/deprecadas")}
                     />
                     <SectionSelectButton
                         sectionName="Canceladas/Rechazadas"
                         activeSection={activeSection}
                         setActive={setActiveSection}
                         onClick={() =>
-                            setLocation("/mis-reservas/canceladas-rechazadas")
+                            setLocation("/reservas/canceladas-rechazadas")
                         }
                     />
                 </div>
