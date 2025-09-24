@@ -14,7 +14,7 @@ export default function ListaDeReservasPendientes({
             {reservas.map((reserva) => (
                 <Link
                     key={reserva.id}
-                    href={`/reserva/pendiente?id=${reserva.id}`}
+                    href={`/reserva/canceladas?id=${reserva.id}`}
                 >
                     <li className="rounded-2xl bg-gray-700 mt-2 pl-2 p-2 flex flex-row justify-between min-w-80">
                         <div className="p-4 bg-gray ">
