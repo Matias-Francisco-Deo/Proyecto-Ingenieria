@@ -61,6 +61,10 @@ export function AppRoutes() {
                         component={PetitionsPage}
                     />
                     <Route
+                        path="/mis-reservas/:estado"
+                        component={ReservasPage}
+                    />
+                    <Route
                         path="/mis-reservas"
                         component={ReservasPage}
                     />
