@@ -25,7 +25,7 @@ public class ReservaTest {
 
         propiedad = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
 
         peticionDeJorge = new Peticion(jorge, propiedad, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
     }

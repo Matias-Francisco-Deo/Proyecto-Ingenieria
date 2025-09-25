@@ -11,12 +11,18 @@ public record PeticionPendienteResponseDTO(
         String description,
         String ubication,
         Double price,
-        // falta el dia acá
+
         String date_start,
         String date_end,
         Integer capacity,
+        String owner_name,
+        String owner_email,
         String client_name,
-        String client_email
+        String client_email,
+        String street,
+        Integer number,
+        String status,
+        String cancellationPolicy
 ) {
     public static PeticionPendienteResponseDTO desdeModelo(Peticion peticion) {
         Inmueble in = peticion.getInmueble();
@@ -29,8 +35,14 @@ public record PeticionPendienteResponseDTO(
                 STR."\{peticion.getFechaDelEvento()} \{peticion.getHoraInicio().toString()}",
                 STR."\{peticion.getFechaDelEvento()} \{peticion.getHoraFin().toString()}",
                 in.getCapacity(),
+                in.getOwner().getName(),
+                in.getOwner().getEmail(),
                 peticion.getCliente().getName(),
-                peticion.getCliente().getEmail()
+                peticion.getCliente().getEmail(),
+                in.getCalle(),
+                in.getAltura(),
+                peticion.getEstado().getClass().getSimpleName(),
+                peticion.getPoliticaCancelacion().name()
         );
     }
 }

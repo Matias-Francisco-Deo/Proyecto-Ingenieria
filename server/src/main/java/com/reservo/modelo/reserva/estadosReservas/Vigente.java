@@ -12,7 +12,7 @@ public class Vigente extends EstadoDePeticion {
 
     @Override
     public void cancelar(Peticion peticion) {
-
+        peticion.setEstado(new Cancelado());
     }
 
     @Override

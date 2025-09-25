@@ -48,6 +48,12 @@ public class Inmueble {
     private  LocalTime horaFin;
 
     @Column(nullable = false)
+    private String calle;
+
+    @Column(nullable = false)
+    private  Integer altura;
+
+    @Column(nullable = false)
     private List<DiasDeLaSemana> availableDays;
 
     @Column(nullable = false)
@@ -60,7 +66,7 @@ public class Inmueble {
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal, List<DiasDeLaSemana> availableDays,
-                    PoliticasDeCancelacion cancellation,List<String> images,Usuario owner) {
+                    PoliticasDeCancelacion cancellation,List<String> images,Usuario owner,String calle,Integer altura) {
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -73,12 +79,14 @@ public class Inmueble {
         this.availableDays = availableDays;
         this.cancellation = cancellation;
         this.images.addAll(images);
+        this.calle = calle;
+        this.altura = altura;
     }
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal, Usuario owner,
-                    PoliticasDeCancelacion cancellation) { // , Usuario owner
+                    PoliticasDeCancelacion cancellation,String calle,Integer altura) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -89,6 +97,8 @@ public class Inmueble {
         this.horaFin = horaFinal;
         this.owner = owner;
         this.cancellation = cancellation;
+        this.calle = calle;
+        this.altura = altura;
 //        this.images.addAll(image);
     }
 

@@ -1,5 +1,6 @@
 package com.reservo.service.impl;
 
+import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
@@ -43,22 +44,27 @@ public class InmuebleServiceImplTest {
     private Inmueble inmueble1;
     private Inmueble inmueble2;
     private List<MultipartFile> emptyImages;
+    private List<DiasDeLaSemana> emptyDays;
 
     @BeforeEach
     public void setUp() {
+
+        emptyDays = Collections.emptyList();
 
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         juan = new Usuario("juan", "aa22", "juan@yahoo.com.ar");
 
         inmueble1 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
 
         inmueble2 = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION,"pelegrini",123);
 
         emptyImages = Collections.emptyList();
+        inmueble1.setAvailableDays(Collections.emptyList());
+        inmueble2.setAvailableDays(Collections.emptyList());
     }
 
     @Test
@@ -114,7 +120,8 @@ public class InmuebleServiceImplTest {
         for (int i = 0; i < 10; i++) {
             Inmueble inm = new Inmueble(
                     "Plaza"+i, "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+            inm.setAvailableDays(Collections.emptyList());
             inmuebleService.create(inm, emptyImages);
         }
 

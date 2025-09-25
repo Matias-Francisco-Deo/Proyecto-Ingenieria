@@ -1,5 +1,6 @@
 package com.reservo.persitencia.dao;
 
+import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
@@ -46,6 +47,7 @@ public class PeticionDAOTests {
     private Peticion peticionDeAlan;
     private Peticion peticionDeprecada;
     private Peticion peticionDeprecadaDeVariosDias;
+    private List<DiasDeLaSemana> emptyDays;
 
     @Autowired
     private InmuebleDAO inmuebleDAO;
@@ -53,7 +55,7 @@ public class PeticionDAOTests {
 
     @BeforeEach
     public void setUp() {
-
+        emptyDays = Collections.emptyList();
 
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         alan = new Usuario("alan", "aa21", "alan@yahoo.com.ar");
@@ -61,9 +63,10 @@ public class PeticionDAOTests {
 
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
 
         emptyImages = Collections.emptyList();
+        inmueble.setAvailableDays(Collections.emptyList());
 
         peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
 //

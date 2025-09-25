@@ -1,5 +1,6 @@
 package com.reservo.service;
 
+import com.reservo.controller.CancelacionDTO;
 import com.reservo.modelo.reserva.Peticion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ public interface PeticionService {
     List<Peticion> findAllVigentesByDateInInmueble(Long inmuebleId, LocalDate date);
     void reject(RechazoDTO  rechazoDTO);
     void approve(Long id);
+    void cancel(CancelacionDTO cancelacionDTO);
     Page<Peticion> findAllPendientByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllApproveByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllRejectByOwnerId(Long id, Pageable pageable);

@@ -1,5 +1,6 @@
 package com.reservo.service.impl;
 
+import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
@@ -61,19 +62,23 @@ public class PeticionServiceImplTest {
     private Peticion peticionDeAlanNoVigente;
     private Peticion peticionDeprecada;
     private RechazoDTO rechazoDTO;
+    private List<DiasDeLaSemana> emptyDays;
 
 
     @BeforeEach
     public void setUp() {
 
+        emptyDays = Collections.emptyList();
 
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         alan = new Usuario("alan", "aa21", "alan@yahoo.com.ar");
-        raul = new Usuario("alan", "aa21", "raul@yahoo.com.ar");
+        raul = new Usuario("raul", "aa21", "raul@yahoo.com.ar");
 
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION);
+                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+
+        inmueble.setAvailableDays(Collections.emptyList());
 
         emptyImages = Collections.emptyList();
 
