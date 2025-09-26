@@ -86,24 +86,13 @@ export interface MappedHorarioDTO {
     horaFin: number;
 }
 
-export interface ReservasPendientesDTO {
-    id: Long;
-    nameInmueble: string;
+export interface ReservaDTO {
+    id: number | string;
+    nameOwner: string;
+    email: string;
     dateEvento: string;
     horaInicio: string;
     horaFin: string;
-    dateEmision: string;
-    email: string;
-    nameOwner: string;
-}
-
-export interface ReservasVigentesDTO {
-    id: Long;
     nameInmueble: string;
-    dateEvento: string;
-    horaInicio: string;
-    horaFin: string;
     dateEmision: string;
-    email: string;
-    nameOwner: string;
 }

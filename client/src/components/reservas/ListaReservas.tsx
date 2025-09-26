@@ -1,20 +1,34 @@
-import type { ReservasVigentesDTO } from "@/types/types";
 import { Link } from "wouter";
 
-interface ListaReservasProps {
-    reservas: ReservasVigentesDTO[];
+interface ListaReservasProps<T> {
+    state: string;
+    reservas: T[];
+    detalleLink?: (reserva: T) => string;
 }
 
-export default function ListaDeReservasVigentes({
+export default function ListaReservas<
+    T extends {
+        id: number | string;
+        nameOwner: string;
+        email: string;
+        dateEvento: string;
+        horaInicio: string;
+        horaFin: string;
+        nameInmueble: string;
+        dateEmision: string;
+    }
+>({
+    state,
     reservas,
-}: ListaReservasProps) {
+    detalleLink = (reserva) => `/reserva/${state}?id=${reserva.id}`,
+}: ListaReservasProps<T>) {
     return (
         <ul className="mt-4 w-3/4 bg-gray-900 rounded-2xl p-10 min-w-max">
-            <h1 className="text-3xl mb-4">Reservas Vigentes</h1>
+            <h1 className="text-3xl mb-4">Reservas {state}</h1>
             {reservas.map((reserva) => (
                 <Link
                     key={reserva.id}
-                    href={`/reserva/canceladas?id=${reserva.id}`}
+                    href={detalleLink(reserva)}
                 >
                     <li className="rounded-2xl bg-gray-700 mt-2 pl-2 p-2 flex flex-row justify-between min-w-80">
                         <div className="p-4 bg-gray ">

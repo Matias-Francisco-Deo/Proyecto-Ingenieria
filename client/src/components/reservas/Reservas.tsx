@@ -1,16 +1,19 @@
-import ListaDeReservasPendientes from "@/components/reservas/listado/ListadoDeReservasPendientes";
 import Paginacion from "@/components/Paginacion";
 import { useUser } from "@/hooks/useUser";
-import type { ReservasPendientesDTO } from "@/types/types";
 import { useEffect, useState } from "react";
+import type { ReservaDTO } from "@/types/types";
+import ListaReservas from "./ListaReservas";
 
-export default function ReservasPendientes() {
-    interface ReservationsSummaryResponse {
-        content: ReservasPendientesDTO[];
-        totalPages: number;
-        number: number;
-    }
+interface ReservationsSummaryResponse {
+    content: ReservaDTO[];
+    totalPages: number;
+    number: number;
+}
+interface ReservasProps {
+    state: string;
+}
 
+export default function Reservas({ state }: ReservasProps) {
     const [data, setData] = useState<
         ReservationsSummaryResponse | null | undefined
     >();
@@ -21,7 +24,7 @@ export default function ReservasPendientes() {
         setLoading(true);
         try {
             const res = await fetch(
-                `http://localhost:8081/mis-reservas/pendientes/${getId()}?page=${page}`
+                `http://localhost:8081/mis-reservas/${state}/${getId()}?page=${page}`
             );
 
             if (!res.ok) {
@@ -44,19 +47,20 @@ export default function ReservasPendientes() {
 
     useEffect(() => {
         handlePendingReservationsFetch(0);
-    }, []);
+    }, [state]);
 
     return (
         <div>
             {loading && <p>Cargando...</p>}
             {!loading && data === null && (
-                <p className="text-white-500 mt-2">
-                    No hay reservas pendientes.
-                </p>
+                <p className="text-white-500 mt-2">No hay reservas {state}.</p>
             )}
             {!loading && data && data.content.length > 0 && (
                 <div className="flex flex-col items-center ">
-                    <ListaDeReservasPendientes reservas={data.content} />
+                    <ListaReservas
+                        state={state}
+                        reservas={data.content}
+                    />
                     <div className="mt-4 bottom-6 sticky">
                         <Paginacion
                             paginaActual={data.number + 1}

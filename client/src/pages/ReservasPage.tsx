@@ -1,9 +1,7 @@
 import SectionSelectButton from "@/components/SectionSelectButton";
 import { useEffect, useState } from "react";
 import { useLocation, useRoute } from "wouter";
-import ReservasPendientes from "@/components/reservas/ReservasPendientes";
-// import ReservasCanceladas from "@/components/reservas/ReservasCanceladas";
-import ReservasVigentes from "@/components/reservas/ReservasVigentes";
+import Reservas from "@/components/reservas/Reservas";
 
 export default function ReservasPage() {
     const [, setLocation] = useLocation();
@@ -29,13 +27,13 @@ export default function ReservasPage() {
     const getListForActiveSection = () => {
         switch (activeSection) {
             case "Pendientes":
-                return <ReservasPendientes />;
+                return <Reservas state="pendientes" />;
             case "Vigentes":
-                return <ReservasVigentes />;
-            /*case "Deprecadas":
+                return <Reservas state="vigentes" />;
+            case "Deprecadas":
                 return <div>No hay reservas</div>;
             case "Canceladas/Rechazadas":
-                return <ReservasCanceladas />;*/
+                return <Reservas state="canceladas-rechazadas" />;
             default:
                 return null;
         }
