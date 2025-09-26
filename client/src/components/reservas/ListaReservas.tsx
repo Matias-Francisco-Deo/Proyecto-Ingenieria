@@ -33,7 +33,7 @@ export default function ListaReservas<
                     <li className="rounded-2xl bg-gray-700 mt-2 pl-2 p-2 flex flex-row justify-between min-w-80">
                         <div className="p-4 bg-gray ">
                             <p>
-                                <strong>Cliente:</strong> {reserva.nameOwner} (
+                                <strong>Dueño:</strong> {reserva.nameOwner} (
                                 {reserva.email})
                             </p>
                             <p>
