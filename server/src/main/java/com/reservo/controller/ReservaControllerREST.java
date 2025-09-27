@@ -43,4 +43,17 @@ public final class ReservaControllerREST {
 
         return ResponseEntity.ok(reservas);
     }
+
+    @GetMapping("/canceladas-rechazadas/{id}")
+    public ResponseEntity<Page<ReservaVigenteDTO>> findAllReservasCanceladasByUserId
+            (@PathVariable Long id,
+             @RequestParam(defaultValue = "0") int page){
+        Page<Peticion> reservaPage = peticionService.findAllReservasVigentesByUserId(id, PageRequest.of(page, 10));
+
+        if(reservaPage.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<ReservaVigenteDTO> reservas = reservaPage.map(ReservaVigenteDTO::desdeModelo);
+
+        return ResponseEntity.ok(reservas);
+    }
 }
