@@ -37,6 +37,9 @@ public record InmuebleRequestDTO(
         if (ubication.isBlank()) throw new ParametroIncorrecto("La ubicación no debe estar en blanco.");
         if (street.isBlank()) throw new ParametroIncorrecto("La calle no debe estar en blanco.");
         if (days.isEmpty()) throw new ParametroIncorrecto("Se deben especificar días para ocupar.");
+        if (price <= 0) throw new ParametroIncorrecto("El precio debe ser mayor a 0.");
+        if (capacity <= 0) throw new ParametroIncorrecto("La capacidad debe ser mayor a 0.");
+        if (number <= 0) throw new ParametroIncorrecto("La altura debe ser mayor a 0.");
 
         getRango result = getRango();
         PoliticasDeCancelacion cancellationPolicy = getPoliticasDeCancelacion();

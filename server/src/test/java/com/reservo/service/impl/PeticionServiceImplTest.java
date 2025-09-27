@@ -75,7 +75,7 @@ public class PeticionServiceImplTest {
 
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         alan = new Usuario("alan", "aa21", "alan@yahoo.com.ar");
-        raul = new Usuario("alan", "aa21", "raul@yahoo.com.ar");
+        raul = new Usuario("raul", "aa21", "raul@yahoo.com.ar");
 
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",

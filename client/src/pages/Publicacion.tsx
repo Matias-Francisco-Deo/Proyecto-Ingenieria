@@ -15,6 +15,8 @@ type Inmueble = {
   cancellation: string;
   ownerName: string;
   ownerEmail: string;
+  street: string;
+  number: number;
 };
 
 export default function Publicacion() {
@@ -97,10 +99,20 @@ export default function Publicacion() {
               <span className="font-semibold text-lg">Horario:</span>{" "}
               {inmueble.start} - {inmueble.end}
             </p>
-            <p>
-              <span className="font-semibold text-lg">Localidad:</span>{" "}
-              {inmueble.ubication}
-            </p>
+            <div className="flex gap-6">
+            <div className="flex items-center gap-1">
+              <span className="font-semibold text-lg">Localidad:</span>
+              <span>{inmueble.ubication}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="font-semibold text-lg">Calle:</span>
+              <span>{inmueble.street}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="font-semibold text-lg">Altura:</span>
+              <span>{inmueble.number}</span>
+            </div>
+            </div>
             <p>
               <span className="font-semibold text-lg">Condiciones:</span>{" "}
               {inmueble.condition}

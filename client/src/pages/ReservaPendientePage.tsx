@@ -86,8 +86,9 @@ export default function ReservaPendientePage() {
             <div className="space-y-3  flex text-xl flex-col justify-center py-8 gap-10">
               <div className=" flex justify-between px-4">
                 <p>
-                  <span className="font-semibold text-lg ">Localidad: </span>
-                  {petition.ubication}
+                  <span>Localidad: </span>{petition.ubication}<br/>
+                  <span>Calle: </span>{petition.street}<br/>
+                  <span>Altura: </span>{petition.number}
                 </p>
                 <p>
                   <span className="font-semibold text-lg">Capacidad: </span>

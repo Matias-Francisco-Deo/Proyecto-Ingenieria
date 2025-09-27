@@ -13,6 +13,8 @@ const PropertyPage = lazy(() => import("../pages/PropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/HacerReservaPage"));
 const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
+const CancelarReservaPage = lazy(() => import("../pages/CancelarReservaPage"));
+
 const ReservaPendientePage = lazy(
     () => import("../pages/ReservaPendientePage")
 );
@@ -68,6 +70,11 @@ export function AppRoutes() {
                     <Route
                         path="/reservas"
                         component={ReservasPage}
+                    />
+
+                    <Route
+                        path="/reservas/Cancelar"
+                        component={CancelarReservaPage}
                     />
                     {/* Rutas protegidas */}
                     {/* <Route path="/home" component={HomePage} />

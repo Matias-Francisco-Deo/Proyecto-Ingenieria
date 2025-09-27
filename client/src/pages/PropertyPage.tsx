@@ -146,6 +146,27 @@ export default function createPropertyPage() {
       resetBlankError();
       return;
     }
+    
+    let hasNumberErrorFlag = false; 
+
+    if (+propertyPrice.value <= 0) { 
+      setHasPriceError(true); 
+      hasNumberErrorFlag = true; 
+    }
+    if (+propertyCapacity.value <= 0) { 
+      setHasCapacityError(true);
+      hasNumberErrorFlag = true; 
+    }
+    if (+propertyNumber.value <= 0) { 
+      setHasNumberError(true);
+      hasNumberErrorFlag = true; 
+    }
+
+    if (hasNumberErrorFlag) { 
+      setGeneralErrorMessage("La altura, el precio y la capacidad deben ser valores mayores a 0"); 
+
+      return; 
+    }
 
     const formData = new FormData();
 
@@ -206,7 +227,7 @@ export default function createPropertyPage() {
         setHasStreetError(true); 
       }
       if (propertyNumberIsBlank) {
-         setHasNumberError(true); 
+        setHasNumberError(true); 
         }
       if (propertyImageIsBlank) {
         setHasImageError(true);
@@ -339,7 +360,12 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="number"
-                  className={`${
+                  onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`no-spin ${
                     hasNumberError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
@@ -397,7 +423,12 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="price"
-                  className={`${
+                  onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`no-spin ${
                     hasPriceError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
@@ -422,9 +453,10 @@ export default function createPropertyPage() {
                     id="start-event"
                     name="start-event"
                     type="time"
+                    step="3600"
                     required
                     autoComplete="start-event"
-                    className={`${
+                    className={`no-time-picker${//clase que quita el picker de horario del input
                       hasStartTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                   />
@@ -440,9 +472,10 @@ export default function createPropertyPage() {
                     id="end-event"
                     name="end-event"
                     type="time"
+                    step="3600"
                     required
                     autoComplete="end-event"
-                    className={`${
+                    className={`no-time-picker${//clase que quita el picker de horario del input
                       hasEndTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                   />
@@ -471,7 +504,12 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="capacity"
-                  className={`${
+                  onKeyDown={(e) => {
+                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`no-spin ${
                     hasCapacityError ? "inputError" : ""
                   } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />

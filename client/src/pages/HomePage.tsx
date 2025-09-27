@@ -52,7 +52,7 @@ export default function ListaInmuebles() {
           type="text"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
-          placeholder="Buscar inmueble..."
+          placeholder="Buscar lugares..."
           className="border p-2 rounded"
         />
         <button

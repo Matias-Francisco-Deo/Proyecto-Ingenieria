@@ -14,7 +14,7 @@ export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
             <div className="p-4 shadow rounded bg-gray">
               <h2 className="text-xl font-bold">{inm.name}</h2>
               <p>
-                <strong>Ubicación: </strong> {inm.ubication}
+                <strong>Ubicación: </strong> {inm.ubication}{inm.street}{inm.number}
               </p>
               <p>
                 <strong>Precio: </strong> ${inm.price}

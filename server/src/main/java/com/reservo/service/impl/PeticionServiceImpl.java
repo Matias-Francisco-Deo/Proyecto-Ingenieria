@@ -1,5 +1,6 @@
 package com.reservo.service.impl;
 
+import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
@@ -106,6 +107,21 @@ public class PeticionServiceImpl implements PeticionService {
         Peticion peticion = peticionDAO.findPendienteById(rechazoDTO.peticionId()).get(); // no debería tirar error porque el check de arriba hace return si no existe también
 
         peticion.rechazar(rechazoDTO.motivoDeRechazo());
+        peticionDAO.save(peticion);
+    }
+
+    @Override
+    public void cancel(CancelacionDTO cancelcaionDTO){
+        Optional<Peticion> optionalPeticion = peticionDAO.findById(cancelcaionDTO.peticionId());
+
+        if (optionalPeticion.isEmpty()) return;
+        if (peticionDAO.itsDeprecatedFromDateAndTime(cancelcaionDTO.peticionId(), LocalDate.now(), LocalTime.now())) throw new PeticionVencida("La petición esta vencida.");
+        if (peticionDAO.findRejectedById(cancelcaionDTO.peticionId()).isPresent()) throw new PeticionYaVigente("La petición ya fue cancelada.");
+
+        Peticion peticion = optionalPeticion.get();
+
+        peticion.cancelar(cancelcaionDTO.motivoDeCancelacion());
+
         peticionDAO.save(peticion);
     }
 

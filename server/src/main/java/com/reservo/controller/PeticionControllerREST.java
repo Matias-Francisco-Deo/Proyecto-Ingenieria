@@ -1,7 +1,7 @@
 package com.reservo.controller;
 
 import com.reservo.controller.dto.Peticion.*;
-import com.reservo.controller.dto.Peticion.PeticionSummaryDTO;
+
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.reserva.Peticion;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/peticion")
-public final class PeticionControllerREST {
+public class PeticionControllerREST {
     private final PeticionService peticionService;
     private final UsuarioService usuarioService;
     private final InmuebleService inmuebleService;
@@ -145,5 +145,11 @@ public final class PeticionControllerREST {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/cancelar")
+    public ResponseEntity<Object> cancel(@RequestBody CancelacionDTO cancelacionDTO) {
+        peticionService.cancel(cancelacionDTO);
+
+        return ResponseEntity.ok().build();
+    }
 
 }
