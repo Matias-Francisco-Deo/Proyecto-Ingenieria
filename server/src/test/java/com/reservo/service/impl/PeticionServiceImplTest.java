@@ -487,7 +487,7 @@ public class PeticionServiceImplTest {
     }
 
 
-    //@AfterEach
+    @AfterEach
     void limpiarDb(){
         testService.eliminarPeticiones();
         testService.eliminarInmuebles();
