@@ -1,7 +1,7 @@
 interface BarraDeBusquedaProps {
     nombre: string;
     setNombre: (nombre: string) => void;
-    handleBuscar: (page?: number) => Promise<void>;
+    onAplicarFiltros: () => void;
     loading: boolean;
     toggleFiltrosDropdown: () => void;
 }
@@ -10,7 +10,7 @@ export default function BarraDeBusqueda({
     nombre,
     setNombre,
     loading,
-    handleBuscar,
+    onAplicarFiltros,
     toggleFiltrosDropdown,
 }: BarraDeBusquedaProps) {
     // Se elimina handleIconoClick y se llama a toggleFiltrosDropdown directamente en el botón.
@@ -25,14 +25,14 @@ export default function BarraDeBusqueda({
                 className="p-3 flex-1 bg-neutral-800 text-gray-300 rounded-2xl focus:outline-none"
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                        handleBuscar(0);
+                        onAplicarFiltros();
                     }
                 }}
             />
 
             {/* Botón de Buscar: Visible en escritorio */}
             <button
-                onClick={() => handleBuscar(0)}
+                onClick={() => onAplicarFiltros()}
                 className="ml-2 p-3 bg-amber-500 text-white rounded-2xl cursor-pointer hover:bg-amber-600 transition duration-150 shadow-lg disabled:opacity-50 hidden sm:block"
                 disabled={loading}
             >
