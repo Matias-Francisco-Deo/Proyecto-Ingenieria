@@ -8,7 +8,6 @@ export default function DetalleReservaCancelada({
     reserva,
 }: DetalleReservaCanceladaProps) {
     return (
-        // Contenido desplegable extraído
         <div className="m-3 space-y-2 bg-gray-800 rounded-lg p-3">
             <div className="flex flex-wrap justify-between text-sm text-gray-200 gap-2">
                 <span>
@@ -22,7 +21,6 @@ export default function DetalleReservaCancelada({
                     Horario: {reserva.horaInicio} - {reserva.horaFin}
                 </span>
             </div>
-            {/* El campo en ReservaCanceladasDTO es 'motivoCancelacion' */}
             {reserva?.motivoCancelacion ? (
                 <div>
                     <span className="font-bold">

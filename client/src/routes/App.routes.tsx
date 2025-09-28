@@ -70,9 +70,8 @@ export function AppRoutes() {
                         path="/reservas"
                         component={ReservasPage}
                     />
-
                     <Route
-                        path="/reservas/Cancelar"
+                        path="/reserva/:estado"
                         component={CancelarReservaPage}
                     />
                     {/* Rutas protegidas */}
