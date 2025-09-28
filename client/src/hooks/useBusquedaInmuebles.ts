@@ -1,17 +1,17 @@
 import type { Inmueble } from "@/types/types";
 import { useState, useCallback } from "react";
 
-// Define la misma estructura de respuesta de la API
 export interface InmueblesSummaryResponse {
     content: Inmueble[];
     totalPages: number;
     number: number;
 }
 
-// Define la interfaz de las propiedades que devuelve el hook
 export interface UseBusquedaInmueblesResult {
     nombre: string;
     setNombre: (nombre: string) => void;
+    localidad: string;
+    setLocalidad: (localidad: string) => void;
     data: InmueblesSummaryResponse | undefined | null;
     loading: boolean;
     handleBuscar: (page?: number) => Promise<void>;
@@ -19,6 +19,7 @@ export interface UseBusquedaInmueblesResult {
 
 export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     const [nombre, setNombre] = useState("");
+    const [localidad, setLocalidad] = useState("");
     const [data, setData] = useState<
         InmueblesSummaryResponse | undefined | null
     >(undefined);
@@ -26,8 +27,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
 
     const handleBuscar = useCallback(
         async (page: number = 0) => {
-            // Si no hay texto de búsqueda, resetea los datos y sale.
-            if (!nombre.trim()) {
+            // Si no hay nombre ni localidad, resetea
+            if (!nombre.trim() && !localidad.trim()) {
                 setData(undefined);
                 return;
             }
@@ -35,15 +36,27 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
             setLoading(true);
 
             try {
-                const encodedNombre = encodeURIComponent(nombre.trim());
+                // DTO que espera el backend
+                const body = {
+                    nombre: nombre.trim(),
+                    localidad: localidad.trim(),
+                    page: page,
+                };
 
                 const res = await fetch(
-                    `http://localhost:8081/property/buscar/${encodedNombre}?page=${page}`
+                    `http://localhost:8081/property/buscar`,
+                    {
+                        method: "POST", // <-- POST en vez de GET
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(body), // <-- body con JSON
+                    }
                 );
 
                 if (!res.ok) {
                     if (res.status === 404) {
-                        setData(null); // Marcar como sin coincidencias
+                        setData(null);
                     } else {
                         console.error(`Error HTTP: ${res.status}`);
                         setData(null);
@@ -60,12 +73,14 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
                 setLoading(false);
             }
         },
-        [nombre]
+        [nombre, localidad]
     );
 
     return {
         nombre,
         setNombre,
+        localidad,
+        setLocalidad,
         data,
         loading,
         handleBuscar,

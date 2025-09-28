@@ -7,7 +7,7 @@ export default function HomePage() {
                 RESERVO
             </h1>
 
-            <div className="w-full max-w-xl">
+            <div className="w-full max-w-3xl">
                 <BuscadorDeInmuebles />
             </div>
         </div>

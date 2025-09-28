@@ -7,28 +7,53 @@ interface ListaResultadosProps {
 
 export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
     return (
-        <ul className="mt-4">
+        <ul className="mt-6 space-y-4">
             {resultados.map((inm) => (
-                <Link href={`/publicacion?id=${inm.id}`}>
-                    <li
-                        key={inm.id}
-                        className="border-2 border-amber-600 mt-2 pl-2 p-2"
-                    >
-                        <div className="p-4 shadow rounded bg-gray">
-                            <h2 className="text-xl font-bold">{inm.name}</h2>
-                            <p>
-                                <strong>Ubicación: </strong> {inm.ubication}
-                            </p>
-                            <p>
-                                <strong>Precio: </strong> ${inm.price}
-                            </p>
-                            <p>
-                                <strong>Nombre del dueño:</strong>{" "}
-                                {inm.nameDelDuenio}
-                            </p>
-                            <p>
-                                <strong>Email:</strong> {inm.email}
-                            </p>
+                <Link
+                    href={`/publicacion?id=${inm.id}`}
+                    key={inm.id}
+                >
+                    {/* Tarjeta Principal: Fondo oscuro (negro/gris oscuro), borde ámbar, sombra sutil, y transición para el hover. */}
+                    <li className="block p-4 bg-[#1a1a1a] border border-amber-600 rounded-lg shadow-xl cursor-pointer transition duration-300 hover:bg-[#2a2a2a] hover:shadow-2xl">
+                        <div className="flex flex-col md:flex-row gap-4">
+                            {/* Placeholder para la imagen (el cuadrado gris de la imagen) */}
+                            <div className="w-full md:w-32 h-32 bg-[#333] rounded-md flex items-center justify-center text-gray-500 text-sm">
+                                Imagen
+                            </div>
+
+                            {/* Contenido de la Información */}
+                            <div className="flex-1 text-white">
+                                {/* Línea Superior: Nombre y Dueño */}
+                                <div className="flex justify-between items-start mb-2">
+                                    <h2 className="text-2xl font-bold text-gray-100 truncate">
+                                        {inm.name}
+                                    </h2>
+                                    {/* Nombre del Dueño en naranja (tal como en la imagen) */}
+                                    <p className="text-sm font-semibold text-amber-500 ml-4">
+                                        {inm.nameDelDuenio}
+                                    </p>
+                                </div>
+
+                                {/* Ubicación */}
+                                <p className="text-gray-400 text-base mb-2">
+                                    <span className="font-semibold">
+                                        Localidad:
+                                    </span>{" "}
+                                    {inm.ubication}
+                                </p>
+
+                                {/* Email del Dueño */}
+                                <p className="text-gray-500 text-sm mb-4">
+                                    <strong>Email:</strong> {inm.email}
+                                </p>
+
+                                {/* Precio Destacado (en naranja/ámbar) */}
+                                <div className="mt-auto pt-2">
+                                    <span className="text-xl font-extrabold text-amber-500">
+                                        ${inm.price.toLocaleString("es-AR")}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </Link>
