@@ -1,27 +1,17 @@
 import { Link } from "wouter";
+import type { ReservaDTO } from "@/types/types";
 
-interface ListaReservasProps<T> {
+interface ListaReservasProps {
     state: string;
-    reservas: T[];
-    detalleLink?: (reserva: T) => string;
+    reservas: ReservaDTO[];
+    detalleLink?: (reserva: ReservaDTO) => string;
 }
 
-export default function ListaReservas<
-    T extends {
-        id: number | string;
-        nameOwner: string;
-        email: string;
-        dateEvento: string;
-        horaInicio: string;
-        horaFin: string;
-        nameInmueble: string;
-        dateEmision: string;
-    }
->({
+export default function ListaReservas({
     state,
     reservas,
     detalleLink = (reserva) => `/reserva/${state}?id=${reserva.id}`,
-}: ListaReservasProps<T>) {
+}: ListaReservasProps) {
     return (
         <ul className="mt-4 w-3/4 bg-gray-900 rounded-2xl p-10 min-w-max">
             <h1 className="text-3xl mb-4">Reservas {state}</h1>

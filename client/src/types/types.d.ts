@@ -47,7 +47,6 @@ export interface CancelledRejectedPetitionDraft {
 }
 
 export interface PendingPetition {
-<<<<<<< HEAD
     id: number;
     name: string;
     description: string;
@@ -56,26 +55,14 @@ export interface PendingPetition {
     date_start: string;
     date_end: string;
     capacity: number;
+    owner_name: string;
+    owner_email: string;
     client_name: string;
     client_email: string;
-=======
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number;
-  date_start: string;
-  date_end: string;
-  capacity: number;
-  owner_name:string;
-  owner_email: string;
-  client_name: string;
-  client_email: string;
-  street: string;
-  number: number;
-  status: string;
-  cancellationPolicy:string;
->>>>>>> dev
+    street: string;
+    number: number;
+    status: string;
+    cancellationPolicy: string;
 }
 
 export interface ErrorResponse {
@@ -83,7 +70,6 @@ export interface ErrorResponse {
 }
 
 export interface Inmueble {
-<<<<<<< HEAD
     id: number;
     name: string;
     description: string;
@@ -94,20 +80,8 @@ export interface Inmueble {
     end: string;
     cancellation: string;
     availableDays: string[];
-=======
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number; // precio por hora
-  condition: string;
-  start: string;
-  end: string;
-  cancellation: string;
-  availableDays: string[];
-  street: string;
-  number: number;
->>>>>>> dev
+    street: string;
+    number: number;
 }
 
 export interface HorarioDTO {
@@ -129,4 +103,30 @@ export interface ReservaDTO {
     horaFin: string;
     nameInmueble: string;
     dateEmision: string;
+}
+
+interface ReservaCanceladasDTO {
+    id: number;
+    dateEvento: string;
+    horaInicio: string;
+    horaFin: string;
+    dateEmision: string;
+    priceToPay: number;
+    motivoCancelacion: string;
+    inmuebleDTO: {
+        nameInmueble: string;
+        ubication: string;
+        calle: string;
+        altura: number;
+        owner: {
+            email: string;
+            nameOwner: string;
+        };
+    };
+}
+
+export interface ReservationsSummaryResponse<T> {
+    content: T[];
+    totalPages: number;
+    number: number;
 }

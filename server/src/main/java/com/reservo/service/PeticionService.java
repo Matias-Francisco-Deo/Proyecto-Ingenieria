@@ -28,4 +28,6 @@ public interface PeticionService {
     Page<Peticion> findAllReservasPendientesByUserId(Long userId, Pageable page);
 
     Page<Peticion> findAllReservasVigentesByUserId(Long userId, Pageable page);
+
+    Page<Peticion> findAllReservasCanceladasByUserId(Long id, Pageable page);
 }

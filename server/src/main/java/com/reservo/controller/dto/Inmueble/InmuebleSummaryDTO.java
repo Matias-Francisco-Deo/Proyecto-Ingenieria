@@ -5,7 +5,7 @@ import com.reservo.modelo.property.Inmueble;
 public record InmuebleSummaryDTO (
         Integer id,
         String name,
-        String  ubication,
+        String ubication,
         Double price,
         String nameDelDuenio,
         String email

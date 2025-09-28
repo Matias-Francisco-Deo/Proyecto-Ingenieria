@@ -1,5 +1,6 @@
 package com.reservo.controller;
 
+import com.reservo.controller.dto.Reservas.ReservaCanceladasRechazadasDTO;
 import com.reservo.controller.dto.Reservas.ReservaPendienteDTO;
 import com.reservo.controller.dto.Reservas.ReservaVigenteDTO;
 import com.reservo.modelo.reserva.Peticion;
@@ -45,14 +46,14 @@ public final class ReservaControllerREST {
     }
 
     @GetMapping("/canceladas-rechazadas/{id}")
-    public ResponseEntity<Page<ReservaVigenteDTO>> findAllReservasCanceladasByUserId
+    public ResponseEntity<Page<ReservaCanceladasRechazadasDTO>> findAllReservasCanceladasByUserId
             (@PathVariable Long id,
              @RequestParam(defaultValue = "0") int page){
-        Page<Peticion> reservaPage = peticionService.findAllReservasVigentesByUserId(id, PageRequest.of(page, 10));
+        Page<Peticion> reservaPage = peticionService.findAllReservasCanceladasByUserId(id, PageRequest.of(page, 10));
 
         if(reservaPage.isEmpty()) return ResponseEntity.status(404).body(null);
 
-        Page<ReservaVigenteDTO> reservas = reservaPage.map(ReservaVigenteDTO::desdeModelo);
+        Page<ReservaCanceladasRechazadasDTO> reservas = reservaPage.map(ReservaCanceladasRechazadasDTO::desdeModelo);
 
         return ResponseEntity.ok(reservas);
     }

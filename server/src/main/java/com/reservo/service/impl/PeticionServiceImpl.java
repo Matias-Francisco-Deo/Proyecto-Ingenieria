@@ -2,6 +2,7 @@ package com.reservo.service.impl;
 
 import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.service.exception.peticion.*;
@@ -162,5 +163,10 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public Page<Peticion> findAllReservasVigentesByUserId(Long userId, Pageable page) {
         return peticionDAO.findAllReservasByEstado(userId, page, Vigente.class);
+    }
+
+    @Override
+    public Page<Peticion> findAllReservasCanceladasByUserId(Long userId, Pageable page) {
+        return peticionDAO.findAllReservasByEstado(userId, page, Cancelado.class);
     }
 }
