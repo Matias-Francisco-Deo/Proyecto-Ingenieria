@@ -1,10 +1,13 @@
 import ResultadosDeInmuebles from "@/components/buscador/ResultadosDeInmuebles";
 import BarraDeBusqueda from "@/components/buscador/BarraBuscadora";
 import FiltrosDropdownUI from "@/components/buscador/DrawDraft";
-import { useBusquedaInmuebles } from "@/hooks/useBusquedaInmuebles";
+
+import type { UseBusquedaInmueblesResult } from "@/hooks/useBusquedaInmuebles";
 import { useState } from "react";
 
-export default function BuscadorDeInmuebles() {
+type BuscadorDeInmueblesProps = UseBusquedaInmueblesResult;
+
+export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
     const {
         nombre,
         setNombre,
@@ -13,7 +16,7 @@ export default function BuscadorDeInmuebles() {
         data,
         loading,
         handleBuscar,
-    } = useBusquedaInmuebles();
+    } = props;
 
     const [isFiltrosDropdownOpen, setIsFiltrosDropdownOpen] = useState(false);
 
@@ -28,9 +31,10 @@ export default function BuscadorDeInmuebles() {
         toggleFiltrosDropdown();
         handleBuscar(0);
     };
+
     return (
         <div className="mt-4">
-            <div className="relative z-10 max-w-2xl mx-auto">
+            <div className="relative z-10 max-w-md mx-auto">
                 <BarraDeBusqueda
                     nombre={nombre}
                     setNombre={setNombre}
@@ -46,11 +50,13 @@ export default function BuscadorDeInmuebles() {
                     onAplicarFiltros={onAplicarFiltros}
                 />
             </div>
-            <ResultadosDeInmuebles
-                data={data}
-                loading={loading}
-                onPageChange={handleBuscar}
-            />
+            <div className="w-full max-w-4xl mx-auto mt-8">
+                <ResultadosDeInmuebles
+                    data={data}
+                    loading={loading}
+                    onPageChange={handleBuscar}
+                />
+            </div>
         </div>
     );
 }

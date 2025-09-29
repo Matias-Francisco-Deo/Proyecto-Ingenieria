@@ -1,34 +1,43 @@
-import React from "react";
+function DaySelectorUI() {
+    const dias = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+    ];
 
-interface DaySelectorUIProps {
-    dias: string[];
-    diasSeleccionados: string[];
-    toggleDia: (dia: string) => void;
-}
-
-const DaySelectorUI: React.FC<DaySelectorUIProps> = ({
-    dias,
-    diasSeleccionados,
-    toggleDia,
-}) => (
-    <div className="mb-6">
-        <p className="text-gray-300 font-semibold mb-3">Días de la Semana:</p>
-        <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-            {dias.map((dia) => (
-                <span
-                    key={dia}
-                    onClick={() => toggleDia(dia)}
-                    className={`p-2 text-center rounded-xl cursor-pointer text-sm font-medium transition duration-150 select-none ${
-                        diasSeleccionados.includes(dia)
-                            ? "bg-amber-500 text-white shadow-md"
-                            : "bg-neutral-700 text-gray-300 hover:bg-neutral-600"
-                    }`}
-                >
-                    {dia.slice(0, 3)}
-                </span>
-            ))}
+    return (
+        <div>
+            <p className="text-gray-400 font-semibold mb-3">
+                Que tenga disponibles los días:
+            </p>
+            <div className="flex flex-col items-center gap-2">
+                <div className="flex justify-center gap-2">
+                    {dias.slice(0, 4).map((dia) => (
+                        <span
+                            key={dia}
+                            className="px-4 py-2 rounded-xl cursor-pointer text-sm bg-neutral-800 text-gray-300"
+                        >
+                            {dia}
+                        </span>
+                    ))}
+                </div>
+                <div className="flex justify-center gap-2">
+                    {dias.slice(4).map((dia) => (
+                        <span
+                            key={dia}
+                            className="px-4 py-2 rounded-xl cursor-pointer text-sm bg-neutral-800 text-gray-300"
+                        >
+                            {dia}
+                        </span>
+                    ))}
+                </div>
+            </div>
         </div>
-    </div>
-);
+    );
+}
 
 export default DaySelectorUI;

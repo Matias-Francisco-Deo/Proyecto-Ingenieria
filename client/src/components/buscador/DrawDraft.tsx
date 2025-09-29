@@ -1,3 +1,8 @@
+import RatingAndCapacityUI from "./filtros/CalificacionCapacidad";
+import DaySelectorUI from "./filtros/dia";
+import ScheduleInputUI from "./filtros/horario";
+import PriceSliderUI from "./filtros/precio";
+
 interface FiltrosDropdownUIProps {
     localidad: string;
     setLocalidad: (localidad: string) => void;
@@ -22,7 +27,7 @@ export default function FiltrosDropdownUI({
                 overflow-hidden
                 ${
                     isVisible
-                        ? "max-h-96 opacity-100 mt-4"
+                        ? "max-h-none opacity-100 mt-4"
                         : "max-h-0 opacity-0 mt-0"
                 } 
             `}
@@ -39,6 +44,10 @@ export default function FiltrosDropdownUI({
                         />
                     </label>
                 </div>
+                <PriceSliderUI></PriceSliderUI>
+                <RatingAndCapacityUI></RatingAndCapacityUI>
+                <ScheduleInputUI></ScheduleInputUI>
+                <DaySelectorUI></DaySelectorUI>
 
                 <div className="flex justify-end mt-4">
                     <button

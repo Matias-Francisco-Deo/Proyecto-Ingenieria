@@ -14,7 +14,9 @@ export interface UseBusquedaInmueblesResult {
     setLocalidad: (localidad: string) => void;
     data: InmueblesSummaryResponse | undefined | null;
     loading: boolean;
+    hasResults: boolean;
     handleBuscar: (page?: number) => Promise<void>;
+    clearResults: () => void;
 }
 
 export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
@@ -36,7 +38,6 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
             setLoading(true);
 
             try {
-                // DTO que espera el backend
                 const body = {
                     nombre: nombre.trim(),
                     localidad: localidad.trim(),
@@ -46,11 +47,11 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
                 const res = await fetch(
                     `http://localhost:8081/property/buscar`,
                     {
-                        method: "POST", // <-- POST en vez de GET
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(body), // <-- body con JSON
+                        body: JSON.stringify(body),
                     }
                 );
 
@@ -76,6 +77,16 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
         [nombre, localidad]
     );
 
+    const clearResults = useCallback(() => {
+        setData(undefined);
+        setNombre("");
+        setLocalidad("");
+    }, []);
+
+    // Determina si hay resultados basado en la data
+    const hasResults =
+        data !== undefined && data !== null && data.content.length > 0;
+
     return {
         nombre,
         setNombre,
@@ -83,6 +94,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
         setLocalidad,
         data,
         loading,
+        hasResults,
         handleBuscar,
+        clearResults,
     };
 };
