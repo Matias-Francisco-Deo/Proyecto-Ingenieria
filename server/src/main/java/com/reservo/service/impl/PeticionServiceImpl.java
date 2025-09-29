@@ -2,13 +2,16 @@ package com.reservo.service.impl;
 
 import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.reserva.estadosReservas.Cancelado;
+import com.reservo.modelo.reserva.estadosReservas.Pendiente;
+import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.service.exception.peticion.*;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
-import com.reservo.service.exception.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,5 +153,20 @@ public class PeticionServiceImpl implements PeticionService {
     @Override
     public Page<Peticion> findAllRejectByOwnerId(Long userId, Pageable pageable) {
         return peticionDAO.findAllRejectByOwnerId(userId, pageable);
+    }
+
+    @Override
+    public Page<Peticion> findAllReservasPendientesByUserId(Long userId, Pageable page) {
+        return peticionDAO.findAllReservasByEstado(userId, page, Pendiente.class);
+    }
+
+    @Override
+    public Page<Peticion> findAllReservasVigentesByUserId(Long userId, Pageable page) {
+        return peticionDAO.findAllReservasByEstado(userId, page, Vigente.class);
+    }
+
+    @Override
+    public Page<Peticion> findAllReservasCanceladasByUserId(Long userId, Pageable page) {
+        return peticionDAO.findAllReservasByEstado(userId, page, Cancelado.class);
     }
 }

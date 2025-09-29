@@ -1,86 +1,22 @@
-import ListaDeInmuebles from "@/components/ListaDeInmuebles";
-import Paginacion from "@/components/Paginacion";
-import type { Inmueble } from "@/types/types";
-import { useState } from "react";
+import BuscadorDeInmuebles from "@/components/buscador/Buscador";
 
-interface InmueblesSummaryResponse {
-  content: Inmueble[];
-  totalPages: number;
-  number: number;
-}
+import { useBusquedaInmuebles } from "@/hooks/useBusquedaInmuebles";
 
-export default function ListaInmuebles() {
-  const [nombre, setNombre] = useState("");
-  const [data, setData] = useState<InmueblesSummaryResponse | undefined | null>(
-    undefined
-  );
-  const [loading, setLoading] = useState(false);
+export default function HomePage() {
+    const busquedaProps = useBusquedaInmuebles();
+    const { hasResults } = busquedaProps;
 
-  const handleBuscar = async (page: number = 0) => {
-    if (!nombre) {
-      setData(undefined);
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `http://localhost:8081/property/buscar/${nombre}?page=${page}`
-      );
+    return (
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] text-white p-4">
+            {!hasResults && (
+                <h1 className="text-6xl font-light text-white w-1/2 text-center">
+                    RESERVO
+                </h1>
+            )}
 
-      if (!res.ok) {
-        if (res.status === 404) {
-          setData(null);
-        } else {
-          throw new Error(`Error HTTP: ${res.status}`);
-        }
-        return;
-      }
-
-      const json: InmueblesSummaryResponse = await res.json();
-      setData(json);
-    } catch {
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="grid gap-4 p-4">
-      <div className="p-4">
-        <input
-          type="text"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          placeholder="Buscar lugares..."
-          className="border p-2 rounded"
-        />
-        <button
-          onClick={() => handleBuscar(0)}
-          className="ml-2 p-2 bg-amber-600 text-white rounded"
-        >
-          Buscar
-        </button>
-
-        {loading && <p>Cargando...</p>}
-
-        {!loading && data === null && (
-          <p className="text-red-500 mt-2">Sin coincidencias</p>
-        )}
-
-        {!loading && data && data.content.length > 0 && (
-          <>
-            <ListaDeInmuebles resultados={data.content} />
-            <div className="mt-4">
-              <Paginacion
-                paginaActual={data.number + 1}
-                totalPaginas={data.totalPages}
-                onPageChange={(nro) => handleBuscar(nro - 1)}
-              />
+            <div className="w-full max-w-2xl">
+                <BuscadorDeInmuebles {...busquedaProps} />
             </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }

@@ -1,3 +1,4 @@
+import ReservasPage from "@/pages/ReservasPage";
 import { MainLayout } from "../layouts/MainLayout";
 import { Suspense, lazy } from "react";
 import { Route, Switch } from "wouter";
@@ -15,29 +16,66 @@ const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const CancelarReservaPage = lazy(() => import("../pages/CancelarReservaPage"));
 
 const ReservaPendientePage = lazy(
-  () => import("../pages/ReservaPendientePage")
+    () => import("../pages/ReservaPendientePage")
 );
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
-  return (
-    <MainLayout>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/home" component={HomePage} />
-          <Route path="/signin" component={AuthPage} />
-          <Route path="/alta-inmueble" component={PropertyPage} />
-          <Route path="/publicacion" component={Publicacion} />
-          <Route path="/hacer-reserva" component={PeticionForm} />
-          <Route path="/peticion/pendiente" component={ReservaPendientePage} />
+    return (
+        <MainLayout>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                    <Route
+                        path="/"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/home"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/signin"
+                        component={AuthPage}
+                    />
+                    <Route
+                        path="/alta-inmueble"
+                        component={PropertyPage}
+                    />
+                    <Route
+                        path="/publicacion"
+                        component={Publicacion}
+                    />
+                    <Route
+                        path="/hacer-reserva"
+                        component={PeticionForm}
+                    />
+                    <Route
+                        path="/peticion/pendiente"
+                        component={ReservaPendientePage}
+                    />
 
-          <Route path="/mis-peticiones/:estado" component={PetitionsPage} />
-          <Route path="/mis-peticiones" component={PetitionsPage} />
-
-          <Route path="/reservas/Cancelar" component={CancelarReservaPage} />
-          {/* Rutas protegidas */}
-          {/* <Route path="/home" component={HomePage} />
+                    <Route
+                        path="/mis-peticiones/:estado"
+                        component={PetitionsPage}
+                    />
+                    <Route
+                        path="/mis-peticiones"
+                        component={PetitionsPage}
+                    />
+                    <Route
+                        path="/reservas/:estado"
+                        component={ReservasPage}
+                    />
+                    <Route
+                        path="/reservas"
+                        component={ReservasPage}
+                    />
+                    <Route
+                        path="/reserva/:estado"
+                        component={CancelarReservaPage}
+                    />
+                    {/* Rutas protegidas */}
+                    {/* <Route path="/home" component={HomePage} />
 
           <Route path="/search/:query?" component={SearchPage} />
           <Route path="/gif/:id" component={GifsDetails} />
@@ -46,12 +84,12 @@ export function AppRoutes() {
 
           <ProtectedRoute path="/upload" component={UploadPage} /> */}
 
-          {/* Ruta 404 */}
-          {/* Ruta 404 */}
+                    {/* Ruta 404 */}
+                    {/* Ruta 404 */}
 
-          <Route component={Page404} />
-        </Switch>
-      </Suspense>
-    </MainLayout>
-  );
+                    <Route component={Page404} />
+                </Switch>
+            </Suspense>
+        </MainLayout>
+    );
 }

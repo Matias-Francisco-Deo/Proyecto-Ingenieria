@@ -1,5 +1,6 @@
 package com.reservo.service.impl;
 
+import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
@@ -111,38 +112,55 @@ public class InmuebleServiceImplTest {
 
         assertEquals(2, inmuebles.size());
     }
-
     @Test
     public void seBuscaLosInmueblesConLaInicialPYTraeDosPaginas() throws EmailRepetido {
         userService.create(jorge);
 
-        //  Setup
+
         for (int i = 0; i < 10; i++) {
             Inmueble inm = new Inmueble(
-                    "Plaza"+i, "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+                    "Plaza" + i, "Es un lugar espacioso", 200d, "Quilmes", 100, "No romper nada",
+                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION, "lavalle", 987);
             inm.setAvailableDays(Collections.emptyList());
             inmuebleService.create(inm, emptyImages);
         }
 
 
+        int pageSize = 5;
 
-        // Página 1 (índice 0)
-        Page<Inmueble> pagina1 = inmuebleService.findByName("P", PageRequest.of(0, 5));
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "P",
+                PageRequest.of(0, pageSize)
+        );
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
         assertFalse(pagina1.isEmpty());
+        assertEquals(pageSize, pagina1.getContent().size());
         pagina1.getContent().forEach(inmueble -> {
             assertTrue(inmueble.getName().startsWith("P"));
         });
 
-        // Página 2 (índice 1)
-        Page<Inmueble> pagina2 = inmuebleService.findByName("P", PageRequest.of(1, 5));
+
+        Filtro filtroPagina2 = new Filtro(
+                "",
+                "P",
+                PageRequest.of(1, pageSize)
+        );
+        Page<Inmueble> pagina2 = inmuebleService.findByFiltro(filtroPagina2);
+
         assertFalse(pagina2.isEmpty());
+        assertEquals(pageSize, pagina2.getContent().size());
         pagina2.getContent().forEach(inmueble -> {
             assertTrue(inmueble.getName().startsWith("P"));
         });
 
+
         assertNotEquals(pagina1.getContent(), pagina2.getContent());
 
+        assertEquals(2, pagina1.getTotalPages());
+        assertEquals(2, pagina2.getTotalPages());
     }
 
     @Test
@@ -153,7 +171,6 @@ public class InmuebleServiceImplTest {
 
         assertThrows(InmuebleRepetidoException.class, () -> {inmuebleService.create(inmueble1,emptyImages);});
     }
-
     @AfterEach
     void limpiarDb(){
         testService.eliminarInmuebles();

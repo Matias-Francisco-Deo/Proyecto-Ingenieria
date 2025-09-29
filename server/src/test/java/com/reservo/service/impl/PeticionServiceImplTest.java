@@ -21,10 +21,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -379,6 +382,109 @@ public class PeticionServiceImplTest {
     }
 
 
+    @Test
+    public void jorgeSolicitaSuListadoDeReservasPendientes() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        for (int i = 0; i < 20; i++) {
+            peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now().plusDays(i),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
+            peticionService.create(peticionDeJorge);
+        }
+
+        Page<Peticion> pagina1 = peticionService.findAllReservasPendientesByUserId(jorge.getId(), PageRequest.of(0, 5));
+
+        assertFalse(pagina1.isEmpty());
+        assertEquals(5, pagina1.getContent().size());
+        pagina1.getContent().forEach(peticion -> {
+            assertEquals(jorge.getId(), peticion.getCliente().getId());
+        });
+        List<LocalDate> fechas = pagina1.getContent().stream()
+                .map(Peticion::getFechaDelEvento)
+                .toList();
+
+
+        List<LocalDate> fechasOrdenadas = new ArrayList<>(fechas);
+        Collections.sort(fechasOrdenadas);
+
+        assertEquals(fechasOrdenadas, fechas);
+
+        Page<Peticion> pagina2 = peticionService.findAllReservasPendientesByUserId(
+                jorge.getId(), PageRequest.of(1, 5));
+
+        assertEquals(5, pagina2.getContent().size());
+    }
+
+    @Test
+    public void jorgeSolicitaSuListadoDeReservasCanceladas() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        for (int i = 0; i < 20; i++) {
+            peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now().plusDays(i),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
+            peticionDeJorge.setEstado(new Cancelado());
+            peticionService.create(peticionDeJorge);
+        }
+
+        Page<Peticion> pagina1 = peticionService.findAllReservasCanceladasByUserId(jorge.getId(), PageRequest.of(0, 5));
+
+        assertFalse(pagina1.isEmpty());
+        assertEquals(5, pagina1.getContent().size());
+        pagina1.getContent().forEach(peticion -> {
+            assertEquals(jorge.getId(), peticion.getCliente().getId());
+        });
+        List<LocalDate> fechas = pagina1.getContent().stream()
+                .map(Peticion::getFechaDelEvento)
+                .toList();
+
+
+        List<LocalDate> fechasOrdenadas = new ArrayList<>(fechas);
+        Collections.sort(fechasOrdenadas);
+
+        assertEquals(fechasOrdenadas, fechas);
+
+        Page<Peticion> pagina2 = peticionService.findAllReservasCanceladasByUserId(
+                jorge.getId(), PageRequest.of(1, 5));
+
+        assertEquals(5, pagina2.getContent().size());
+    }
+
+    @Test
+    public void jorgeSolicitaSuListadoDeReservasVigentes() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(raul);
+        inmuebleService.create(inmueble, emptyImages);
+
+        for (int i = 0; i < 20; i++) {
+            peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now().plusDays(i),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
+            peticionDeJorge.setEstado(new Vigente());
+            peticionService.create(peticionDeJorge);
+        }
+
+        Page<Peticion> pagina1 = peticionService.findAllReservasVigentesByUserId(jorge.getId(), PageRequest.of(0, 5));
+
+        assertFalse(pagina1.isEmpty());
+        assertEquals(5, pagina1.getContent().size());
+        pagina1.getContent().forEach(peticion -> {
+            assertEquals(jorge.getId(), peticion.getCliente().getId());
+        });
+        List<LocalDate> fechas = pagina1.getContent().stream()
+                .map(Peticion::getFechaDelEvento)
+                .toList();
+
+
+        List<LocalDate> fechasOrdenadas = new ArrayList<>(fechas);
+        Collections.sort(fechasOrdenadas);
+
+        assertEquals(fechasOrdenadas, fechas);
+
+        Page<Peticion> pagina2 = peticionService.findAllReservasVigentesByUserId(
+                jorge.getId(), PageRequest.of(1, 5));
+
+        assertEquals(5, pagina2.getContent().size());
+    }
 
 
     @AfterEach

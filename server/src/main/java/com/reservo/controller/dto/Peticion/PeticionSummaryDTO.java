@@ -1,4 +1,4 @@
-package com.reservo.controller.dto;
+package com.reservo.controller.dto.Peticion;
 
 
 import com.reservo.modelo.reserva.Peticion;

@@ -1,7 +1,7 @@
 package com.reservo.controller;
 
 import com.reservo.controller.dto.Peticion.*;
-import com.reservo.controller.dto.PeticionSummaryDTO;
+
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.reserva.Peticion;
