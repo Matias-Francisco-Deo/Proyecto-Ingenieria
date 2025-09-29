@@ -49,7 +49,7 @@ export default function FiltrosDropdownUI({
                 <ScheduleInputUI></ScheduleInputUI>
                 <DaySelectorUI></DaySelectorUI>
 
-                <div className="flex justify-end mt-4">
+                <div className="flex flex-col items-center justify-center mt-4">
                     <button
                         onClick={onAplicarFiltros}
                         className="px-6 py-3 bg-amber-500 text-white font-bold rounded-xl cursor-pointer hover:bg-amber-600 transition duration-150 shadow-lg disabled:opacity-50"
