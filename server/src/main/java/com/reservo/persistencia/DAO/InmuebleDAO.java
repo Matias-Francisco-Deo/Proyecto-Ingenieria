@@ -1,5 +1,6 @@
 package com.reservo.persistencia.DAO;
 
+import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,12 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
 
     @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%')")
     Page<Inmueble> findByNameContainingIgnoreCase(String unName, Pageable pageable);
+
+    @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%') AND i.ubication = :unaLocalidad")
+    Page<Inmueble> findByNameAndLocalidad(@Param("unName") String nombre,@Param("unaLocalidad") String localidad, Pageable pageable);
+
+    @Query("FROM Inmueble i " +
+            "WHERE LOWER(i.name) LIKE CONCAT(LOWER(:#{#f.nombre}), '%') " +
+            "AND LOWER(i.ubication) LIKE CONCAT(LOWER(:#{#f.localidad}), '%')")
+    Page<Inmueble> findByFiltro(@Param("f") Filtro filtro, Pageable pageable);
 }

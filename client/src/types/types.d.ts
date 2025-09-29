@@ -16,6 +16,7 @@ export interface Inmueble {
     price: number;
     nameDelDuenio: string;
     email: string;
+    imageURL: string;
     error?: string;
 }
 
@@ -82,6 +83,8 @@ export interface Inmueble {
     availableDays: string[];
     street: string;
     number: number;
+    // ¡NUEVO!
+    imageURL: string;
 }
 
 export interface HorarioDTO {

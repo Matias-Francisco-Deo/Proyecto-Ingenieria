@@ -1,7 +1,9 @@
 package com.reservo.service;
 
+import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,4 +17,6 @@ public interface InmuebleService {
     Optional<Inmueble> findById(Long inmuebleId);
     List<Inmueble> findAll();
     Page<Inmueble> findByName(String name, Pageable pageable);
+
+    Page<Inmueble> findByFiltro(Filtro filtro);
 }

@@ -15,10 +15,19 @@ export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
                 >
                     <li className="mt-6 block p-4 bg-[#1a1a1a] border border-amber-600 rounded-lg shadow-xl cursor-pointer transition duration-300 hover:bg-[#2a2a2a] hover:shadow-2xl">
                         <div className="flex flex-col md:flex-row gap-4">
-                            <div className="w-full md:w-32 h-32 bg-[#333] rounded-md flex items-center justify-center text-gray-500 text-sm">
-                                Imagen
+                            <div className="w-full md:w-32 h-32 rounded-md overflow-hidden">
+                                {inm.imageURL ? (
+                                    <img
+                                        src={inm.imageURL}
+                                        alt={`Imagen de ${inm.name}`}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-[#333] flex items-center justify-center text-gray-500 text-sm">
+                                        Sin Imagen
+                                    </div>
+                                )}
                             </div>
-
                             <div className="flex-1 text-white">
                                 <div className="flex justify-between items-start mb-2">
                                     <h2 className="text-2xl font-bold text-gray-100 truncate">

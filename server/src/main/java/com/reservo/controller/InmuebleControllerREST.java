@@ -1,5 +1,6 @@
 package com.reservo.controller;
 
+import com.reservo.controller.dto.Inmueble.BusquedaInmueblesDTO;
 import com.reservo.controller.dto.Inmueble.InmuebleRequestDTO;
 import com.reservo.controller.dto.Inmueble.InmuebleResponseDTO;
 import com.reservo.controller.dto.Inmueble.InmuebleSummaryDTO;
@@ -62,21 +63,20 @@ public final class InmuebleControllerREST {
         return ResponseEntity.ok(InmuebleResponseDTO.desdeModelo(inmueble));
     }
 
-    @GetMapping("/buscar/{name}")
-    public ResponseEntity<Page<InmuebleSummaryDTO>> getInmuebleByName(
-            @PathVariable String name,
-            @RequestParam(defaultValue = "0") int page
+    @PostMapping("/buscar")
+    public ResponseEntity<Page<InmuebleSummaryDTO>> buscarInmuebles(
+            @RequestBody BusquedaInmueblesDTO filtros
     ) {
+        Page<Inmueble> findByNameAndLocalidad = this.inmuebleService.findByFiltro(filtros.aModelo());
 
-        Page<Inmueble> findByName = this.inmuebleService.findByName(name, PageRequest.of(page, 10));
+        if (findByNameAndLocalidad.isEmpty()) {
+            return ResponseEntity.status(404).body(null);
+        }
 
-        if(findByName.isEmpty()) return ResponseEntity.status(404).body(null);
-
-        Page<InmuebleSummaryDTO> inmuebles = findByName.map(InmuebleSummaryDTO::desdeModelo);
+        Page<InmuebleSummaryDTO> inmuebles = findByNameAndLocalidad.map(InmuebleSummaryDTO::desdeModelo);
 
         return ResponseEntity.ok(inmuebles);
     }
-
     @GetMapping("/{id}/images")
     public ResponseEntity<List<String>> getInmuebleImages(@PathVariable Long id) {
         return inmuebleService.findById(id)

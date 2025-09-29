@@ -60,7 +60,7 @@ public class Inmueble {
     @Enumerated(EnumType.STRING)
     private  PoliticasDeCancelacion cancellation;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> images = new ArrayList<>();
 
     public Inmueble(String name, String desc, Double price,
@@ -99,7 +99,12 @@ public class Inmueble {
         this.cancellation = cancellation;
         this.calle = calle;
         this.altura = altura;
-//        this.images.addAll(image);
     }
 
+    public String getFirstImageURL() {
+        if (images != null && !images.isEmpty()) {
+            return "http://localhost:8081/uploads/" + images.get(0);
+        }
+        return null;
+    }
 }
