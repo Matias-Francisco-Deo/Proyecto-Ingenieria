@@ -7,10 +7,11 @@ interface ListaResultadosProps {
 
 export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
   return (
-    <ul className="mt-6 space-y-4">
+    <ul className="mt-6 space-y-4 bg-gray-900 rounded-2xl p-10 min-w-max">
+      <h1 className="text-3xl">Mis publicaciones</h1>
       {resultados.map((inm) => (
         <Link href={`/publicacion?id=${inm.id}`} key={inm.id}>
-          <li className="mt-6 block p-4 bg-[#1a1a1a] border border-amber-600 rounded-lg shadow-xl cursor-pointer transition duration-300 hover:bg-[#2a2a2a] hover:shadow-2xl">
+          <li className="rounded-2xl bg-gray-700 mt-4 pl-2 p-2 flex flex-row justify-between min-w-80">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="w-full md:w-32 h-32 rounded-md overflow-hidden">
                 {inm.imageURL ? (
@@ -25,23 +26,28 @@ export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
                   </div>
                 )}
               </div>
-              <div className="flex-1 text-white">
-                <div className="flex justify-between items-start mb-2">
+              <div className="flex-2 text-white">
+                <div className="items-start mb-2">
                   <h2 className="text-2xl font-bold text-gray-100 truncate">
-                    {inm.name}
+                    Inmueble: {inm.name}
                   </h2>
-                  <p className="text-sm font-semibold text-amber-500 ml-4">
-                    {inm.ownerName}
-                  </p>
                 </div>
 
-                <p className="text-gray-400 text-base mb-2">
-                  <span className="font-semibold">Localidad:</span>{" "}
-                  {inm.ubication}
-                </p>
-                <div className="mt-auto pt-2">
-                  <span className="text-xl font-extrabold text-amber-500">
-                    ${inm.price.toLocaleString("es-AR")}
+                    <p className="text-gray-400 text-base mb-2">
+                        <span className="font-semibold">Localidad:</span>{" "}
+                        {inm.ubication}
+                        <span className="font-semibold"> - </span>{" "}
+                        {inm.street}
+                        <span className="font-semibold"> </span>{" "}
+                        {inm.number}
+                    </p>
+                    <p className="text-gray-400 text-base mb-2">
+                        <span className="font-semibold">Capacidad:</span>{" "}
+                        {inm.capacity}
+                    </p>
+                <div className="mt-auto ">
+                  <span className="text-xl ">
+                    Horario disponible: {inm.start} - {inm.end}
                   </span>
                 </div>
               </div>

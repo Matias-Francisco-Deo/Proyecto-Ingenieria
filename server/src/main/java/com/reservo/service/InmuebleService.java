@@ -19,4 +19,6 @@ public interface InmuebleService {
     Page<Inmueble> findByName(String name, Pageable pageable);
 
     Page<Inmueble> findByFiltro(Filtro filtro);
+    Page<Inmueble> getAllByOwnerId(Long id, Pageable pageable);
+
 }

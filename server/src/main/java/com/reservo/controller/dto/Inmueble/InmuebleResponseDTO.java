@@ -20,9 +20,13 @@ public record InmuebleResponseDTO(
         String ownerEmail,
         List<DiasDeLaSemana> availableDays,
         String street,
-        Integer number
+        Integer number,
+        String imageURL
 ) {
     public static InmuebleResponseDTO desdeModelo(Inmueble prop) {
+
+        String imageUrl = prop.getFirstImageURL();
+
         return new InmuebleResponseDTO(
             Math.toIntExact(prop.getId()),
             prop.getName(), prop.getDescription(), prop.getUbication(),
@@ -30,11 +34,11 @@ public record InmuebleResponseDTO(
             prop.getHoraInicio().toString(), prop.getHoraFin().toString(),
             prop.getCancellation().toString(),
             prop.getOwner().getName(),
-            //prop.getOwner().getId(),
             prop.getOwner().getEmail(),
             prop.getAvailableDays(),
             prop.getCalle(),
-            prop.getAltura()
+            prop.getAltura(),
+            imageUrl
         );
     }
 }

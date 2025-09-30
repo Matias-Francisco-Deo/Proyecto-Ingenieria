@@ -15,7 +15,7 @@ export default function Paginacion({
       <button
         onClick={() => onPageChange?.(paginaActual - 1)}
         disabled={paginaActual === 1}
-        className="px-3 py-1 rounded bg-amber-600 text-white disabled:bg-gray-400"
+        className="px-3 py-1 rounded bg-amber-600 text-white disabled:bg-gray-400 cursor-pointer"
       >
         Atrás
       </button>
@@ -29,7 +29,7 @@ export default function Paginacion({
       <button
         onClick={() => onPageChange?.(paginaActual + 1)}
         disabled={paginaActual === totalPaginas}
-        className="px-3 py-1 rounded bg-amber-600 text-white disabled:bg-gray-400"
+        className="px-3 py-1 rounded bg-amber-600 text-white disabled:bg-gray-400 cursor-pointer"
       >
         Adelante
       </button>

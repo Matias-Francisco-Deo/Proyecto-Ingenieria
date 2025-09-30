@@ -6,7 +6,6 @@ import com.reservo.persistencia.DAO.InmuebleDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +69,11 @@ public class InmuebleServiceImpl implements InmuebleService {
     @Override
     public Page<Inmueble> findByFiltro(Filtro filtro) {
         return dao.findByFiltro(filtro, filtro.getPage());
+    }
+
+    @Override
+    public Page<Inmueble> getAllByOwnerId(Long id, Pageable pageable) {
+        return dao.getAllByOwnerId(id, pageable);
     }
 
     private List<String> saveImages(List<MultipartFile> images) {
