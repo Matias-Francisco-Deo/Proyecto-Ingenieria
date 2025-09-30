@@ -5,13 +5,13 @@ import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
+import com.reservo.service.EmailService;
 import com.reservo.service.exception.peticion.*;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +28,12 @@ public class PeticionServiceImpl implements PeticionService {
 
     private final PeticionDAO peticionDAO;
     private final TimeManager timeManager;
+    private final EmailService emailService;
 
-    public PeticionServiceImpl(PeticionDAO peticionDAO, TimeManager timeManager) {
+    public PeticionServiceImpl(PeticionDAO peticionDAO, TimeManager timeManager, EmailService emailService) {
         this.timeManager = timeManager;
         this.peticionDAO = peticionDAO;
+        this.emailService = emailService;
     }
 
     @Override
@@ -109,6 +111,7 @@ public class PeticionServiceImpl implements PeticionService {
 
         peticion.rechazar(rechazoDTO.motivoDeRechazo());
         peticionDAO.save(peticion);
+        sendRejectMessageToClient(peticion);
     }
 
     @Override
@@ -124,6 +127,7 @@ public class PeticionServiceImpl implements PeticionService {
         peticion.cancelar(cancelcaionDTO.motivoDeCancelacion());
 
         peticionDAO.save(peticion);
+
     }
 
     @Override
@@ -138,6 +142,34 @@ public class PeticionServiceImpl implements PeticionService {
 
         peticion.aprobar();
         peticionDAO.save(peticion);
+        sendApproveMessageToClient(peticion);
+
+    }
+
+    private void sendApproveMessageToClient(Peticion peticion) {
+        String clientEmail = peticion.getCliente().getEmail();
+        String subject = "Petición a propiedad";
+        String inmueble = peticion.getInmueble().getName();
+        String ubication = peticion.getInmueble().getUbication();
+        String message = "Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido aceptada por el dueño en el horario de %s - %s el día %s.".formatted(inmueble, ubication
+                , peticion.getHoraInicio(), peticion.getHoraFin(), peticion.getFechaDelEvento());
+        emailService.sendSimpleEmail(clientEmail, subject, message);
+    }
+
+    private void sendRejectMessageToClient(Peticion peticion) {
+        String clientEmail = peticion.getCliente().getEmail();
+        String subject = "Petición a propiedad";
+        String inmueble = peticion.getInmueble().getName();
+        String ubication = peticion.getInmueble().getUbication();
+
+        String rejectPartOfMessage = (peticion.getMotivoRechazo() != null) ? " bajo el motivo: %s .".formatted(peticion.getMotivoRechazo()) : ".";
+
+        String message ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, el día %s para el horario de %s - %s  ha sido rechazada por el dueño%s".formatted(
+                       inmueble, ubication
+                    ,peticion.getFechaDelEvento(), peticion.getHoraInicio(), peticion.getHoraFin(), rejectPartOfMessage) ;
+
+
+        emailService.sendSimpleEmail(clientEmail, subject, message);
     }
 
     @Override
