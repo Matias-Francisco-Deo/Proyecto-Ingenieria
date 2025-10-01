@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Run Model Tests Only
-        run: mvn -B -Dtest=com.reservo.modelo.*Test test
+        run: mvn -B test -Dsurefire.includes=**/com/reservo/modelo/**/*.java
         working-directory: server
 
       - name: Publish Test Results
