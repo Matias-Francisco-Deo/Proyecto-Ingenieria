@@ -11,8 +11,8 @@ on:
       - dev
 
 jobs:
-  backend:
-    name: Backend - Spring Boot
+  backend-tests:
+    name: Backend Tests - No DB
     runs-on: ubuntu-latest
 
     steps:
@@ -26,16 +26,16 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      # - name: Build & Test Backend
-      #   run: mvn -B clean verify
-      #   working-directory: server
+      - name: Run Unit Tests Without DB
+        run: mvn -B clean test -Dspring.profiles.active=test
+        working-directory: server
 
-      # - name: Publish Test Results (Backend)
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: backend-test-results
-      #     path: server/target/surefire-reports/
+      - name: Publish Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: server/target/surefire-reports/
 
   frontend:
     name: Frontend - React
