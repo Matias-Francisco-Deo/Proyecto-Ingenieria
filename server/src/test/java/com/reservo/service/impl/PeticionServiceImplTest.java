@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
@@ -255,7 +254,7 @@ public class PeticionServiceImplTest {
 
         Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
 
-        assertEquals(NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO, peticionFromDb.getMotivoRechazo());
+        assertEquals(NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO, peticionFromDb.getMotivoCancelacionRechazo());
 
     }
 
@@ -274,7 +273,7 @@ public class PeticionServiceImplTest {
 
         Peticion peticionFromDb = peticionService.findById(peticionSaved.getId()).get();
 
-        assertNull(peticionFromDb.getMotivoRechazo());
+        assertNull(peticionFromDb.getMotivoCancelacionRechazo());
         assertInstanceOf(Pendiente.class, peticionFromDb.getEstado());
 
     }

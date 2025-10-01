@@ -52,7 +52,7 @@ public class Peticion {
     private EstadoDePeticion estado;
 
     @Column(length = 150)
-    private String motivoRechazo;
+    private String motivoCancelacionRechazo;
 
     private PoliticasDeCancelacion politicaCancelacion;
 
@@ -75,12 +75,12 @@ public class Peticion {
 
     public void cancelar(String motivo){
         this.estado.cancelar(this);
-        this.setMotivoRechazo(motivo);
+        this.setMotivoCancelacionRechazo(motivo);
     }
 
     public void rechazar(String motivo){
         this.estado.rechazar(this);
-        this.setMotivoRechazo(motivo);
+        this.setMotivoCancelacionRechazo(motivo);
     }
 
     public void finalizar(){

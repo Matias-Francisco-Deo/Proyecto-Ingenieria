@@ -29,7 +29,7 @@ public record PeticionSummaryDTO(
                 peticion.getInmueble().getName(),
                 peticion.getFechaEmision(),
                 peticion.getFechaDelEvento(),
-                peticion.getMotivoRechazo()
+                peticion.getMotivoCancelacionRechazo()
         );
     }
 }

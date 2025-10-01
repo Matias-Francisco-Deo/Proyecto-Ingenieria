@@ -1,11 +1,11 @@
 package com.reservo.service.impl;
 
+import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.reserva.Peticion;
-import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.EmailService;
 import com.reservo.service.InmuebleService;
@@ -108,7 +108,47 @@ public class EmailServiceImplTest {
 
         peticionService.create(peticionDeMatias);
 
-        peticionService.reject(new RechazoDTO(raul.getId(), peticionDeMatias.getId(), "adidas"));
+        peticionService.reject(new RechazoDTO(raul.getId(), peticionDeMatias.getId(), "TENGOS MIS MOTIVOS OK :)"));
+
+    }
+
+    @Test
+    public void testSeEnviaMensajeCuandoSeRechazaMiReservaSinMotivoYSeAdapta() throws EmailRepetido {
+        usuarioService.create(matias);
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        peticionService.create(peticionDeMatias);
+
+        // debe comerse parte del texto para que no quede horrible
+        peticionService.reject(new RechazoDTO(raul.getId(), peticionDeMatias.getId(), ""));
+
+    }
+
+    @Test
+    public void testSeEnviaMensajeCuandoSeCancelaAlClienteConMotivoYNoSeMuestra() throws EmailRepetido {
+        usuarioService.create(matias);
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        peticionService.create(peticionDeMatias);
+
+        peticionService.cancel(new CancelacionDTO(matias.getId(), peticionDeMatias.getId(), "Pepe"));
+
+    }
+
+    @Test
+    public void testSeEnviaMensajeCuandoSeCancelaAlClienteSinMotivoYNoSeMuestraNadaAdicional() throws EmailRepetido {
+        usuarioService.create(matias);
+        usuarioService.create(raul);
+
+        inmuebleService.create(inmueble, emptyImages);
+
+        peticionService.create(peticionDeMatias);
+
+        peticionService.cancel(new CancelacionDTO(matias.getId(), peticionDeMatias.getId(), ""));
 
     }
 

@@ -11,6 +11,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Profile("!test")
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -18,10 +21,14 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
-    private String email = "reservoapptmmj@gmail.com";
+    private String appEmail = "reservoapptmmj@gmail.com";
+
+    private final List<String> KNOWN_EMAILS = Arrays.asList(appEmail,"joel.c.98@hotmail.com", "matiasfd.deo@gmail.com", "rockito10.mfd@gmail.com", "tm1453766@gmail.com", "ma.nahuel.d@gmail.com");
 
     @Override
     public void sendSimpleEmail(String to, String subject, String text) {
+        if (!KNOWN_EMAILS.contains(to)) return; // para que nos manden a nosotros nada más
+
         try {
             sendEmail(to, subject, text);
         } catch (MailSendException e) {
@@ -32,6 +39,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendHTMLEmail(String to, String subject, String html) {
+        if (!KNOWN_EMAILS.contains(to)) return; // para que nos manden a nosotros nada más
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
@@ -48,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
 
     private void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(email);
+        message.setFrom(appEmail);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);

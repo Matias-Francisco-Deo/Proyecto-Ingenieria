@@ -3,6 +3,7 @@ package com.reservo.service.impl;
 import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.peticion.EmailMessages;
+import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -128,6 +130,7 @@ public class PeticionServiceImpl implements PeticionService {
         peticion.cancelar(cancelcaionDTO.motivoDeCancelacion());
 
         peticionDAO.save(peticion);
+        sendCancelMessageToClient(peticion);
 
     }
 
@@ -148,17 +151,24 @@ public class PeticionServiceImpl implements PeticionService {
     }
 
     private void sendApproveMessageToClient(Peticion peticion) {
-        String propertyDataText = "Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido aceptada por el dueño en el horario de";
-        String dateText = "%s - %s el día %s.";
+        String propertyDataText = "Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, dirección %s %s, ha sido aceptada por el dueño en el horario de";
+        String dateText = "%s - %s para el día %s.";
         sendMessageToClient(peticion, propertyDataText, dateText);
     }
 
     private void sendRejectMessageToClient(Peticion peticion) {
-        String rejectionSpan = EmailMessages.getOrangeHTMLSpan("\"" + peticion.getMotivoRechazo() + "\"");
-        String rejectPartOfMessage = (peticion.getMotivoRechazo() != null) ? " bajo el motivo: %s,".formatted(rejectionSpan) : ",";
+        String rejectionSpan = EmailMessages.getOrangeHTMLSpan("\"" + peticion.getMotivoCancelacionRechazo() + "\"");
+        String rejectPartOfMessage = (!peticion.getMotivoCancelacionRechazo().isBlank()) ? " bajo el motivo: %s.".formatted(rejectionSpan) : ".";
 
-        String propertyDataText ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido rechazada por el dueño" + rejectPartOfMessage;
-        String dateText = "para el horario de %s - %s en el día %s.";
+        String propertyDataText ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, dirección %s %s,";
+        String dateText = "en el horario de %s - %s para el día %s, ha sido rechazada por el dueño" + rejectPartOfMessage;
+
+        sendMessageToClient(peticion, propertyDataText, dateText);
+    }
+
+    private void sendCancelMessageToClient(Peticion peticion) {
+        String propertyDataText ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, dirección %s %s,";
+        String dateText = "en el horario de %s - %s para el día %s, ha sido cancelada correctamente.";
 
         sendMessageToClient(peticion, propertyDataText, dateText);
     }
@@ -167,17 +177,24 @@ public class PeticionServiceImpl implements PeticionService {
         String clientEmail = peticion.getCliente().getEmail();
         String subject = "Petición a propiedad";
 
-        String inmueble = EmailMessages.getOrangeHTMLSpan(peticion.getInmueble().getName());
-        String ubication = EmailMessages.getOrangeHTMLSpan(peticion.getInmueble().getUbication());
-        String horaInicio =  EmailMessages.getOrangeHTMLSpan(String.valueOf(peticion.getHoraInicio()));
-        String horaFin = EmailMessages.getOrangeHTMLSpan(String.valueOf(peticion.getHoraFin()));
+        Inmueble inmueble = peticion.getInmueble();
+        String propertyName = EmailMessages.getOrangeHTMLSpan(inmueble.getName());
+
+        String ubication = EmailMessages.getOrangeHTMLSpan(inmueble.getUbication());
+        String calle = EmailMessages.getOrangeHTMLSpan(inmueble.getCalle());
+        String altura = EmailMessages.getOrangeHTMLSpan(String.valueOf(inmueble.getAltura()));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String horaInicio =  EmailMessages.getOrangeHTMLSpan(formatter.format(peticion.getHoraInicio()));
+        String horaFin = EmailMessages.getOrangeHTMLSpan(formatter.format(peticion.getHoraFin()));
+
         String fechaDelEvento = EmailMessages.getOrangeHTMLSpan(String.valueOf(peticion.getFechaDelEvento()));
 
         String htmlContent = EmailMessages.getHTML(
-                propertyDataText.formatted(inmueble, ubication),
+                propertyDataText.formatted(propertyName, ubication, calle, altura),
                 dateText.formatted(horaInicio, horaFin, fechaDelEvento));
 
-        emailService.sendHTMLEmail(clientEmail, subject, htmlContent);
+        new Thread(() -> emailService.sendHTMLEmail(clientEmail, subject, htmlContent)).start();
     }
 
 

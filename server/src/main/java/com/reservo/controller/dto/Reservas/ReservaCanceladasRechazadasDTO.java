@@ -24,7 +24,7 @@ public record ReservaCanceladasRechazadasDTO(
                 peticion.getHoraInicio(),
                 peticion.getHoraFin(),
                 peticion.getFechaEmision(),
-                peticion.getMotivoRechazo(),
+                peticion.getMotivoCancelacionRechazo(),
                 peticion.getPrice(),
                 InmuebleReservaDTO.desdeModelo(peticion.getInmueble())
         );
