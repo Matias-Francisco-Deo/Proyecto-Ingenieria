@@ -2,6 +2,7 @@ package com.reservo.service.impl;
 
 import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.peticion.EmailMessages;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
@@ -147,30 +148,38 @@ public class PeticionServiceImpl implements PeticionService {
     }
 
     private void sendApproveMessageToClient(Peticion peticion) {
-        String clientEmail = peticion.getCliente().getEmail();
-        String subject = "Petición a propiedad";
-        String inmueble = peticion.getInmueble().getName();
-        String ubication = peticion.getInmueble().getUbication();
-        String message = "Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido aceptada por el dueño en el horario de %s - %s el día %s.".formatted(inmueble, ubication
-                , peticion.getHoraInicio(), peticion.getHoraFin(), peticion.getFechaDelEvento());
-        emailService.sendSimpleEmail(clientEmail, subject, message);
+        String propertyDataText = "Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido aceptada por el dueño en el horario de";
+        String dateText = "%s - %s el día %s.";
+        sendMessageToClient(peticion, propertyDataText, dateText);
     }
 
     private void sendRejectMessageToClient(Peticion peticion) {
+        String rejectionSpan = EmailMessages.getOrangeHTMLSpan("\"" + peticion.getMotivoRechazo() + "\"");
+        String rejectPartOfMessage = (peticion.getMotivoRechazo() != null) ? " bajo el motivo: %s,".formatted(rejectionSpan) : ",";
+
+        String propertyDataText ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido rechazada por el dueño" + rejectPartOfMessage;
+        String dateText = "en el día %s para el horario de %s - %s.";
+
+        sendMessageToClient(peticion, propertyDataText, dateText);
+    }
+
+    private void sendMessageToClient(Peticion peticion, String propertyDataText, String dateText) {
         String clientEmail = peticion.getCliente().getEmail();
         String subject = "Petición a propiedad";
-        String inmueble = peticion.getInmueble().getName();
-        String ubication = peticion.getInmueble().getUbication();
 
-        String rejectPartOfMessage = (peticion.getMotivoRechazo() != null) ? " bajo el motivo: %s .".formatted(peticion.getMotivoRechazo()) : ".";
+        String inmueble = EmailMessages.getOrangeHTMLSpan(peticion.getInmueble().getName());
+        String ubication = EmailMessages.getOrangeHTMLSpan(peticion.getInmueble().getUbication());
+        String horaInicio =  EmailMessages.getOrangeHTMLSpan(String.valueOf(peticion.getHoraInicio()));
+        String horaFin = EmailMessages.getOrangeHTMLSpan(String.valueOf(peticion.getHoraFin()));
+        String fechaDelEvento = EmailMessages.getOrangeHTMLSpan(String.valueOf(peticion.getFechaDelEvento()));
 
-        String message ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, el día %s para el horario de %s - %s  ha sido rechazada por el dueño%s".formatted(
-                       inmueble, ubication
-                    ,peticion.getFechaDelEvento(), peticion.getHoraInicio(), peticion.getHoraFin(), rejectPartOfMessage) ;
+        String htmlContent = EmailMessages.getHTML(
+                propertyDataText.formatted(inmueble, ubication),
+                dateText.formatted(horaInicio, horaFin, fechaDelEvento));
 
-
-        emailService.sendSimpleEmail(clientEmail, subject, message);
+        emailService.sendHTMLEmail(clientEmail, subject, htmlContent);
     }
+
 
     @Override
     public Page<Peticion> findAllPendientByOwnerId(Long userId, Pageable pageable) {

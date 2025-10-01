@@ -108,7 +108,7 @@ public class EmailServiceImplTest {
 
         peticionService.create(peticionDeMatias);
 
-        peticionService.reject(new RechazoDTO(raul.getId(), peticionDeMatias.getId(), "???? qué¡??? andate vo"));
+        peticionService.reject(new RechazoDTO(raul.getId(), peticionDeMatias.getId(), "adidas"));
 
     }
 
