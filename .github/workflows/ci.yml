@@ -53,9 +53,9 @@ jobs:
         run: mvn -B clean verify
         working-directory: server
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
-          SPRING_DATASOURCE_USERNAME: testuser
-          SPRING_DATASOURCE_PASSWORD: testpass
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/reservo
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: root
 
       - name: Publish Test Results
         if: always()
