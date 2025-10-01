@@ -157,6 +157,6 @@ public class EmailServiceImplTest {
     void limpiarDb(){
         testService.eliminarPeticiones();
         testService.eliminarInmuebles();
-        testService.eliminarUsuarios();;
+        testService.eliminarUsuarios();
     }
 }
