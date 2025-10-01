@@ -11,9 +11,24 @@ on:
       - dev
 
 jobs:
-  backend-model-tests:
-    name: Backend - Model Tests Only
+  backend-tests:
+    name: Backend - All Tests (with Postgres)
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: reservo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -26,15 +41,27 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Run Model Tests Only
-        run: mvn -B test -Dsurefire.includes=**/com/reservo/modelo/**/*.java
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..10}; do
+            nc -z localhost 5432 && echo "Postgres is up" && break
+            echo "Waiting for Postgres..."
+            sleep 5
+          done
+
+      - name: Run All Backend Tests
+        run: mvn -B clean verify
         working-directory: server
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+          SPRING_DATASOURCE_USERNAME: testuser
+          SPRING_DATASOURCE_PASSWORD: testpass
 
       - name: Publish Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: backend-model-test-results
+          name: backend-test-results
           path: server/target/surefire-reports/
 
   frontend:
