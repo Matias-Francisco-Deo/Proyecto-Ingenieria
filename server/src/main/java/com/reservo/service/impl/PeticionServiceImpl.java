@@ -158,7 +158,7 @@ public class PeticionServiceImpl implements PeticionService {
         String rejectPartOfMessage = (peticion.getMotivoRechazo() != null) ? " bajo el motivo: %s,".formatted(rejectionSpan) : ",";
 
         String propertyDataText ="Le informamos desde Reservo que su petición al inmueble %s, en la localidad de %s, ha sido rechazada por el dueño" + rejectPartOfMessage;
-        String dateText = "en el día %s para el horario de %s - %s.";
+        String dateText = "para el horario de %s - %s en el día %s.";
 
         sendMessageToClient(peticion, propertyDataText, dateText);
     }
