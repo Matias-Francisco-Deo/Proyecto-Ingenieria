@@ -7,8 +7,7 @@ interface ListaResultadosProps {
 
 export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
   return (
-    <ul className="mt-6 space-y-4 bg-gray-900 rounded-2xl p-10 min-w-max">
-      <h1 className="text-3xl">Mis publicaciones</h1>
+    <div>
       {resultados.map((inm) => (
         <Link href={`/publicacion?id=${inm.id}`} key={inm.id}>
           <li className="rounded-2xl bg-gray-700 mt-4 pl-2 p-2 flex flex-row justify-between min-w-80">
@@ -55,6 +54,6 @@ export default function ListaDeInmuebles({ resultados }: ListaResultadosProps) {
           </li>
         </Link>
       ))}
-    </ul>
+    </div>
   );
 }
