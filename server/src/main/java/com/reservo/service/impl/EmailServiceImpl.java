@@ -23,7 +23,7 @@ public class EmailServiceImpl implements EmailService {
 
     private String appEmail = "reservoapptmmj@gmail.com";
 
-    private final List<String> KNOWN_EMAILS = Arrays.asList(appEmail,"joel.c.98@hotmail.com", "matiasfd.deo@gmail.com", "rockito10.mfd@gmail.com", "tm1453766@gmail.com", "ma.nahuel.d@gmail.com");
+    private final List<String> KNOWN_EMAILS = Arrays.asList(appEmail, "joelhc.98@gmail.com", "joel.c.98@hotmail.com", "matiasfd.deo@gmail.com", "rockito10.mfd@gmail.com", "tm1453766@gmail.com", "ma.nahuel.d@gmail.com");
 
     @Override
     public void sendSimpleEmail(String to, String subject, String text) {
