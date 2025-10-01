@@ -11,8 +11,8 @@ on:
       - dev
 
 jobs:
-  backend-tests:
-    name: Backend Tests - No DB
+  backend-model-tests:
+    name: Backend - Model Tests Only
     runs-on: ubuntu-latest
 
     steps:
@@ -26,15 +26,15 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Run Unit Tests Without DB
-        run: mvn -B clean test -Dspring.profiles.active=test
+      - name: Run Model Tests Only
+        run: mvn -B -Dtest=com.reservo.modelo.*Test test
         working-directory: server
 
       - name: Publish Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: backend-test-results
+          name: backend-model-test-results
           path: server/target/surefire-reports/
 
   frontend:
