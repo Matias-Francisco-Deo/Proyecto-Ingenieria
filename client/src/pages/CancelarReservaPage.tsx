@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
 import type { ErrorResponse, PendingPetition } from "@/types/types";
+import { useToast } from "@/hooks/useToast";
 
 export default function CancelarReservaPage() {
   const [petition, setPetition] = useState<PendingPetition | null>(null);
@@ -14,6 +15,7 @@ export default function CancelarReservaPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const cancellationMotive = useRef<HTMLTextAreaElement>(null);
   const { getId } = useUser();
+  const { toastError } = useToast();
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -67,7 +69,6 @@ export default function CancelarReservaPage() {
       {popUpCancelacion()}
 
       <div className="flex gap-6">
-
         <div className="w-3/5">
           <Carrusel
             images={images}
@@ -78,34 +79,44 @@ export default function CancelarReservaPage() {
         </div>
 
         <div className="w-2/5 flex flex-col" style={{ minHeight: "100%" }}>
-
           <div className="bg-gray-800 rounded-xl px-6 py-6 flex flex-col gap-4 flex-1 overflow-y-auto">
             <p className="text-2xl font-bold text-amber-400">{petition.name}</p>
-            <p className="text-lg"><span className="font-semibold">Dueño: </span>
-            {petition.owner_name} - {petition.owner_email}</p>
+            <p className="text-lg">
+              <span className="font-semibold">Dueño: </span>
+              {petition.owner_name} - {petition.owner_email}
+            </p>
             <p className="text-left text-lg flex-1 overflow-y-auto">
-              <span className="font-semibold">Descripción: </span>{petition.description}
+              <span className="font-semibold">Descripción: </span>
+              {petition.description}
             </p>
 
             <div className="flex justify-between text-lg gap-4">
               <div className="flex flex-col gap-1">
-                <span className="font-semibold">Localidad: {petition.ubication}</span>
+                <span className="font-semibold">
+                  Localidad: {petition.ubication}
+                </span>
                 <span>
-                  <span className="font-semibold">Calle: </span>{petition.street} &nbsp;
-                  <span className="font-semibold">Altura: </span>{petition.number}
+                  <span className="font-semibold">Calle: </span>
+                  {petition.street} &nbsp;
+                  <span className="font-semibold">Altura: </span>
+                  {petition.number}
                 </span>
               </div>
               <div className="flex items-center mr-15">
-                <span className="font-semibold">Capacidad: </span> {petition.capacity}
+                <span className="font-semibold">Capacidad: </span>{" "}
+                {petition.capacity}
               </div>
             </div>
 
             <p className="text-lg">
-              <span className="font-semibold">Fecha del evento: </span>{petition.date_start.split(" ")[0]}
+              <span className="font-semibold">Fecha del evento: </span>
+              {petition.date_start.split(" ")[0]}
             </p>
             <p className="text-lg">
-              <span className="font-semibold">De: </span>{petition.date_start.split(" ")[1]} 
-              <span className="font-semibold"> - Hasta: </span>{petition.date_end.split(" ")[1]}
+              <span className="font-semibold">De: </span>
+              {petition.date_start.split(" ")[1]}
+              <span className="font-semibold"> - Hasta: </span>
+              {petition.date_end.split(" ")[1]}
             </p>
           </div>
 
@@ -125,7 +136,6 @@ export default function CancelarReservaPage() {
           </div>
 
           <p className="text-red-500 mt-2">{generalError}</p>
-        
         </div>
       </div>
     </div>
@@ -144,19 +154,15 @@ export default function CancelarReservaPage() {
         }
         style={{ left: "50%", transform: "translateX(-50%)" }}
       >
-        <h2 className="text-3xl text-center ">
-            Cancelar reserva
-        </h2>
-        
+        <h2 className="text-3xl text-center ">Cancelar reserva</h2>
+
         {petition?.status === "Vigente" && (
-            <>
-                <p className="text-2xl text-white">
-                    Se le aplicarán estas políticas de cancelación:
-                </p>
-                <p className="text-2xl text-white">
-                    {petition.cancellationPolicy}
-                </p>
-            </>
+          <>
+            <p className="text-2xl text-white">
+              Se le aplicarán estas políticas de cancelación:
+            </p>
+            <p className="text-2xl text-white">{petition.cancellationPolicy}</p>
+          </>
         )}
         <p className="text-2xl">Motivo de la cancelación:</p>
         <form
@@ -198,21 +204,20 @@ export default function CancelarReservaPage() {
         motivoDeCancelacion: cancellationMotive.current?.value,
       }),
     }).catch(() => {
-      setGeneralError("Ocurrió un error al cancelar la reserva.");
+      toastError("Hubo un error inesperado.");
       return;
     });
 
     if (!response) return;
 
     if (response.ok) {
-
-    setGeneralError("");
-    setSuccessMessage("La reserva se canceló correctamente");
-    setTimeout(() => {
-      location.href = "/reservas/pendientes";
-    }, 2000); 
-    return;
-  }
+      setGeneralError("");
+      setSuccessMessage("La reserva se canceló correctamente");
+      setTimeout(() => {
+        location.href = "/reservas/pendientes";
+      }, 2000);
+      return;
+    }
 
     const cancelErrorResponse = (await response.json()) as ErrorResponse;
     if (cancelErrorResponse.error) {

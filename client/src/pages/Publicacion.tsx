@@ -96,25 +96,25 @@ export default function Publicacion() {
               Precio Por Hora: ${inmueble.price}
             </p>
             <p>
-              <span className="font-semibold text-lg">Horario:</span>{" "}
+              <span className="font-semibold text-lg">Horario:</span>
               {inmueble.start} - {inmueble.end}
             </p>
             <div className="flex gap-6">
-            <div className="flex items-center gap-1">
-              <span className="font-semibold text-lg">Localidad:</span>
-              <span>{inmueble.ubication}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="font-semibold text-lg">Calle:</span>
-              <span>{inmueble.street}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="font-semibold text-lg">Altura:</span>
-              <span>{inmueble.number}</span>
-            </div>
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-lg">Localidad:</span>
+                <span>{inmueble.ubication}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-lg">Calle:</span>
+                <span>{inmueble.street}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="font-semibold text-lg">Altura:</span>
+                <span>{inmueble.number}</span>
+              </div>
             </div>
             <p>
-              <span className="font-semibold text-lg">Condiciones:</span>{" "}
+              <span className="font-semibold text-lg">Condiciones:</span>
               {inmueble.condition}
             </p>
             <p>
@@ -124,7 +124,7 @@ export default function Publicacion() {
               {inmueble.cancellation}
             </p>
             <p>
-              <span className="font-semibold text-lg">Descripción:</span>{" "}
+              <span className="font-semibold text-lg">Descripción:</span>
               {inmueble.description}
             </p>
           </div>

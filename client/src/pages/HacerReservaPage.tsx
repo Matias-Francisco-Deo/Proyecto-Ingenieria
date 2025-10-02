@@ -3,6 +3,7 @@ import CalendarioCarrusel from "../components/CalendarioCarrusel";
 import CarruselHorarios from "../components/CarruselHorarios";
 import { useUser } from "../hooks/useUser";
 import type { HorarioDTO, Inmueble, MappedHorarioDTO } from "@/types/types";
+import { useToast } from "@/hooks/useToast";
 
 export default function PeticionForm() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -22,6 +23,8 @@ export default function PeticionForm() {
   const [altoHorarios, setAltoHorarios] = useState<number>(0);
 
   const { getId } = useUser();
+  const { toastError } = useToast();
+
   const searchParams = new URLSearchParams(window.location.search);
   const id = searchParams.get("id");
 
@@ -44,7 +47,6 @@ export default function PeticionForm() {
 
     fetchInmueble();
   }, [id]);
-
 
   // Ajustar alto del contenedor de horarios según info del inmueble
 
@@ -73,7 +75,7 @@ export default function PeticionForm() {
         const res = await fetch(
           `http://localhost:8081/peticion/vigentes/${inmueble.id}/${dateStr}`
         );
-        if (!res.ok) throw new Error("Error al traer horarios ocupados");
+        if (!res.ok) throw new Error("Error al traer horarios ocupados.");
 
         const data = await res.json();
         const ocupados: MappedHorarioDTO[] = data.map((h: HorarioDTO) => ({
@@ -82,7 +84,7 @@ export default function PeticionForm() {
         }));
         setHorariosOcupados(ocupados);
       } catch (err) {
-        console.error(err);
+        console.log(err);
         setHorariosOcupados([]);
       }
     };
@@ -166,7 +168,8 @@ export default function PeticionForm() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
-      setMessage(err.message || "Error al enviar la petición");
+      // setMessage(err.message || "Error al enviar la petición");
+      toastError("Hubo un error inesperado.");
       resetComponents();
       setTimeout(() => setMessage(""), 4000);
     } finally {
@@ -181,7 +184,8 @@ export default function PeticionForm() {
       <div className="w-[80%]">
         <CalendarioCarrusel
           onDaySelect={setSelectedDate}
-          availableDays={inmueble.availableDays ?? []} />
+          availableDays={inmueble.availableDays ?? []}
+        />
       </div>
 
       <div className="mt-8 flex w-[80%] gap-6 min-h-[55vh]">

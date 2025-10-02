@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
 import type { ErrorResponse, PendingPetition } from "@/types/types";
+import { useToast } from "@/hooks/useToast";
 
 export default function ReservaPendientePage() {
   const [petition, setPetition] = useState<PendingPetition | null>(null);
@@ -13,7 +14,9 @@ export default function ReservaPendientePage() {
   const [generalError, setGeneralError] = useState("");
   const [approvalMessage, setApprovalMessage] = useState("");
   const rejectionMotive = useRef<HTMLTextAreaElement>(null);
+
   const { getId } = useUser();
+  const { toastError } = useToast();
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -86,9 +89,14 @@ export default function ReservaPendientePage() {
             <div className="space-y-3  flex text-xl flex-col justify-center py-8 gap-10">
               <div className=" flex justify-between px-4">
                 <p>
-                  <span>Localidad: </span>{petition.ubication}<br/>
-                  <span>Calle: </span>{petition.street}<br/>
-                  <span>Altura: </span>{petition.number}
+                  <span>Localidad: </span>
+                  {petition.ubication}
+                  <br />
+                  <span>Calle: </span>
+                  {petition.street}
+                  <br />
+                  <span>Altura: </span>
+                  {petition.number}
                 </p>
                 <p>
                   <span className="font-semibold text-lg">Capacidad: </span>
@@ -194,8 +202,9 @@ export default function ReservaPendientePage() {
       body: JSON.stringify({
         peticionId: id,
       }),
-    }).catch(() => {
-      setGeneralError("No se pudo concretar la operación.");
+    }).catch((err) => {
+      console.log(err);
+      toastError("Hubo un error inesperado.");
       return;
     });
 
@@ -227,8 +236,9 @@ export default function ReservaPendientePage() {
         peticionId: id,
         motivoDeRechazo: rejectionMotive.current?.value,
       }),
-    }).catch(() => {
-      setRejError("No se pudo concretar la operación.");
+    }).catch((err) => {
+      console.log(err);
+      toastError("Hubo un error inesperado.");
       return;
     });
 

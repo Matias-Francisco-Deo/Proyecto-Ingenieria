@@ -2,11 +2,14 @@
 import { useState, type FormEvent } from "react";
 import { useUser } from "@/hooks/useUser";
 import { useAuth } from "@/hooks/useAuth";
+import { useEffect } from "react";
 import Dias from "@/components/Dias";
+import { useToast } from "@/hooks/useToast";
 
 export default function createPropertyPage() {
   const { isAuthenticated } = useAuth();
   const { getId } = useUser();
+  const { toastError } = useToast();
 
   /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
@@ -89,8 +92,12 @@ export default function createPropertyPage() {
     const propertyUbication = form.elements.namedItem(
       "ubication"
     ) as HTMLInputElement;
-    const propertyStreet = form.elements.namedItem("street") as HTMLInputElement;
-    const propertyNumber = form.elements.namedItem("number") as HTMLInputElement;
+    const propertyStreet = form.elements.namedItem(
+      "street"
+    ) as HTMLInputElement;
+    const propertyNumber = form.elements.namedItem(
+      "number"
+    ) as HTMLInputElement;
     // const propertyImage = form.elements.namedItem("images") as HTMLInputElement;
     const propertyPrice = form.elements.namedItem("price") as HTMLInputElement;
     const propertyStartTime = form.elements.namedItem(
@@ -146,26 +153,28 @@ export default function createPropertyPage() {
       resetBlankError();
       return;
     }
-    
-    let hasNumberErrorFlag = false; 
 
-    if (+propertyPrice.value <= 0) { 
-      setHasPriceError(true); 
-      hasNumberErrorFlag = true; 
+    let hasNumberErrorFlag = false;
+
+    if (+propertyPrice.value <= 0) {
+      setHasPriceError(true);
+      hasNumberErrorFlag = true;
     }
-    if (+propertyCapacity.value <= 0) { 
+    if (+propertyCapacity.value <= 0) {
       setHasCapacityError(true);
-      hasNumberErrorFlag = true; 
+      hasNumberErrorFlag = true;
     }
-    if (+propertyNumber.value <= 0) { 
+    if (+propertyNumber.value <= 0) {
       setHasNumberError(true);
-      hasNumberErrorFlag = true; 
+      hasNumberErrorFlag = true;
     }
 
-    if (hasNumberErrorFlag) { 
-      setGeneralErrorMessage("La altura, el precio y la capacidad deben ser valores mayores a 0"); 
+    if (hasNumberErrorFlag) {
+      setGeneralErrorMessage(
+        "La altura, el precio y la capacidad deben ser valores mayores a 0"
+      );
 
-      return; 
+      return;
     }
 
     const formData = new FormData();
@@ -183,8 +192,8 @@ export default function createPropertyPage() {
       condition: propertyConditions.value,
       cancellation: propertyCancellation.value,
       userId: userId,
-      street: propertyStreet.value, 
-      number: propertyNumber.value, 
+      street: propertyStreet.value,
+      number: propertyNumber.value,
     };
     formData.append(
       "property",
@@ -198,20 +207,23 @@ export default function createPropertyPage() {
       formData.append("images", file);
     });
 
-    const response = await fetch("http://localhost:8081/property", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      await fetch("http://localhost:8081/property", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (!response.ok) {
-      const { error } = await response.json();
+      // if (!response.ok) {
+      //   const { error } = await response.json();
+      //   toastError("Hubo un error inesperado.");
+      //   return;
+      // }
 
-      console.error(error);
-
-      return;
+      location.href = "/home";
+    } catch (error: unknown) {
+      console.log(error);
+      toastError("Hubo un error inesperado.");
     }
-
-    location.href = "/home";
 
     function checkHasNoBlanks() {
       if (propertyNameIsBlank) {
@@ -223,12 +235,12 @@ export default function createPropertyPage() {
       if (propertyUbicationIsBlank) {
         setHasUbicationError(true);
       }
-      if (propertyStreetIsBlank) { 
-        setHasStreetError(true); 
+      if (propertyStreetIsBlank) {
+        setHasStreetError(true);
       }
       if (propertyNumberIsBlank) {
-        setHasNumberError(true); 
-        }
+        setHasNumberError(true);
+      }
       if (propertyImageIsBlank) {
         setHasImageError(true);
       }
@@ -361,7 +373,12 @@ export default function createPropertyPage() {
                   required
                   autoComplete="number"
                   onKeyDown={(e) => {
-                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                    if (
+                      e.key === "e" ||
+                      e.key === "E" ||
+                      e.key === "+" ||
+                      e.key === "-"
+                    ) {
                       e.preventDefault();
                     }
                   }}
@@ -424,7 +441,12 @@ export default function createPropertyPage() {
                   required
                   autoComplete="price"
                   onKeyDown={(e) => {
-                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                    if (
+                      e.key === "e" ||
+                      e.key === "E" ||
+                      e.key === "+" ||
+                      e.key === "-"
+                    ) {
                       e.preventDefault();
                     }
                   }}
@@ -456,7 +478,8 @@ export default function createPropertyPage() {
                     step="3600"
                     required
                     autoComplete="start-event"
-                    className={`no-time-picker${//clase que quita el picker de horario del input
+                    className={`no-time-picker${
+                      //clase que quita el picker de horario del input
                       hasStartTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                   />
@@ -475,7 +498,8 @@ export default function createPropertyPage() {
                     step="3600"
                     required
                     autoComplete="end-event"
-                    className={`no-time-picker${//clase que quita el picker de horario del input
+                    className={`no-time-picker${
+                      //clase que quita el picker de horario del input
                       hasEndTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                   />
@@ -505,7 +529,12 @@ export default function createPropertyPage() {
                   required
                   autoComplete="capacity"
                   onKeyDown={(e) => {
-                    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-") {
+                    if (
+                      e.key === "e" ||
+                      e.key === "E" ||
+                      e.key === "+" ||
+                      e.key === "-"
+                    ) {
                       e.preventDefault();
                     }
                   }}

@@ -1,16 +1,10 @@
 import BuscadorDeInmuebles from "@/components/buscador/Buscador";
 
 import { useBusquedaInmuebles } from "@/hooks/useBusquedaInmuebles";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
 
 export default function HomePage() {
   const busquedaProps = useBusquedaInmuebles();
   const { hasResults } = busquedaProps;
-
-  useEffect(() => {
-    toast.warn("NO");
-  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] text-white p-4">
