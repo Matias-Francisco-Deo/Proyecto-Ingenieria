@@ -159,7 +159,8 @@ export default function PeticionForm() {
 
       if (!res.ok) {
         const errData = await res.json();
-        throw new Error(errData?.message || "Error al enviar la petición");
+        setMessage(errData?.message || "Error al enviar la petición");
+        return;
       }
 
       setMessage("✅ Petición enviada exitosamente!");
@@ -168,7 +169,6 @@ export default function PeticionForm() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
-      // setMessage(err.message || "Error al enviar la petición");
       toastError("Hubo un error inesperado.");
       resetComponents();
       setTimeout(() => setMessage(""), 4000);
