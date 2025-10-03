@@ -7,8 +7,8 @@ public record InmuebleSummaryDTO (
         String name,
         String ubication,
         Double price,
-        String nameDelDuenio,
-        String email,
+        String ownerName,
+        String ownerEmail,
         String imageURL
 ){
     public static InmuebleSummaryDTO desdeModelo(Inmueble prop) {

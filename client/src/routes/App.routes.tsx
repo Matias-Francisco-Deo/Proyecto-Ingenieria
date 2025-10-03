@@ -14,6 +14,7 @@ const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/HacerReservaPage"));
 const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const CancelarReservaPage = lazy(() => import("../pages/CancelarReservaPage"));
+const PublicacionesPage = lazy(() => import("../pages/ListaDePublicaciones"));
 
 const ReservaPendientePage = lazy(
     () => import("../pages/ReservaPendientePage")
@@ -74,6 +75,13 @@ export function AppRoutes() {
                         path="/reserva/:estado"
                         component={CancelarReservaPage}
                     />
+
+                    <Route
+                        path="/mis-publicaciones"
+                        component={PublicacionesPage}
+                    />
+
+
                     {/* Rutas protegidas */}
                     {/* <Route path="/home" component={HomePage} />
 

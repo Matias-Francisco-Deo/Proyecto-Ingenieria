@@ -46,6 +46,13 @@ export function Header({ ...props }: HeaderProps) {
                 >
                     Ver reservas
                 </Link>
+
+                <Link
+                    to={isAuthenticated ? "/mis-publicaciones" : "/signin"}
+                    className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+                >
+                    Mis publicaciones
+                </Link>
             </div>
 
             {isAuthenticated ? (

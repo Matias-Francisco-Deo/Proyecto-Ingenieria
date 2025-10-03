@@ -89,4 +89,18 @@ public final class InmuebleControllerREST {
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
+
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<Page<InmuebleResponseDTO>> getAllPropertiesByIdOwner(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<Inmueble> allPropertiesByOwner = this.inmuebleService.getAllByOwnerId(id, PageRequest.of(page, 10));
+
+        if (allPropertiesByOwner.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<InmuebleResponseDTO> inmuebles = allPropertiesByOwner.map(InmuebleResponseDTO::desdeModelo);
+
+        return ResponseEntity.ok(inmuebles);
+    }
 }
