@@ -1,5 +1,7 @@
 package com.reservo.service;
 
+import com.reservo.controller.dto.Inmueble.InmuebleModifyRequestDTO;
+import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
 import org.springframework.data.domain.Page;
@@ -21,4 +23,5 @@ public interface InmuebleService {
     Page<Inmueble> findByFiltro(Filtro filtro);
     Page<Inmueble> getAllByOwnerId(Long id, Pageable pageable);
 
+    void modify(Long inmuebleId, InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto;
 }

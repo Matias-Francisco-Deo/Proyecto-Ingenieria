@@ -1,5 +1,7 @@
 package com.reservo.service.impl;
 
+import com.reservo.controller.dto.Inmueble.InmuebleModifyRequestDTO;
+import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.persistencia.DAO.InmuebleDAO;
@@ -25,10 +27,10 @@ import java.util.UUID;
 @Transactional
 public class InmuebleServiceImpl implements InmuebleService {
 
-    private final InmuebleDAO dao;
+    private final InmuebleDAO inmuebleDAO;
 
     public InmuebleServiceImpl(InmuebleDAO dao) {
-        this.dao = dao;
+        this.inmuebleDAO = dao;
     }
 
     @Override
@@ -37,8 +39,8 @@ public class InmuebleServiceImpl implements InmuebleService {
         List<String> imagePaths = saveImages(images);
         inmueble.getImages().addAll(imagePaths);
 
-        if (dao.existeInmueble(inmueble.getId())) throw new InmuebleRepetidoException("El inmueble ya está registrado.");
-        return dao.save(inmueble);
+        if (inmuebleDAO.existeInmueble(inmueble.getId())) throw new InmuebleRepetidoException("El inmueble ya está registrado.");
+        return inmuebleDAO.save(inmueble);
     }
 
     @Override
@@ -53,27 +55,33 @@ public class InmuebleServiceImpl implements InmuebleService {
 
     @Override
     public Optional<Inmueble> findById(Long inmuebleId) {
-        return dao.findById(inmuebleId);
+        return inmuebleDAO.findById(inmuebleId);
     }
 
     @Override
     public List<Inmueble> findAll() {
-        return dao.findAll();
+        return inmuebleDAO.findAll();
     }
 
     @Override
     public Page<Inmueble> findByName(String name, Pageable pageable) {
-        return dao.findByNameContainingIgnoreCase(name, pageable);
+        return inmuebleDAO.findByNameContainingIgnoreCase(name, pageable);
     }
 
     @Override
     public Page<Inmueble> findByFiltro(Filtro filtro) {
-        return dao.findByFiltro(filtro, filtro.getPage());
+        return inmuebleDAO.findByFiltro(filtro, filtro.getPage());
     }
 
     @Override
     public Page<Inmueble> getAllByOwnerId(Long id, Pageable pageable) {
-        return dao.getAllByOwnerId(id, pageable);
+        return inmuebleDAO.getAllByOwnerId(id, pageable);
+    }
+
+    @Override
+    public void modify(Long inmuebleId, InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto {
+        Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
+        Inmueble inmuebleModificado = inmuebleDTO.aModeloModificado(inmueble);
     }
 
     private List<String> saveImages(List<MultipartFile> images) {
