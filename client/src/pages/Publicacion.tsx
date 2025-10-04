@@ -1,32 +1,22 @@
 import { useState, useEffect } from "react";
 import Carrusel from "../components/Carrusel";
 import { Link } from "wouter";
-
-type Inmueble = {
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number;
-  condition: string;
-  start: string;
-  end: string;
-  capacity: number;
-  cancellation: string;
-  ownerName: string;
-  ownerEmail: string;
-  street: string;
-  number: number;
-};
+import type { Inmueble } from "@/types/types";
+import InmuebleEditable from "../components/InmuebleEditable";
+import InmuebleReadOnly from "../components/InmuebleReadOnly";
+import { useUser } from "@/hooks/useUser";
 
 export default function Publicacion() {
   const [inmueble, setInmueble] = useState<Inmueble | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [editando, setEditando] = useState(false);
 
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const id = params.get("id"); // id de la publicación
+
+  const { getId } = useUser(); // Id del usuario
 
   useEffect(() => {
     if (!id) return;
@@ -68,6 +58,9 @@ export default function Publicacion() {
   if (loading) return <p>Cargando...</p>;
   if (!inmueble) return <p>Inmueble no encontrado</p>;
 
+  // const isOwner = inmueble.ownerId === getId(); // acá iría la comprobación para editar la publicación, necesito desde el back en el endpoint traer el ownerId
+  const isOwner = 109 === getId(); // ahora lo hardcodié a esto
+
   return (
     <div className="p-6 text-white border border-gray-700 rounded-xl">
       <div className="flex justify-between items-center mb-4">
@@ -91,50 +84,60 @@ export default function Publicacion() {
         </div>
 
         <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="space-y-3">
-            <p className="text-2xl font-bold text-amber-400">
-              Precio Por Hora: ${inmueble.price}
-            </p>
-            <p>
-              <span className="font-semibold text-lg">Horario:</span>
-              {inmueble.start} - {inmueble.end}
-            </p>
-            <div className="flex gap-6">
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">Localidad:</span>
-                <span>{inmueble.ubication}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">Calle:</span>
-                <span>{inmueble.street}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">Altura:</span>
-                <span>{inmueble.number}</span>
-              </div>
-            </div>
-            <p>
-              <span className="font-semibold text-lg">Condiciones:</span>
-              {inmueble.condition}
-            </p>
-            <p>
-              <span className="font-semibold text-lg">
-                Política de cancelación:
-              </span>{" "}
-              {inmueble.cancellation}
-            </p>
-            <p>
-              <span className="font-semibold text-lg">Descripción:</span>
-              {inmueble.description}
-            </p>
-          </div>
+          {editando ? (
+            <InmuebleEditable
+              inmueble={inmueble}
+              images={images}
+              onCancelar={() => setEditando(false)}
+              onGuardar={async (data, nuevasImgs) => {
+                try {
+                  // 1. Enviar PUT con los datos editados
+                  const res = await fetch(`http://localhost:8081/property/${inmueble.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                  });
 
-          <div className="flex justify-center mt-6">
-            <Link href={`/hacer-reserva?id=${inmueble.id}`}>
-              <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
-                Reservar
-              </button>
-            </Link>
+                  if (!res.ok) throw new Error("Error al actualizar el inmueble");
+
+                  const actualizado = await res.json();
+                  setInmueble(actualizado);
+
+                  // 2. Enviar imágenes nuevas (si tu backend lo soporta en otra ruta)
+                  // acá podrías usar un fetch separado tipo POST / DELETE según corresponda
+                  setImages(nuevasImgs);
+
+                  // 3. Salir de modo edición
+                  setEditando(false);
+                } catch (err) {
+                  console.error("Error al guardar:", err);
+                }
+              }}
+            />
+          ) : (
+            <InmuebleReadOnly inmueble={inmueble} />
+          )}
+
+          {/* Botones */}
+          <div className="flex justify-center mt-6 gap-4">
+            {!editando && (
+              <>
+                <Link href={`/hacer-reserva?id=${inmueble.id}`}>
+                  <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
+                    Reservar
+                  </button>
+                </Link>
+
+                {isOwner && (
+                  <button
+                    onClick={() => setEditando(true)}
+                    className="bg-amber-500 px-3 py-1 rounded cursor-pointer hover:bg-amber-700"
+                  >
+                    Editar
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

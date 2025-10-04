@@ -70,6 +70,7 @@ export interface Inmueble {
     start: string;
     end: string;
     cancellation: string;
+    ownerId: number;            // nuevo
     ownerName: string;
     ownerEmail: string;
     availableDays: string[];

@@ -316,9 +316,10 @@ export default function createPropertyPage() {
                   type="text"
                   required
                   autoComplete="description"
+                  placeholder="Descripción"
                   className={`${
                     hasDescriptionError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-grey px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
               </div>
             </div>
