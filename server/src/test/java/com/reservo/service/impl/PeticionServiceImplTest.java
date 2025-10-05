@@ -45,7 +45,7 @@ public class PeticionServiceImplTest {
     private TestService testService; // cambiar por uno para inmueble
 
     @Autowired
-    PeticionService peticionService;
+    private PeticionService peticionService;
 
     @Autowired
     private PeticionDAO peticionDAO;
