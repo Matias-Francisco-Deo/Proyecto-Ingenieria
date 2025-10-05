@@ -1,6 +1,7 @@
 package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Inmueble.InmuebleModifyRequestDTO;
+import com.reservo.controller.dto.Inmueble.InmuebleRemoveImagesDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
@@ -44,11 +45,6 @@ public class InmuebleServiceImpl implements InmuebleService {
     }
 
     @Override
-    public Inmueble update(Inmueble inmueble) {
-        return null;
-    }
-
-    @Override
     public Inmueble delete(Inmueble inmueble) {
         return null;
     }
@@ -78,10 +74,48 @@ public class InmuebleServiceImpl implements InmuebleService {
         return inmuebleDAO.getAllByOwnerId(id, pageable);
     }
 
+
+
     @Override
-    public void modify(Long inmuebleId, InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto {
+    public void update(Long inmuebleId, InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto {
+
         Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
         Inmueble inmuebleModificado = inmuebleDTO.aModeloModificado(inmueble);
+
+        inmuebleDAO.save(inmuebleModificado);
+    }
+
+    @Override
+    public void addImages(Long inmuebleId, List<MultipartFile> images) throws ParametroIncorrecto {
+        if (images.isEmpty()) return;
+
+        Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
+        List<String> imagePaths = saveImages(images);
+        inmueble.getImages().addAll(imagePaths);
+
+        inmuebleDAO.save(inmueble);
+
+    }
+
+    @Override
+    public void removeImages(Long inmuebleId, InmuebleRemoveImagesDTO images) throws ParametroIncorrecto {
+        List<Integer> imagesToRemove = images.imagesToRemove();
+        if (images.imagesToRemove().isEmpty()) return;
+
+        Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
+
+        List<String> pathsToDelete = new ArrayList<>();
+        for (Integer index : imagesToRemove) {
+            String path = inmueble.getImages().get(index);
+            pathsToDelete.add(path);
+        }
+
+        removeImages(pathsToDelete);
+        for (String path : pathsToDelete) {
+            inmueble.getImages().remove(path);
+        }
+
+        inmuebleDAO.save(inmueble);
     }
 
     private List<String> saveImages(List<MultipartFile> images) {
@@ -98,8 +132,7 @@ public class InmuebleServiceImpl implements InmuebleService {
                 String filename = UUID.randomUUID() + "_" + originalFilename;
                 Path filePath = uploadDir.resolve(filename);
 
-
-                Files.copy(file.getInputStream(), filePath,StandardCopyOption.REPLACE_EXISTING);// Guardar archivo
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);// Guardar archivo
 
                 paths.add(filename);
             }
@@ -108,5 +141,23 @@ public class InmuebleServiceImpl implements InmuebleService {
         }
 
         return paths;
+    }
+
+    private void removeImages(List<String> images) {
+        Path uploadDir = Paths.get("uploads");
+
+        try {
+
+            for (String pathString : images) {
+
+                String pathToImage = uploadDir + "/" + pathString;
+
+                Files.delete(Path.of(pathToImage));
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error al eliminar las imágenes");
+        }
+
     }
 }

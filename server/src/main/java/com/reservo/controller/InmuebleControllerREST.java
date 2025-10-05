@@ -56,7 +56,19 @@ public final class InmuebleControllerREST {
 
     @PutMapping("/{id}")
     public ResponseEntity<DTOResponseError> modifyInmueble(@PathVariable Long id, @RequestBody InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto {
-        this.inmuebleService.modify(id, inmuebleDTO);
+        this.inmuebleService.update(id, inmuebleDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}/addImages")
+    public ResponseEntity<DTOResponseError> addImages(@PathVariable Long id, @RequestPart("images") List<MultipartFile> imagesToAdd) throws ParametroIncorrecto {
+        this.inmuebleService.addImages(id, imagesToAdd);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}/removeImages")
+    public ResponseEntity<DTOResponseError> removeImages(@PathVariable Long id, @RequestBody InmuebleRemoveImagesDTO inmuebleRemoveImagesDTO) throws ParametroIncorrecto {
+        this.inmuebleService.removeImages(id, inmuebleRemoveImagesDTO);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
