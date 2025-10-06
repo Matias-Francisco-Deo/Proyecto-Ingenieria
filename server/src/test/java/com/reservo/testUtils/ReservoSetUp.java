@@ -118,7 +118,7 @@ public class ReservoSetUp {
         }
 
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 8; i++) {
             peticionService.create(getPeticionNueva(jorge, inmueble4, i));
         }
 
