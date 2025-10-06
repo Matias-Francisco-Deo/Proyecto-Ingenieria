@@ -5,6 +5,9 @@ import type { Inmueble } from "@/types/types";
 import InmuebleEditable from "../components/InmuebleEditable";
 import InmuebleReadOnly from "../components/InmuebleReadOnly";
 import { useUser } from "@/hooks/useUser";
+import CarruselEditable from "@/components/CarruselEditable";
+import { toast } from "react-toastify";
+// import EditNoteIcon from '@mui/icons-material';
 
 export default function Publicacion() {
   const [inmueble, setInmueble] = useState<Inmueble | null>(null);
@@ -76,15 +79,47 @@ export default function Publicacion() {
     fetchImages();
   }, [id]);
 
+  // Paginación
   const nextImage = () => setCurrentIndex((prev) => (prev + 1) % images.length);
   const prevImage = () =>
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
 
+  // ELIMINAR IMÁGENES del carrusel
+  const handleRemoveImage = async (index: number) => {
+    if (!id) return;
+
+    if (images.length <= 1) {
+      toast.warning("Debe haber al menos una imagen en la publicación.");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:8081/property/${id}/removeImages`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imagesToRemove: [index] }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al eliminar la imagen");
+
+      setImages((prev) => prev.filter((_, i) => i !== index));
+
+      setCurrentIndex((prev) =>
+        prev >= images.length - 1 ? Math.max(0, prev - 1) : prev
+      );
+    } catch (err) {
+      toast.error("Error al eliminar imagen:" + err);
+    }
+  };
+
   if (loading) return <p>Cargando...</p>;
   if (!inmueble) return <p>Inmueble no encontrado</p>;
 
-  const isOwner = inmueble.ownerId === getId(); 
-  
+  const isOwner = inmueble.ownerId === getId(); // habilita botón de edición
+
   return (
     <div className="p-6 text-white border border-gray-700 rounded-xl">
       <div className="flex justify-between items-center mb-4">
@@ -100,13 +135,14 @@ export default function Publicacion() {
       <div className="flex gap-6">
         {editando ? (
           <>
-            {/* carrusel */}
+            {/* Carrusel */}
             <div className="w-3/5">
-              <Carrusel
+              <CarruselEditable
                 images={images}
                 currentIndex={currentIndex}
                 nextImage={nextImage}
                 prevImage={prevImage}
+                onRemoveImage={handleRemoveImage}
               />
 
               <div className="mt-2 flex w-1/2 gap-2 flex-wrap">
@@ -146,21 +182,33 @@ export default function Publicacion() {
             <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
               <InmuebleEditable
                 inmueble={inmueble}
-                // images={images}
                 onCancelar={() => setEditando(false)}
                 onGuardar={async (data) => {
-                  try {
-                    await fetch(`http://localhost:8081/property/${inmueble.id}`, {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(data),
+                  await fetch(`http://localhost:8081/property/${inmueble.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                  });
+
+                  if (selectedFiles.length > 0) {
+                    const formData = new FormData();
+                    selectedFiles.forEach((file) => {
+                      formData.append("images", file);
                     });
 
-                    setEditando(false);
-                    location.href = `/publicacion?id=${inmueble.id}`;
-                  } catch (err) {
-                    console.error("Error al guardar:", err);
+                    await fetch(
+                      `http://localhost:8081/property/${inmueble.id}/addImages`,
+                      {
+                        method: "PATCH",
+                        body: formData,
+                      }
+                    );
                   }
+
+                  setSelectedFiles([]);
+                  setPreviewImages([]);
+                  setEditando(false);
+                  location.href = `/publicacion?id=${inmueble.id}`;
                 }}
               />
             </div>
@@ -181,20 +229,21 @@ export default function Publicacion() {
             {/* Contenido */}
             <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
               <InmuebleReadOnly inmueble={inmueble} />
+              {isOwner && (                  
+                  <button
+                    onClick={() => setEditando(true)}
+                    className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
+                    aria-label="Editar publicación"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M4 14v-2h7v2zm0-4V8h11v2zm0-4V4h11v2zm9 14v-3.075l5.525-5.5q.225-.225.5-.325t.55-.1q.3 0 .575.113t.5.337l.925.925q.2.225.313.5t.112.55t-.1.563t-.325.512l-5.5 5.5zm7.5-6.575l-.925-.925zm-6 5.075h.95l3.025-3.05l-.45-.475l-.475-.45l-3.05 3.025zm3.525-3.525l-.475-.45l.925.925z"/></svg>
+                  </button>
+                )}
               <div className="flex justify-center mt-6 gap-4">
                 <Link href={`/hacer-reserva?id=${inmueble.id}`}>
                   <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
                     Reservar
                   </button>
                 </Link>
-                {isOwner && (
-                  <button
-                    onClick={() => setEditando(true)}
-                    className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer"
-                  >
-                    Editar
-                  </button>
-                )}
               </div>
             </div>
           </>

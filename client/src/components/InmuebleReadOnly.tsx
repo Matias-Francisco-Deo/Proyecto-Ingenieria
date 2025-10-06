@@ -6,6 +6,7 @@ export default function InmuebleReadOnly({ inmueble }: { inmueble: Inmueble }) {
       <p className="text-2xl font-bold text-amber-400">
         Precio Por Hora: ${inmueble.price}
       </p>
+      
       <p>
         <span className="font-semibold text-lg">Horario: </span>
         {inmueble.start} - {inmueble.end}
