@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Inmueble } from "@/types/types";
+import Dias from "./Dias";
 
 export default function InmuebleEditable({
   inmueble,
@@ -8,33 +9,41 @@ export default function InmuebleEditable({
 }: {
   inmueble: Inmueble;
   onCancelar: () => void;
-  onGuardar: (data: Inmueble, nuevasImgs: File[]) => void;
+  onGuardar: (data: Inmueble) => void;
 }) {
   const [formData, setFormData] = useState(inmueble);
-  const [nuevasImgs, setNuevasImgs] = useState<File[]>([]);
-  const [imgsActuales, setImgsActuales] = useState<string[]>(
-    inmueble.images || []
-  );
+  // const [nuevasImgs, setNuevasImgs] = useState<File[]>([]);
+  // const [imgsActuales, setImgsActuales] = useState<string[]>(
+  //   inmueble.images || []
+  // );
+  /* IMAGENES ACÁ ARRIBA */
 
+  const days = new Set(inmueble.availableDays);
+  
+  const [selectedDays, setSelectedDays] = useState<Set<string>>(days);
+  
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleImagenes = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setNuevasImgs(Array.from(e.target.files));
-    }
-  };
+  // const agregarImagenes = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setNuevasImgs(Array.from(e.target.files));
+  //   }
+  // };
 
-  const eliminarImagen = (img: string) => {
-    setImgsActuales(imgsActuales.filter((i) => i !== img));
-  };
+  // const eliminarImagen = (img: string) => {
+  //   setImgsActuales(imgsActuales.filter((i) => i !== img));
+  // };
 
   const handleGuardar = async () => {
-    onGuardar({ ...formData, images: imgsActuales }, nuevasImgs);
+    onGuardar({
+      ...formData,
+      availableDays: Array.from(selectedDays)
+    });
   };
 
   return (
@@ -62,7 +71,17 @@ export default function InmuebleEditable({
             value={formData.price}
             onChange={handleChange}
             placeholder="Precio"
-            className="rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+            onKeyDown={(e) => {
+              if (
+                e.key === "e" ||
+                e.key === "E" ||
+                e.key === "+" ||
+                e.key === "-"
+              ) {
+                e.preventDefault();
+              }
+            }}
+            className="no-spin rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
           />
         </div>
 
@@ -70,34 +89,37 @@ export default function InmuebleEditable({
           <label>Horario:</label>
           <div className="flex gap-2">
             <input
-              type="text"
+              type="time"
               name="start"
+              step="3600"
               value={formData.start}
               onChange={handleChange}
               placeholder="Desde"
-              className="flex-1 rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+              className="no-time-picker flex-[1] min-w-[90px] rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
             />
             <input
-              type="text"
+              type="time"
               name="end"
+              step="3600"
               value={formData.end}
               onChange={handleChange}
               placeholder="Hasta"
-              className="flex-1 rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+              className="no-time-picker flex-[1] min-w-[90px] rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
             />
           </div>
         </div>
 
+        
         <div className="flex flex-col gap-1 text-amber-400">
           <label>Dirección:</label>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <input
               type="text"
               name="ubication"
               value={formData.ubication}
               onChange={handleChange}
               placeholder="Localidad"
-              className="flex-1 rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+              className="flex-[2] min-w-[120px] rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
             />
             <input
               type="text"
@@ -105,18 +127,23 @@ export default function InmuebleEditable({
               value={formData.street}
               onChange={handleChange}
               placeholder="Calle"
-              className="flex-1 rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+              className="flex-[1] min-w-[90px] rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
             />
             <input
-              type="text"
+              type="number"
               name="number"
               value={formData.number}
               onChange={handleChange}
               placeholder="Altura"
-              className="flex-1 rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+              className="no-spin flex-[1] min-w-[90px] rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
             />
           </div>
         </div>
+
+        <Dias
+          selectedDays={selectedDays}
+          setSelectedDays={setSelectedDays}
+        ></Dias>
 
         <div className="flex flex-col gap-1 text-amber-400">
           <label htmlFor="condition">Condiciones:</label>
@@ -134,14 +161,15 @@ export default function InmuebleEditable({
         <div className="flex flex-col gap-1 text-amber-400">
           <label htmlFor="cancellation">Política de cancelación:</label>
           <select
-            name="cancellation-policy"
-            id="cancellation-policy"
-            required
+            name="cancellation"
+            id="cancellation"
+            value={formData.cancellation}
+            onChange={handleChange}
             className="rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
           >
-            <option value="non-restriction">Sin restricción</option>
-            <option value="Flexible">Flexible</option>
-            <option value="Severo">Severo</option>
+            <option value="SIN_RETRIBUCION">Sin restricción</option>
+            <option value="FLEXIBLE">Flexible</option>
+            <option value="SEVERO">Severo</option>
           </select>
         </div>
 
@@ -153,52 +181,19 @@ export default function InmuebleEditable({
             value={formData.description}
             onChange={handleChange}
             placeholder="Agrega una descripción"
-            className="w-full rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
+            className="w-full h-25 rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2 focus:ring-indigo-600"
           />
         </div>
-
-        {/* SE(X)CCIÓN DE IMAGENES */}
-        <div>
-          <p className="text-amber-400 font-bold">Imágenes actuales:</p>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {imgsActuales.map((img) => (
-              <div key={img} className="relative">
-                <img src={img} alt="preview" className="w-24 h-24 rounded" />
-                <button
-                  type="button"
-                  onClick={() => eliminarImagen(img)}
-                  className="absolute top-0 right-0 bg-red-600 text-white px-1 rounded"
-                >
-                  X
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-amber-400">
-            Agregar imágenes nuevas:
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImagenes}
-              className="mt-2"
-            />
-          </label>
-        </div>
-
         <div className="flex gap-2 mt-4">
           <button
             onClick={handleGuardar}
-            className="bg-green-600 px-3 py-1 rounded text-white"
+            className="bg-amber-500 hover:bg-amber-700 px-3 py-1 rounded text-white cursor-pointer"
           >
             Guardar
           </button>
           <button
             onClick={onCancelar}
-            className="bg-gray-600 px-3 py-1 rounded text-white"
+            className="bg-gray-500 hover:bg-gray-700 px-3 py-1 rounded text-white cursor-pointer"
           >
             Cancelar
           </button>
@@ -207,3 +202,8 @@ export default function InmuebleEditable({
     </div>
   );
 }
+
+// Código para agregar las imagenes al form
+// selectedFiles.forEach((file) => {
+//       formData.append("images", file);
+//     });

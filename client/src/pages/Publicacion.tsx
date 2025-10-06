@@ -13,6 +13,31 @@ export default function Publicacion() {
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState(false);
 
+  // Imágenes
+
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFiles = Array.from(files);
+    setSelectedFiles((prev) => [...prev, ...newFiles]);
+
+    const urls = newFiles.map((file) => URL.createObjectURL(file));
+    setPreviewImages((prev) => [...prev, ...urls]);
+
+    e.target.value = "";
+  };
+
+  const removeImage = (index: number) => {
+    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // terminá imágenes
+
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id"); // id de la publicación
 
@@ -58,9 +83,8 @@ export default function Publicacion() {
   if (loading) return <p>Cargando...</p>;
   if (!inmueble) return <p>Inmueble no encontrado</p>;
 
-  // const isOwner = inmueble.ownerId === getId(); // acá iría la comprobación para editar la publicación, necesito desde el back en el endpoint traer el ownerId
-  const isOwner = 109 === getId(); // ahora lo hardcodié a esto
-
+  const isOwner = inmueble.ownerId === getId(); 
+  
   return (
     <div className="p-6 text-white border border-gray-700 rounded-xl">
       <div className="flex justify-between items-center mb-4">
@@ -74,72 +98,107 @@ export default function Publicacion() {
       </div>
 
       <div className="flex gap-6">
-        <div className="w-3/5">
-          <Carrusel
-            images={images}
-            currentIndex={currentIndex}
-            nextImage={nextImage}
-            prevImage={prevImage}
-          />
-        </div>
+        {editando ? (
+          <>
+            {/* carrusel */}
+            <div className="w-3/5">
+              <Carrusel
+                images={images}
+                currentIndex={currentIndex}
+                nextImage={nextImage}
+                prevImage={prevImage}
+              />
 
-        <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
-          {editando ? (
-            <InmuebleEditable
-              inmueble={inmueble}
-              images={images}
-              onCancelar={() => setEditando(false)}
-              onGuardar={async (data, nuevasImgs) => {
-                try {
-                  // 1. Enviar PUT con los datos editados
-                  const res = await fetch(`http://localhost:8081/property/${inmueble.id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                  });
+              <div className="mt-2 flex w-1/2 gap-2 flex-wrap">
+                <label htmlFor="images" className="block font-medium text-sm/6">
+                  Subir imagenes
+                </label>
+                <input
+                  id="images"
+                  name="images"
+                  type="file"
+                  multiple
+                  required
+                  autoComplete="images"
+                  onChange={handleImageChange}
+                  className={`loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                />
+                {previewImages.map((img, idx) => (
+                  <div key={idx} className="relative">
+                    <img
+                      src={img}
+                      alt={`Preview ${idx}`}
+                      className="w-32 h-32 object-contain border rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                  if (!res.ok) throw new Error("Error al actualizar el inmueble");
+            {/* Edición */}
+            <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
+              <InmuebleEditable
+                inmueble={inmueble}
+                // images={images}
+                onCancelar={() => setEditando(false)}
+                onGuardar={async (data) => {
+                  try {
+                    await fetch(`http://localhost:8081/property/${inmueble.id}`, {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(data),
+                    });
 
-                  const actualizado = await res.json();
-                  setInmueble(actualizado);
+                    setEditando(false);
+                    location.href = `/publicacion?id=${inmueble.id}`;
+                  } catch (err) {
+                    console.error("Error al guardar:", err);
+                  }
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          // Sección de solo vista
+          <>
+            {/* Carrusel */}
+            <div className="w-3/5">
+              <Carrusel
+                images={images}
+                currentIndex={currentIndex}
+                nextImage={nextImage}
+                prevImage={prevImage}
+              />
+            </div>
 
-                  // 2. Enviar imágenes nuevas (si tu backend lo soporta en otra ruta)
-                  // acá podrías usar un fetch separado tipo POST / DELETE según corresponda
-                  setImages(nuevasImgs);
-
-                  // 3. Salir de modo edición
-                  setEditando(false);
-                } catch (err) {
-                  console.error("Error al guardar:", err);
-                }
-              }}
-            />
-          ) : (
-            <InmuebleReadOnly inmueble={inmueble} />
-          )}
-
-          {/* Botones */}
-          <div className="flex justify-center mt-6 gap-4">
-            {!editando && (
-              <>
+            {/* Contenido */}
+            <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
+              <InmuebleReadOnly inmueble={inmueble} />
+              <div className="flex justify-center mt-6 gap-4">
                 <Link href={`/hacer-reserva?id=${inmueble.id}`}>
                   <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
                     Reservar
                   </button>
                 </Link>
-
                 {isOwner && (
                   <button
                     onClick={() => setEditando(true)}
-                    className="bg-amber-500 px-3 py-1 rounded cursor-pointer hover:bg-amber-700"
+                    className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer"
                   >
                     Editar
                   </button>
                 )}
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

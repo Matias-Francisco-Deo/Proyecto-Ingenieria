@@ -2,7 +2,6 @@
 import { useState, type FormEvent } from "react";
 import { useUser } from "@/hooks/useUser";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
 import Dias from "@/components/Dias";
 import { useToast } from "@/hooks/useToast";
 
@@ -195,6 +194,7 @@ export default function createPropertyPage() {
       street: propertyStreet.value,
       number: propertyNumber.value,
     };
+    
     formData.append(
       "property",
       new Blob([JSON.stringify(propertyJson)], {
@@ -316,10 +316,9 @@ export default function createPropertyPage() {
                   type="text"
                   required
                   autoComplete="description"
-                  placeholder="Descripción"
                   className={`${
                     hasDescriptionError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-grey px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                 />
               </div>
             </div>
@@ -479,7 +478,7 @@ export default function createPropertyPage() {
                     step="3600"
                     required
                     autoComplete="start-event"
-                    className={`no-time-picker${
+                    className={`no-time-picker ${
                       //clase que quita el picker de horario del input
                       hasStartTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
@@ -499,7 +498,7 @@ export default function createPropertyPage() {
                     step="3600"
                     required
                     autoComplete="end-event"
-                    className={`no-time-picker${
+                    className={`no-time-picker ${
                       //clase que quita el picker de horario del input
                       hasEndTimeError ? "inputError" : ""
                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}

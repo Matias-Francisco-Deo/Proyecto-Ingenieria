@@ -7,8 +7,8 @@ public enum PoliticasDeCancelacion {
 
     public static PoliticasDeCancelacion getPoliticasDeCancelacion(String cancellation) {
         return switch (cancellation) {
-            case "Flexible" -> PoliticasDeCancelacion.FLEXIBLE;
-            case "Severo" -> PoliticasDeCancelacion.SEVERO;
+            case "FLEXIBLE" -> PoliticasDeCancelacion.FLEXIBLE;
+            case "SEVERO" -> PoliticasDeCancelacion.SEVERO;
             default -> PoliticasDeCancelacion.SIN_RETRIBUCION;
         };
     }

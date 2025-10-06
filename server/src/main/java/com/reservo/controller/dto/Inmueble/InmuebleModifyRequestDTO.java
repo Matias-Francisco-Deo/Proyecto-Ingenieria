@@ -17,11 +17,11 @@ public record InmuebleModifyRequestDTO(
         String ubication,
         Double price,
         Integer capacity,
-        String conditions,
+        String condition,
         String start,
-        String end,      // este
-        List<DiasDeLaSemana> days,
-        String cancellation, // este
+        String end,
+        List<DiasDeLaSemana> availableDays,
+        String cancellation,
         String street,
         Integer number
 
@@ -35,7 +35,7 @@ public record InmuebleModifyRequestDTO(
         if (description != null && description.isBlank()) throw new ParametroIncorrecto("La descripción no debe estar en blanco.");
         if (ubication != null && ubication.isBlank()) throw new ParametroIncorrecto("La ubicación no debe estar en blanco.");
         if (street != null && street.isBlank()) throw new ParametroIncorrecto("La calle no debe estar en blanco.");
-        if (days != null && days.isEmpty()) throw new ParametroIncorrecto("Se deben especificar días para ocupar.");
+        if (availableDays != null && availableDays.isEmpty()) throw new ParametroIncorrecto("Se deben especificar días para ocupar.");
         if (price != null && price <= 0) throw new ParametroIncorrecto("El precio debe ser mayor a 0.");
         if (capacity != null && capacity <= 0) throw new ParametroIncorrecto("La capacidad debe ser mayor a 0.");
         if (number != null && number <= 0) throw new ParametroIncorrecto("La altura debe ser mayor a 0.");
@@ -46,8 +46,8 @@ public record InmuebleModifyRequestDTO(
         if (this.ubication != null) inmueble.setUbication(this.ubication());
         if (this.price != null) inmueble.setPrice(this.price());
         if (this.capacity != null) inmueble.setCapacity(this.capacity());
-        if (this.conditions != null) inmueble.setConditions(this.conditions());
-        if (this.days != null) inmueble.setAvailableDays(this.days());
+        if (this.condition != null) inmueble.setConditions(this.condition());
+        if (this.availableDays != null) inmueble.setAvailableDays(this.availableDays());
         if (this.cancellation != null) inmueble.setCancellation(PoliticasDeCancelacion.getPoliticasDeCancelacion(this.cancellation));
         if (this.street != null) inmueble.setCalle(this.street());
         if (this.number != null) inmueble.setAltura(this.number());
