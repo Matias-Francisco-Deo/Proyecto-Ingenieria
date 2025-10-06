@@ -44,7 +44,7 @@ export default function InmuebleEditable({
       "street",
       "number",
       "condition",
-      "description",
+      "description"
     ];
 
     requiredFields.forEach((field) => {
@@ -54,6 +54,7 @@ export default function InmuebleEditable({
     });
 
     setErrors(newErrors);
+    
     toast.error("Faltan campos por llenar");
     return Object.keys(newErrors).length === 0;
   };
@@ -161,6 +162,16 @@ export default function InmuebleEditable({
               value={formData.number}
               onChange={handleChange}
               placeholder="Altura"
+              onKeyDown={(e) => {
+                if (
+                  e.key === "e" ||
+                  e.key === "E" ||
+                  e.key === "+" ||
+                  e.key === "-"
+                ) {
+                  e.preventDefault();
+                }
+              }}
               className={`no-spin flex-[1] min-w-[90px] ${inputClass("number")}`}
             />
           </div>
