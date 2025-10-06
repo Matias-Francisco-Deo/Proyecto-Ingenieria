@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record InmuebleRequestDTO(
+
         String name,
         String description,
         String ubication,
@@ -25,11 +26,13 @@ public record InmuebleRequestDTO(
         Long userId,
         String street,
         Integer number
+
 ) {
     public Inmueble aModelo(Usuario user) throws ParametroIncorrecto {
         if (name == null || description == null || price == null ||
             start == null || end == null || ubication == null ||
-            capacity == null || condition == null || cancellation == null || days == null || street == null || number == null)
+            capacity == null || condition == null || cancellation == null
+                || days == null || street == null || number == null)
             throw new ParametroIncorrecto("Faltan datos para guardar");
 
         if (name.isBlank()) throw new ParametroIncorrecto("El nombre no debe estar en blanco.");
@@ -42,7 +45,7 @@ public record InmuebleRequestDTO(
         if (number <= 0) throw new ParametroIncorrecto("La altura debe ser mayor a 0.");
 
         getRango result = getRango();
-        PoliticasDeCancelacion cancellationPolicy = getPoliticasDeCancelacion();
+        PoliticasDeCancelacion cancellationPolicy = PoliticasDeCancelacion.getPoliticasDeCancelacion(this.cancellation);
         List<DiasDeLaSemana> orderedDays = getDiasDeLaSemanas();
 
         return new Inmueble(name, description, price, ubication, capacity, condition,

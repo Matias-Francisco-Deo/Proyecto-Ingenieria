@@ -1,32 +1,50 @@
 import { useState, useEffect } from "react";
 import Carrusel from "../components/Carrusel";
 import { Link } from "wouter";
-
-type Inmueble = {
-  id: number;
-  name: string;
-  description: string;
-  ubication: string;
-  price: number;
-  condition: string;
-  start: string;
-  end: string;
-  capacity: number;
-  cancellation: string;
-  ownerName: string;
-  ownerEmail: string;
-  street: string;
-  number: number;
-};
+import type { Inmueble } from "@/types/types";
+import InmuebleEditable from "../components/InmuebleEditable";
+import InmuebleReadOnly from "../components/InmuebleReadOnly";
+import { useUser } from "@/hooks/useUser";
+import CarruselEditable from "@/components/CarruselEditable";
+import { toast } from "react-toastify";
+// import EditNoteIcon from '@mui/icons-material';
 
 export default function Publicacion() {
   const [inmueble, setInmueble] = useState<Inmueble | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [editando, setEditando] = useState(false);
+
+  // Imágenes
+
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFiles = Array.from(files);
+    setSelectedFiles((prev) => [...prev, ...newFiles]);
+
+    const urls = newFiles.map((file) => URL.createObjectURL(file));
+    setPreviewImages((prev) => [...prev, ...urls]);
+
+    e.target.value = "";
+  };
+
+  const removeImage = (index: number) => {
+    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // terminá imágenes
 
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const id = params.get("id"); // id de la publicación
+
+  const { getId } = useUser(); // Id del usuario
 
   useEffect(() => {
     if (!id) return;
@@ -61,12 +79,46 @@ export default function Publicacion() {
     fetchImages();
   }, [id]);
 
+  // Paginación
   const nextImage = () => setCurrentIndex((prev) => (prev + 1) % images.length);
   const prevImage = () =>
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
 
+  // ELIMINAR IMÁGENES del carrusel
+  const handleRemoveImage = async (index: number) => {
+    if (!id) return;
+
+    if (images.length <= 1) {
+      toast.warning("Debe haber al menos una imagen en la publicación.");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:8081/property/${id}/removeImages`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imagesToRemove: [index] }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al eliminar la imagen");
+
+      setImages((prev) => prev.filter((_, i) => i !== index));
+
+      setCurrentIndex((prev) =>
+        prev >= images.length - 1 ? Math.max(0, prev - 1) : prev
+      );
+    } catch (err) {
+      toast.error("Error al eliminar imagen:" + err);
+    }
+  };
+
   if (loading) return <p>Cargando...</p>;
   if (!inmueble) return <p>Inmueble no encontrado</p>;
+
+  const isOwner = inmueble.ownerId === getId(); // habilita botón de edición
 
   return (
     <div className="p-6 text-white border border-gray-700 rounded-xl">
@@ -81,62 +133,121 @@ export default function Publicacion() {
       </div>
 
       <div className="flex gap-6">
-        <div className="w-3/5">
-          <Carrusel
-            images={images}
-            currentIndex={currentIndex}
-            nextImage={nextImage}
-            prevImage={prevImage}
-          />
-        </div>
+        {editando ? (
+          <>
+            {/* Carrusel */}
+            <div className="w-3/5">
+              <CarruselEditable
+                images={images}
+                currentIndex={currentIndex}
+                nextImage={nextImage}
+                prevImage={prevImage}
+                onRemoveImage={handleRemoveImage}
+              />
 
-        <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="space-y-3">
-            <p className="text-2xl font-bold text-amber-400">
-              Precio Por Hora: ${inmueble.price}
-            </p>
-            <p>
-              <span className="font-semibold text-lg">Horario:</span>
-              {inmueble.start} - {inmueble.end}
-            </p>
-            <div className="flex gap-6">
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">Localidad:</span>
-                <span>{inmueble.ubication}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">Calle:</span>
-                <span>{inmueble.street}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-lg">Altura:</span>
-                <span>{inmueble.number}</span>
+              <div className="mt-2 flex w-1/2 gap-2 flex-wrap">
+                <label htmlFor="images" className="block font-medium text-sm/6">
+                  Subir imagenes
+                </label>
+                <input
+                  id="images"
+                  name="images"
+                  type="file"
+                  multiple
+                  required
+                  autoComplete="images"
+                  onChange={handleImageChange}
+                  className={`loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                />
+                {previewImages.map((img, idx) => (
+                  <div key={idx} className="relative">
+                    <img
+                      src={img}
+                      alt={`Preview ${idx}`}
+                      className="w-32 h-32 object-contain border rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
-            <p>
-              <span className="font-semibold text-lg">Condiciones:</span>
-              {inmueble.condition}
-            </p>
-            <p>
-              <span className="font-semibold text-lg">
-                Política de cancelación:
-              </span>{" "}
-              {inmueble.cancellation}
-            </p>
-            <p>
-              <span className="font-semibold text-lg">Descripción:</span>
-              {inmueble.description}
-            </p>
-          </div>
 
-          <div className="flex justify-center mt-6">
-            <Link href={`/hacer-reserva?id=${inmueble.id}`}>
-              <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
-                Reservar
-              </button>
-            </Link>
-          </div>
-        </div>
+            {/* Edición */}
+            <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
+              <InmuebleEditable
+                inmueble={inmueble}
+                onCancelar={() => setEditando(false)}
+                onGuardar={async (data) => {
+                  await fetch(`http://localhost:8081/property/${inmueble.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                  });
+
+                  if (selectedFiles.length > 0) {
+                    const formData = new FormData();
+                    selectedFiles.forEach((file) => {
+                      formData.append("images", file);
+                    });
+
+                    await fetch(
+                      `http://localhost:8081/property/${inmueble.id}/addImages`,
+                      {
+                        method: "PATCH",
+                        body: formData,
+                      }
+                    );
+                  }
+
+                  setSelectedFiles([]);
+                  setPreviewImages([]);
+                  setEditando(false);
+                  location.href = `/publicacion?id=${inmueble.id}`;
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          // Sección de solo vista
+          <>
+            {/* Carrusel */}
+            <div className="w-3/5">
+              <Carrusel
+                images={images}
+                currentIndex={currentIndex}
+                nextImage={nextImage}
+                prevImage={prevImage}
+              />
+            </div>
+
+            {/* Contenido */}
+            <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
+              <InmuebleReadOnly inmueble={inmueble} />
+              {isOwner && (                  
+                  <button
+                    onClick={() => setEditando(true)}
+                    className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
+                    aria-label="Editar publicación"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="currentColor" d="M4 14v-2h7v2zm0-4V8h11v2zm0-4V4h11v2zm9 14v-3.075l5.525-5.5q.225-.225.5-.325t.55-.1q.3 0 .575.113t.5.337l.925.925q.2.225.313.5t.112.55t-.1.563t-.325.512l-5.5 5.5zm7.5-6.575l-.925-.925zm-6 5.075h.95l3.025-3.05l-.45-.475l-.475-.45l-3.05 3.025zm3.525-3.525l-.475-.45l.925.925z"/></svg>
+                  </button>
+                )}
+              <div className="flex justify-center mt-6 gap-4">
+                <Link href={`/hacer-reserva?id=${inmueble.id}`}>
+                  <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
+                    Reservar
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
