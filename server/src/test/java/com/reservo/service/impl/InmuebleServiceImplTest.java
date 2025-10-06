@@ -71,7 +71,7 @@ public class InmuebleServiceImplTest {
         inmueble2.setAvailableDays(Collections.emptyList());
 
         List<DiasDeLaSemana> diasDTOInmueble = List.of(DiasDeLaSemana.LUNES);
-        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
+        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "FLEXIBLE", "Balcarce", 50);
 
         mockImage = new MockMultipartFile(
                 "image",
