@@ -34,7 +34,7 @@ export default function BotonDeclararPago({ reservaId, onPagoDeclarado }: BotonD
     <>
       <button
         onClick={(e) => { e.stopPropagation(); e.preventDefault(); setShowPopup(true); }}
-        className="mt-1 px-4 py-2 bg-amber-600 text-white text-lg font-bold rounded-xl hover:bg-amber-700 disabled:opacity-50"
+        className="mt-1 px-4 py-2 bg-amber-600 text-white text-lg font-bold rounded-xl hover:bg-amber-700 disabled:opacity-50 cursor-pointer"
         disabled={loading}
       >
         {loading ? "Procesando..." : "Declarar Pago Realizado"}

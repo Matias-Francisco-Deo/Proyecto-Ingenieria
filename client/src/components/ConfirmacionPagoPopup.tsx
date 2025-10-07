@@ -39,7 +39,7 @@ export default function ConfirmacionPagoPopup({ onConfirm, onClose }: Confirmaci
 
         <button
           onClick={handleClick}
-          className="bg-amber-600 text-white text-lg font-bold rounded-xl hover:bg-amber-700 py-2 w-1/2 disabled:opacity-50"
+          className="bg-amber-600 text-white text-lg font-bold rounded-xl hover:bg-amber-700 py-2 w-1/2 disabled:opacity-50 cursor-pointer"
           disabled={loading}
         >
           {loading ? "Procesando..." : "Confirmar pago"}
