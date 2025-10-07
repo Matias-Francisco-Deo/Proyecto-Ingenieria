@@ -212,7 +212,7 @@ export default function CancelarReservaPage() {
 
     async function cancelReservation(evt: React.FormEvent<HTMLFormElement>) {
         evt.preventDefault();
-        const response = await fetch("${apiUrl}    /peticion/cancelar", {
+        const response = await fetch(`${apiUrl}/peticion/cancelar`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
