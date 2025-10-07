@@ -37,7 +37,6 @@ public class Peticion {
     @Column(nullable = false)
     private LocalDate fechaDelEvento;
 
-
     @Column(nullable = false)
     private LocalTime horaInicio;
 
@@ -54,6 +53,9 @@ public class Peticion {
     @Column(length = 150)
     private String motivoCancelacionRechazo;
 
+    @Column(nullable = false)
+    private Boolean pagado;
+
     private PoliticasDeCancelacion politicaCancelacion;
 
     public Peticion(Usuario cliente,Inmueble inmueble,LocalDate fechaDelEvento,LocalTime horaInicio
@@ -67,6 +69,7 @@ public class Peticion {
         this.estado = new Pendiente() ;
         this.politicaCancelacion = inmueble.getCancellation();
         this.fechaEmision = LocalDate.now();
+        this.pagado = false;
     }
 
     public void aprobar(){
@@ -85,6 +88,10 @@ public class Peticion {
 
     public void finalizar(){
         this.estado.finalizar(this);
+    }
+
+    public void declararPago(){
+        this.pagado = true;
     }
 
 

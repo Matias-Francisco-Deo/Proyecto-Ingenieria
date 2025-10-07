@@ -20,6 +20,7 @@ export interface PendingPetitionDraft {
     created_date: string;
     event_date: string;
     error?: string;
+    pagado: boolean;
 }
 
 export interface CancelledRejectedPetitionDraft {
@@ -99,6 +100,7 @@ export interface ReservaDTO {
     horaFin: string;
     nameInmueble: string;
     dateEmision: string;
+    pagado:boolean;
 }
 
 interface ReservaCanceladasDTO {

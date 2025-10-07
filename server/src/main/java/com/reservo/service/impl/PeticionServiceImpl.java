@@ -13,6 +13,7 @@ import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.managers.TimeManager;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.PeticionService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -195,6 +196,19 @@ public class PeticionServiceImpl implements PeticionService {
                 dateText.formatted(horaInicio, horaFin, fechaDelEvento));
 
         new Thread(() -> emailService.sendHTMLEmail(clientEmail, subject, htmlContent)).start();
+    }
+
+    @Override
+    public void declararPago(Long peticionId){
+        Optional<Peticion> optionalPeticion = peticionDAO.findById(peticionId);
+        if (optionalPeticion.isEmpty()) {
+            return;
+        }
+        Peticion peticion= optionalPeticion.get();
+
+        peticion.declararPago();
+        peticionDAO.save(peticion);
+
     }
 
 
