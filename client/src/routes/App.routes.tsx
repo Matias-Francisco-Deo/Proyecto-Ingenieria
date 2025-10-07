@@ -16,9 +16,6 @@ const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const CancelarReservaPage = lazy(() => import("../pages/CancelarReservaPage"));
 const PublicacionesPage = lazy(() => import("../pages/ListaDePublicaciones"));
 
-const ReservaPendientePage = lazy(
-    () => import("../pages/ReservaPendientePage")
-);
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
@@ -50,10 +47,6 @@ export function AppRoutes() {
                         path="/hacer-reserva"
                         component={PeticionForm}
                     />
-                    <Route
-                        path="/peticion/pendiente"
-                        component={ReservaPendientePage}
-                    />
 
                     <Route
                         path="/mis-peticiones/:estado"
@@ -80,7 +73,6 @@ export function AppRoutes() {
                         path="/mis-publicaciones"
                         component={PublicacionesPage}
                     />
-
 
                     {/* Rutas protegidas */}
                     {/* <Route path="/home" component={HomePage} />

@@ -24,6 +24,7 @@ export default function PeticionForm() {
 
     const { getId } = useUser();
     const { toastError } = useToast();
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const searchParams = new URLSearchParams(window.location.search);
     const id = searchParams.get("id");
