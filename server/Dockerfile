@@ -15,7 +15,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copiar el .jar generado en la etapa anterior
-COPY --from=build /app/target/medium-weekly-0.0.1.jar app.jar
+COPY --from=build /app/target/reservo-0.0.1.jar app.jar
 
 # Exponer el puerto de la aplicación
 EXPOSE 8080
