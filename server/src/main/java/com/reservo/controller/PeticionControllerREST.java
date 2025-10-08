@@ -152,4 +152,11 @@ public class PeticionControllerREST {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/declararPago/{peticionId}")
+    public ResponseEntity<Object> declararPago(@PathVariable Long peticionId){
+        peticionService.declararPago(peticionId);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

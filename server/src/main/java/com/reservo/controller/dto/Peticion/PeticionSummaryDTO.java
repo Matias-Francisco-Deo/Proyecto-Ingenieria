@@ -16,7 +16,8 @@ public record PeticionSummaryDTO(
         String property_name,
         LocalDate created_date,
         LocalDate event_date,
-        String rejection_motive
+        String rejection_motive,
+        boolean pagado
 ) {
     public static PeticionSummaryDTO desdeModelo(Peticion peticion) {
         return new PeticionSummaryDTO(
@@ -29,7 +30,8 @@ public record PeticionSummaryDTO(
                 peticion.getInmueble().getName(),
                 peticion.getFechaEmision(),
                 peticion.getFechaDelEvento(),
-                peticion.getMotivoCancelacionRechazo()
+                peticion.getMotivoCancelacionRechazo(),
+                peticion.getPagado()
         );
     }
 }
