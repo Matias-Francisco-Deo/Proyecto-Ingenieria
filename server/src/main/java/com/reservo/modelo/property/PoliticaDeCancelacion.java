@@ -14,15 +14,14 @@ public abstract class PoliticaDeCancelacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public void aplicarPolitica(Peticion peticion){
+    public double aplicarPolitica(Peticion peticion){
 
         long diasAnticipacion = ChronoUnit.DAYS.between(LocalDate.now(), peticion.getFechaDelEvento());
-        double monto;
 
         if(peticion.getPagado()){
-            monto = this.calcularReintegro(peticion.getPrice(),diasAnticipacion);
+            return  this.calcularReintegro(peticion.getPrice(),diasAnticipacion);
         }else{
-            monto = this.calcularDeuda(peticion.getPrice(),diasAnticipacion);}
+            return  this.calcularDeuda(peticion.getPrice(),diasAnticipacion);}
 
     }
 

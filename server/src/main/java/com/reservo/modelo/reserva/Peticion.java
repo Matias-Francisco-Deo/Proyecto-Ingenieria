@@ -79,9 +79,9 @@ public class Peticion {
         this.estado.aprobar(this);
     }
 
-    public void cancelar(String motivo){
-        this.estado.cancelar(this);
+    public double cancelar(String motivo){
         this.setMotivoCancelacionRechazo(motivo);
+        return this.estado.cancelar(this);
     }
 
     public void rechazar(String motivo){

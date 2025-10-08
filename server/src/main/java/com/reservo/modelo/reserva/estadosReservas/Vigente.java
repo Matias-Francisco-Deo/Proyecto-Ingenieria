@@ -11,9 +11,9 @@ public class Vigente extends EstadoDePeticion {
     }
 
     @Override
-    public void cancelar(Peticion peticion) {
+    public double cancelar(Peticion peticion) {
         peticion.setEstado(new Cancelado());
-        peticion.getPoliticaCancelacion().aplicarPolitica(peticion);
+        return peticion.getPoliticaCancelacion().aplicarPolitica(peticion);
     }
 
     @Override
