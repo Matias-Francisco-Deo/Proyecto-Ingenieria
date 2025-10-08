@@ -13,7 +13,7 @@ public class Vigente extends EstadoDePeticion {
     @Override
     public void cancelar(Peticion peticion) {
         peticion.setEstado(new Cancelado());
-        peticion.getPoliticaCancelacion().aplicarPolitica(peticion);
+        double monto = peticion.getPoliticaCancelacion().aplicarPolitica(peticion);
     }
 
     @Override
