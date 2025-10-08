@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ConfirmacionPagoPopup from "./ConfirmacionPagoPopup"; // renombrado al nuevo componente
+import ConfirmacionPagoPopup from "./ConfirmacionPagoPopup";
 
 interface BotonDeclararPagoProps {
   reservaId: number | string;
@@ -43,7 +43,7 @@ export default function BotonDeclararPago({ reservaId, onPagoDeclarado }: BotonD
       {showPopup && (
         <ConfirmacionPagoPopup
           onConfirm={handleConfirm}
-          onClose={() => setShowPopup(false)} // coincide con el nombre de la prop del cartel
+          onClose={() => setShowPopup(false)}
         />
       )}
     </>
