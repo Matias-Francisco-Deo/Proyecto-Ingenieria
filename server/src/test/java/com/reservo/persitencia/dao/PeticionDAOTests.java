@@ -77,21 +77,23 @@ public class PeticionDAOTests {
         peticionDeprecadaDeVariosDias = new Peticion(alan, inmueble, LocalDate.now().minusDays(10),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
         peticionDeAlan.setEstado(new Vigente());
         usuarioDAO.save(raul);
+        usuarioDAO.save(jorge);
+        usuarioDAO.save(alan);
         inmuebleDAO.save(inmueble);
     }
 
     @Test
     void laPeticionEsDeUnDueñoEspecifico() {
-        /*usuarioDAO.save(jorge);
+
 
         peticionDAO.save(peticionDeJorge);
 
-        assertTrue(peticionDAO.isPetitionOfOwner(peticionDeJorge.getId(), raul.getId()));*/
+        assertTrue(peticionDAO.isPetitionOfOwner(peticionDeJorge.getId(), raul.getId()));
     }
-/*
+
     @Test
     void unaPeticionSeDeprecaHoy() {
-        usuarioDAO.save(alan);
+
 
 
 
@@ -103,7 +105,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionDeVariosDiasAtrasSeDeprecaHoy() {
-        usuarioDAO.save(alan);
+
 
 
 
@@ -114,7 +116,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionNoEstáDeprecada() {
-        usuarioDAO.save(alan);
+
 
 
 
@@ -125,8 +127,8 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionYaFueAceptadaParaEseRangoHorarioEmpiezaAntesQueTermineLaOtraYTerminaDespues() {
-        usuarioDAO.save(alan);
-        usuarioDAO.save(jorge);
+
+
 
 
 
@@ -139,8 +141,8 @@ public class PeticionDAOTests {
     @Test
     void unaPeticionYaFueAceptadaParaEseRangoHorarioEmpiezanEnMismoHorario() {
         Peticion peticionDeAlan2 = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(60), 100D);
-        usuarioDAO.save(alan);
-        usuarioDAO.save(jorge);
+
+
 
 
 
@@ -162,8 +164,8 @@ public class PeticionDAOTests {
 
         Peticion peticionDeJorge2 = new Peticion(alan, inmueble, fecha, horaInicioJorge, horaFinJorge, 100D);
         Peticion peticionDeAlan2 = new Peticion(alan, inmueble, fecha, horaInicioAlan, horaFinAlan, 100D);
-        usuarioDAO.save(alan);
-        usuarioDAO.save(jorge);
+
+
         
 
 
@@ -175,7 +177,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionNoFueAceptadaParaEseRangoHorario() {
-        usuarioDAO.save(alan);
+
 
 
         peticionDAO.save(peticionDeprecada);
@@ -185,7 +187,7 @@ public class PeticionDAOTests {
 
     @Test
     void laPeticionNoEsDeUnDueñoEspecifico() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -197,7 +199,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionEsRechazada() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -215,7 +217,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionEsAprobada() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -233,7 +235,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionYaAprobadaNoSeBuscaComoPendiente() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -249,7 +251,7 @@ public class PeticionDAOTests {
 
     @Test
     void seBuscaUnaPeticionYaAprobada() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -262,7 +264,7 @@ public class PeticionDAOTests {
 
     @Test
     void seBuscaUnaPeticionYaRechazada() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -275,7 +277,7 @@ public class PeticionDAOTests {
 
     @Test
     void seBuscaUnaPeticionYaAprobadaPeroEstabaPendiente() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -287,7 +289,7 @@ public class PeticionDAOTests {
 
     @Test
     void seBuscaUnaPeticionYaRechazadaPeroEstabaPendiente() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -299,7 +301,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionRechazadaNoSeBuscaComoPendiente() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -315,7 +317,7 @@ public class PeticionDAOTests {
 
     @Test
     void unaPeticionPendienteSeBusca() {
-        usuarioDAO.save(jorge);
+
 
 
 
@@ -326,7 +328,7 @@ public class PeticionDAOTests {
     }
 
 
-*/
+
 
     @AfterEach
     void limpiarDb(){
