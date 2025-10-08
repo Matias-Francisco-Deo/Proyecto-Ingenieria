@@ -8,12 +8,12 @@ import jakarta.persistence.Entity;
 public class SinDevolucion extends PoliticaDeCancelacion {
 
     @Override
-    public double calcularReintegro(double monto){
+    public double calcularReintegro(double monto, Long diasAnticipacion){
         return 0;
     }
 
     @Override
-    public double calcularDeuda(double monto){
+    public double calcularDeuda(double monto,Long diasAnticipacion){
         return monto;
     }
 

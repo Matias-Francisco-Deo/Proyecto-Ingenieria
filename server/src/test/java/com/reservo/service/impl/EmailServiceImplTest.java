@@ -62,9 +62,9 @@ public class EmailServiceImplTest {
     void crearInstancias() {
         emptyDays = Collections.emptyList();
 
-        matias = new Usuario("matiasElCapo", "aa21", "matiasfd.deo@gmail.com");
-        alan = new Usuario("alan", "aa21", "matiasfd.deo@gmail.com");
-        raul = new Usuario("raul", "aa21", "rockito10.mfd@gmail.com");
+        matias = new Usuario("matiasElCapo", "aa21", "joel.c.98@hotmail.com");//matiasfd.deo@gmail.com
+        alan = new Usuario("alan", "aa21", "joel.c.98@hotmail.com");//matiasfd.deo@gmail.com
+        raul = new Usuario("raul", "aa21", "joelhc.98@gmail.com");//rockito10.mfd@gmail.com
 
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
@@ -83,8 +83,8 @@ public class EmailServiceImplTest {
     }
 
     @Test
-    public void testEmailService() {
-        emailService.sendSimpleEmail("matiasfd.deo@gmail.com", "woo pish", "BIENVENIDOS A TODOS A OTRO VIDEO DE DEIGAMER DONDE DISFRUTARÁS DE ALGO DIFERENTE");
+    public void testEmailService() {//cambiar email
+        emailService.sendSimpleEmail("joel.c.98@hotmail.com", "woo pish", "BIENVENIDOS A TODOS A OTRO VIDEO DE DEIGAMER DONDE DISFRUTARÁS DE ALGO DIFERENTE");
     }
 
     @Test
