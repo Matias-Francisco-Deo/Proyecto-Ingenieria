@@ -23,11 +23,12 @@ export default function Reservas({ state }: ReservasProps) {
     const [loading, setLoading] = useState(false);
     const { getId } = useUser();
 
+    const apiUrl = import.meta.env.VITE_API_URL;
     const handleReservationsFetch = async (page: number = 0) => {
         setLoading(true);
         try {
             const res = await fetch(
-                `http://localhost:8081/mis-reservas/${state}/${getId()}?page=${page}`
+                `${apiUrl}/mis-reservas/${state}/${getId()}?page=${page}`
             );
 
             if (!res.ok) {
