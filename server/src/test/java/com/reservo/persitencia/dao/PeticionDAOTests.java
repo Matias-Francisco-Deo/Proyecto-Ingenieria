@@ -326,12 +326,12 @@ public class PeticionDAOTests {
     }
 
 
-
+*/
 
     @AfterEach
     void limpiarDb(){
         testService.eliminarPeticiones();
         testService.eliminarInmuebles();
         testService.eliminarUsuarios();
-    }*/
+    }
 }

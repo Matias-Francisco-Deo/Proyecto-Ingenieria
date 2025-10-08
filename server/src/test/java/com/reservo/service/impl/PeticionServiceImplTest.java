@@ -190,7 +190,7 @@ public class PeticionServiceImplTest {
     @Test
     public void jorgeSolicitaLasPeticionesVigentesDeHoy() throws EmailRepetido {
 
-        
+
 
         peticionDeJorge.setEstado(new Vigente());
         Peticion savedPeticion = peticionService.create(peticionDeJorge);
