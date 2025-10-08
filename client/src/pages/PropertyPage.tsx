@@ -612,7 +612,7 @@ export default function createPropertyPage() {
                                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                                 >
                                     <option value="non-restriction">
-                                        Sin restricción
+                                        Sin devolución
                                     </option>
                                     <option value="Flexible">Flexible</option>
                                     <option value="Severo">Severo</option>

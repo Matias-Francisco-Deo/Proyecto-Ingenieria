@@ -1,9 +1,7 @@
 package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
-import com.reservo.modelo.property.DiasDeLaSemana;
-import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.*;
 import com.reservo.modelo.user.Usuario;
 
 import java.time.LocalTime;
@@ -48,7 +46,7 @@ public record InmuebleModifyRequestDTO(
         if (this.capacity != null) inmueble.setCapacity(this.capacity());
         if (this.condition != null) inmueble.setConditions(this.condition());
         if (this.availableDays != null) inmueble.setAvailableDays(this.availableDays());
-        if (this.cancellation != null) inmueble.setCancellation(PoliticasDeCancelacion.getPoliticasDeCancelacion(this.cancellation));
+        if (this.cancellation != null) inmueble.setCancellation(getPoliticasDeCancelacion(cancellation));
         if (this.street != null) inmueble.setCalle(this.street());
         if (this.number != null) inmueble.setAltura(this.number());
         if (this.start != null) inmueble.setHoraInicio(LocalTime.parse(start));
@@ -57,5 +55,12 @@ public record InmuebleModifyRequestDTO(
         return inmueble;
     }
 
+    private PoliticaDeCancelacion getPoliticasDeCancelacion(String cancelacion) {
+        return switch (cancelacion) {
+            case "Flexible" -> new Flexible();
+            case "Severo" -> new Severo();
+            default -> new SinDevolucion();
+        };
+    }
 
 }

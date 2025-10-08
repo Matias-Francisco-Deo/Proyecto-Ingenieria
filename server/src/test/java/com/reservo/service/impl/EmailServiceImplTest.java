@@ -5,6 +5,7 @@ import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.EmailService;
@@ -67,7 +68,7 @@ public class EmailServiceImplTest {
 
         inmueble = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+                LocalTime.now().plusMinutes(30), LocalTime.now().plusHours(1), raul, new SinDevolucion(),"lavalle",987);
 
         inmueble.setAvailableDays(Collections.emptyList());
 

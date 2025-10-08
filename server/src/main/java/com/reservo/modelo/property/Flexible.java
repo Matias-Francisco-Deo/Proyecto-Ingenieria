@@ -1,5 +1,8 @@
 package com.reservo.modelo.property;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Flexible extends PoliticaDeCancelacion {
 
     @Override

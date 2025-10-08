@@ -1,5 +1,6 @@
 package com.reservo.modelo.reserva;
 
+import com.reservo.modelo.property.PoliticaDeCancelacion;
 import com.reservo.modelo.reserva.estadosReservas.EstadoDePeticion;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.property.Inmueble;
@@ -56,7 +57,9 @@ public class Peticion {
     @Column(nullable = false)
     private Boolean pagado;
 
-    private PoliticasDeCancelacion politicaCancelacion;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "politicaId")
+    private PoliticaDeCancelacion politicaCancelacion;
 
     public Peticion(Usuario cliente,Inmueble inmueble,LocalDate fechaDelEvento,LocalTime horaInicio
                     ,LocalTime horaFin,Double price){

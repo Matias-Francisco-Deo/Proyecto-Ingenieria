@@ -56,9 +56,9 @@ public class Inmueble {
     @Column(nullable = false)
     private List<DiasDeLaSemana> availableDays;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private  PoliticasDeCancelacion cancellation;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "politicaId")
+    private  PoliticaDeCancelacion cancellation;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> images = new ArrayList<>();
@@ -66,7 +66,7 @@ public class Inmueble {
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal, List<DiasDeLaSemana> availableDays,
-                    PoliticasDeCancelacion cancellation,List<String> images,Usuario owner,String calle,Integer altura) {
+                    PoliticaDeCancelacion cancellation,List<String> images,Usuario owner,String calle,Integer altura) {
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -86,7 +86,7 @@ public class Inmueble {
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal, Usuario owner,
-                    PoliticasDeCancelacion cancellation,String calle,Integer altura) { // , Usuario owner
+                    PoliticaDeCancelacion cancellation,String calle,Integer altura) { // , Usuario owner
         this.name = name;
         this.description = desc;
         this.price = price;

@@ -7,6 +7,7 @@ import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.SinDevolucion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
@@ -60,11 +61,11 @@ public class InmuebleServiceImplTest {
 
         inmueble1 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, new SinDevolucion(),"lavalle",987);
 
         inmueble2 = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION,"pelegrini",123);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, new SinDevolucion(),"pelegrini",123);
 
         emptyImages = Collections.emptyList();
         inmueble1.setAvailableDays(Collections.emptyList());
@@ -135,7 +136,7 @@ public class InmuebleServiceImplTest {
         for (int i = 0; i < 10; i++) {
             Inmueble inm = new Inmueble(
                     "Plaza" + i, "Es un lugar espacioso", 200d, "Quilmes", 100, "No romper nada",
-                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION, "lavalle", 987);
+                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, new SinDevolucion(), "lavalle", 987);
             inm.setAvailableDays(Collections.emptyList());
             inmuebleService.create(inm, emptyImages);
         }

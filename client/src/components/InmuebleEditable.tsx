@@ -207,9 +207,9 @@ export default function InmuebleEditable({
               onChange={handleChange}
               className={inputClass("cancellation")}
             >
-              <option value="SIN_RETRIBUCION">Sin devolución</option>
-              <option value="FLEXIBLE">Flexible</option>
-              <option value="SEVERO">Severo</option>
+              <option value="Sin_Devolucion">Sin devolución</option>
+              <option value="Flexible">Flexible</option>
+              <option value="Severo">Severo</option>
             </select>
             <button
               type="button"
