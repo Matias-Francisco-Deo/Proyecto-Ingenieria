@@ -57,7 +57,7 @@ public class Peticion {
     @Column(nullable = false)
     private Boolean pagado;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "politicaId")
     private PoliticaDeCancelacion politicaCancelacion;
 

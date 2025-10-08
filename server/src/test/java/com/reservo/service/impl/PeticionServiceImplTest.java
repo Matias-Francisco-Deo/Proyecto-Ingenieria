@@ -69,10 +69,10 @@ public class PeticionServiceImplTest {
     private Peticion peticionDeprecada;
     private RechazoDTO rechazoDTO;
     private List<DiasDeLaSemana> emptyDays;
-
+    Inmueble savedIn;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws EmailRepetido {
 
         emptyDays = Collections.emptyList();
 
@@ -88,6 +88,11 @@ public class PeticionServiceImplTest {
 
         emptyImages = Collections.emptyList();
 
+        usuarioService.create(jorge);
+        usuarioService.create(alan);
+        usuarioService.create(raul);
+         savedIn = inmuebleService.create(inmueble, emptyImages);
+
         peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
         peticionDeAlan = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
         peticionDeAlan.setEstado(new Vigente());
@@ -95,14 +100,14 @@ public class PeticionServiceImplTest {
         peticionDeAlanNoVigente = new Peticion(alan, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(45), LocalTime.now().plusMinutes(55), 100D);
         peticionDeprecada = new Peticion(alan, inmueble, LocalDate.now().minusDays(10),LocalTime.now().minusMinutes(45), LocalTime.now().minusMinutes(55), 100D);
 
+        
     }
 
     @Test
     public void solicitaLaPlazaElUsuarioJorge() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
 
@@ -110,14 +115,13 @@ public class PeticionServiceImplTest {
 
         assertTrue(peticionGot.isPresent());
     }
-
     @Test
     public void solicitaLaPlazaElUsuarioJorgePeroAlanYaLaSolicito() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(alan);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
+
+
 
         peticionService.create(peticionDeAlan);
 
@@ -126,10 +130,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void solicitaLaPlazaElUsuarioJorgePeroTieneLosHorariosDesordenados() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         LocalTime horaInicio = peticionDeJorge.getHoraInicio();
 
@@ -143,10 +146,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void solicitaLaPlazaElUsuarioJorgePeroLosHorariosNoEstanContenidosPorLosHorariosDelInmueble() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         peticionDeJorge.setHoraInicio(inmueble.getHoraInicio().minusMinutes(1));
 
@@ -156,13 +158,12 @@ public class PeticionServiceImplTest {
 
     @Test
     public void elViajeroEnElTiempoSolicitaLaPlaza() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
+
 
         inmueble.setHoraInicio(LocalTime.now().minusMinutes(40));
         inmueble.setHoraFin(LocalTime.now().plusHours(1));
 
-        inmuebleService.create(inmueble, emptyImages);
+
 
         peticionDeJorge.setFechaDelEvento(LocalDate.now().minusDays(1));
         peticionDeJorge.setHoraInicio(LocalTime.now().minusMinutes(30));
@@ -173,10 +174,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void jorgeIntentaPedirDosVecesLaPlaza() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         peticionService.create(peticionDeJorge);
 
@@ -189,11 +189,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void jorgeSolicitaLasPeticionesVigentesDeHoy() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(alan);
-        usuarioService.create(raul);
 
-        Inmueble savedIn = inmuebleService.create(inmueble, emptyImages);
+        
 
         peticionDeJorge.setEstado(new Vigente());
         Peticion savedPeticion = peticionService.create(peticionDeJorge);
@@ -214,9 +211,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void raulIntentaSolicitarSuInmueble() throws EmailRepetido {
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionRaul = new Peticion(raul, inmueble, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
 
@@ -225,10 +222,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unInmuebleEsReservadoPorUnUsuarioYLuegoCanceladoPorSuDueñoYSuEstadoPasaARechazado() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
 
@@ -242,10 +238,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unInmuebleEsReservadoPorUnUsuarioYLuegoCanceladoPorSuDueñoYTieneMensajeDeRechazo() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
 
@@ -261,10 +256,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unInmuebleEsReservadoPorUnUsuarioYLuegoCanceladoPorAlguienQueNoEsSuDueñoYNoHaceNada() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
 
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
 
@@ -281,8 +275,7 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unaPeticionQueNoExisteNoEsPosibleDeCancelar() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
+
 
         RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), -1L, NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
 
@@ -293,9 +286,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unInmuebleEsReservadoPorUnUsuario() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
         peticionService.approve(peticionDeJorge.getId());
@@ -308,10 +300,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unInmuebleEsReservadoPorUnUsuarioYLuegoOtroUsuarioQuiereReservarALaVezEntoncesSeTiraException() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        usuarioService.create(alan);
-        inmuebleService.create(inmueble, emptyImages);
+
+
+
 
          peticionService.create(peticionDeJorge);
         Peticion peticionAlanSaved = peticionService.create(peticionDeAlanNoVigente);
@@ -324,9 +315,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unaPeticionNoPuedeSerAceptadaMasDeUnaVezYNoHaceNada() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
         peticionService.approve(peticionDeJorge.getId());
@@ -337,9 +327,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unaPeticionNoPuedeSerRechazadaMasDeUnaVezYNoHaceNada() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
         RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
@@ -351,9 +340,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unaPeticionNoPuedeSerRechazadaLuegoDeSerAceptada() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         Peticion peticionSaved = peticionService.create(peticionDeJorge);
         RechazoDTO rechazoDTO = new RechazoDTO(jorge.getId(), peticionSaved.getId(), NO_ME_GUSTÓ_LA_COMIDA_DE_GANZO);
@@ -364,9 +352,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unaPeticionVencidaNoPuedeSerRechazada() throws EmailRepetido {
-        usuarioService.create(alan);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
+
 
         Peticion peticionSaved = peticionDAO.save(peticionDeprecada);
 
@@ -375,9 +363,9 @@ public class PeticionServiceImplTest {
 
     @Test
     public void unaPeticionVencidaNoPuedeSerAprobada() throws EmailRepetido {
-        usuarioService.create(alan);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
+
 
         Peticion peticionSaved = peticionDAO.save(peticionDeprecada);
 
@@ -387,9 +375,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void jorgeSolicitaSuListadoDeReservasPendientes() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         for (int i = 0; i < 20; i++) {
             peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now().plusDays(i),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
@@ -421,9 +408,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void jorgeSolicitaSuListadoDeReservasCanceladas() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         for (int i = 0; i < 20; i++) {
             peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now().plusDays(i),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
@@ -456,9 +442,8 @@ public class PeticionServiceImplTest {
 
     @Test
     public void jorgeSolicitaSuListadoDeReservasVigentes() throws EmailRepetido {
-        usuarioService.create(jorge);
-        usuarioService.create(raul);
-        inmuebleService.create(inmueble, emptyImages);
+
+
 
         for (int i = 0; i < 20; i++) {
             peticionDeJorge = new Peticion(jorge, inmueble, LocalDate.now().plusDays(i),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
