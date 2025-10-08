@@ -99,7 +99,7 @@ public class ReservoSetUp {
     private PeticionService peticionService;
 
     @Test
-    //@Disabled("Ejecutar como setup para reviews / testing a nivel integración")
+    @Disabled("Ejecutar como setup para reviews / testing a nivel integración")
     void setup() throws EmailRepetido {
         usuarioService.create(jorge);
         usuarioService.create(juanito);
