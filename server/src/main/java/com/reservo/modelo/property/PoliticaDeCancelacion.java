@@ -17,14 +17,12 @@ public abstract class PoliticaDeCancelacion {
     public double aplicarPolitica(Peticion peticion){
 
         long diasAnticipacion = ChronoUnit.DAYS.between(LocalDate.now(), peticion.getFechaDelEvento());
-        double monto;
 
         if(peticion.getPagado()){
-            monto = this.calcularReintegro(peticion.getPrice(),diasAnticipacion);
+            return  this.calcularReintegro(peticion.getPrice(),diasAnticipacion);
         }else{
-            monto = this.calcularDeuda(peticion.getPrice(),diasAnticipacion);}
+            return  this.calcularDeuda(peticion.getPrice(),diasAnticipacion);}
 
-        return monto;
     }
 
     public abstract double calcularReintegro(double monto,Long diasAnticipacion);

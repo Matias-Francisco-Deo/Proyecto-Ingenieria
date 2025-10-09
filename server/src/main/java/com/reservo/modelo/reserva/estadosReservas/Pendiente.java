@@ -11,7 +11,10 @@ public class Pendiente extends EstadoDePeticion {
     }
 
     @Override
-    public void cancelar(Peticion peticion) {peticion.setEstado(new Cancelado());}
+    public double cancelar(Peticion peticion) {
+        peticion.setEstado(new Cancelado());
+        return 0;
+    }
 
     @Override
     public void rechazar(Peticion peticion) {
