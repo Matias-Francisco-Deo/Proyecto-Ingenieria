@@ -23,7 +23,6 @@ public abstract class PoliticaDeCancelacion {
         }else{
             return  this.calcularDeuda(peticion.getPrice(),diasAnticipacion);}
 
-        return monto;
     }
 
     public abstract double calcularReintegro(double monto,Long diasAnticipacion);
