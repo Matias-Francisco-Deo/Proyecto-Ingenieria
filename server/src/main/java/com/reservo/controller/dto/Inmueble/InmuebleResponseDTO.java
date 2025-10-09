@@ -2,6 +2,7 @@ package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.modelo.property.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.PoliticaDeCancelacion;
 
 import java.util.List;
 
@@ -28,12 +29,14 @@ public record InmuebleResponseDTO(
 
         String imageUrl = prop.getFirstImageURL();
 
+        String cancellationName = politicaAString(prop.getCancellation());
+
         return new InmuebleResponseDTO(
             Math.toIntExact(prop.getId()),
             prop.getName(), prop.getDescription(), prop.getUbication(),
             prop.getPrice(), prop.getCapacity(), prop.getConditions(),
             prop.getHoraInicio().toString(), prop.getHoraFin().toString(),
-                prop.getCancellation().getClass().getSimpleName(),
+                cancellationName,
             prop.getOwner().getId(),
             prop.getOwner().getName(),
             prop.getOwner().getEmail(),
@@ -42,5 +45,14 @@ public record InmuebleResponseDTO(
             prop.getAltura(),
             imageUrl
         );
+    }
+
+    private static String politicaAString(PoliticaDeCancelacion politica) {
+
+        String name = politica.getClass().getSimpleName();
+
+        if (name.equals("SinDevolucion")) return "Sin devolución";
+
+        return name;
     }
 }

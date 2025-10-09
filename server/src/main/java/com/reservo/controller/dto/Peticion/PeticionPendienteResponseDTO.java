@@ -1,9 +1,9 @@
 package com.reservo.controller.dto.Peticion;
 
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.PoliticaDeCancelacion;
 import com.reservo.modelo.reserva.Peticion;
 
-import java.time.LocalTime;
 
 public record PeticionPendienteResponseDTO(
         Long id,
@@ -26,6 +26,8 @@ public record PeticionPendienteResponseDTO(
 ) {
     public static PeticionPendienteResponseDTO desdeModelo(Peticion peticion) {
         Inmueble in = peticion.getInmueble();
+        String cancellationName = politicaAString(in.getCancellation());
+
         return new PeticionPendienteResponseDTO(
                 peticion.getId(),
                 in.getName(),
@@ -42,7 +44,16 @@ public record PeticionPendienteResponseDTO(
                 in.getCalle(),
                 in.getAltura(),
                 peticion.getEstado().getClass().getSimpleName(),
-                peticion.getPoliticaCancelacion().getClass().getSimpleName()
+                cancellationName
         );
+    }
+
+    private static String politicaAString(PoliticaDeCancelacion politica) {
+
+        String name = politica.getClass().getSimpleName();
+
+        if (name.equals("SinDevolucion")) return "Sin devolución";
+
+        return name;
     }
 }
