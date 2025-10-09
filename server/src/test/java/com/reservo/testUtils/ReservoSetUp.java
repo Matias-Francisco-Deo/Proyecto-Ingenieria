@@ -135,8 +135,8 @@ public class ReservoSetUp {
     }
 
 //    @AfterEach
-    @Test
-    @Disabled("Ejecutar con cuidado, borra TODO")
+    //@Test
+    //@Disabled("Ejecutar con cuidado, borra TODO")
     void teardown() {
         testService.eliminarPeticiones();
         testService.eliminarInmuebles();
