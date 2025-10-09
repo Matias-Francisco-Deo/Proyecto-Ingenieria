@@ -42,7 +42,7 @@ public record PeticionPendienteResponseDTO(
                 in.getCalle(),
                 in.getAltura(),
                 peticion.getEstado().getClass().getSimpleName(),
-                peticion.getPoliticaCancelacion().name()
+                peticion.getPoliticaCancelacion().getClass().getSimpleName()
         );
     }
 }

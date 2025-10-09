@@ -4,11 +4,13 @@ import { useUser } from "@/hooks/useUser";
 import { useAuth } from "@/hooks/useAuth";
 import Dias from "@/components/Dias";
 import { useToast } from "@/hooks/useToast";
+import PoliticasPopup from "@/components/PoliticasPopup";
 
 export default function createPropertyPage() {
     const { isAuthenticated } = useAuth();
     const { getId } = useUser();
     const { toastError } = useToast();
+    const [showPopup, setShowPopup] = useState(false);
 
     /*
   Constante para usar directamente sobre el <p> definido arriba del input de email
@@ -601,6 +603,16 @@ export default function createPropertyPage() {
                                 >
                                     Políticas de cancelación
                                 </label>
+                                 <button
+                                    type="button"
+                                    onClick={() => setShowPopup(true)}
+                                    className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 text-white hover:bg-amber-500 transition cursor-pointer"
+                                    aria-label="Información sobre políticas de cancelación"
+                                >
+                                    ?
+                                </button>
+
+                                <PoliticasPopup show={showPopup} setShow={setShowPopup} />
                             </div>
                             <div className="mt-2">
                                 <select
@@ -612,7 +624,7 @@ export default function createPropertyPage() {
                                     } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
                                 >
                                     <option value="non-restriction">
-                                        Sin restricción
+                                        Sin devolución
                                     </option>
                                     <option value="Flexible">Flexible</option>
                                     <option value="Severo">Severo</option>
@@ -623,6 +635,7 @@ export default function createPropertyPage() {
                                     </p>
                                 )}
                             </div>
+                            
                         </div>
 
                         <div>

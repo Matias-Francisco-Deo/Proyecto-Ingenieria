@@ -1,9 +1,7 @@
 package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
-import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.DiasDeLaSemana;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.*;
 import com.reservo.modelo.user.Usuario;
 
 import java.time.LocalTime;
@@ -45,7 +43,7 @@ public record InmuebleRequestDTO(
         if (number <= 0) throw new ParametroIncorrecto("La altura debe ser mayor a 0.");
 
         getRango result = getRango();
-        PoliticasDeCancelacion cancellationPolicy = PoliticasDeCancelacion.getPoliticasDeCancelacion(this.cancellation);
+        PoliticaDeCancelacion cancellationPolicy = this.getPoliticasDeCancelacion(this.cancellation);
         List<DiasDeLaSemana> orderedDays = getDiasDeLaSemanas();
 
         return new Inmueble(name, description, price, ubication, capacity, condition,
@@ -67,12 +65,11 @@ public record InmuebleRequestDTO(
     private record getRango(LocalTime horaInicio, LocalTime horaFin) {
     }
 
-    private PoliticasDeCancelacion getPoliticasDeCancelacion() {
-        PoliticasDeCancelacion cancellationPolicy = switch (cancellation) {
-            case "Flexible" -> PoliticasDeCancelacion.FLEXIBLE;
-            case "Severo" -> PoliticasDeCancelacion.SEVERO;
-            default -> PoliticasDeCancelacion.SIN_RETRIBUCION;
+    private PoliticaDeCancelacion getPoliticasDeCancelacion(String cancelacion) {
+        return switch (cancelacion) {
+            case "Flexible" -> new Flexible();
+            case "Severo" -> new Severo();
+            default -> new SinDevolucion();
         };
-        return cancellationPolicy;
     }
 }

@@ -4,9 +4,7 @@ import com.reservo.controller.dto.Inmueble.InmuebleModifyRequestDTO;
 import com.reservo.controller.dto.Inmueble.InmuebleRemoveImagesDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
-import com.reservo.modelo.property.DiasDeLaSemana;
-import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.*;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
@@ -53,25 +51,25 @@ public class InmuebleServiceImplTest {
     private InmuebleRemoveImagesDTO removeImagesDTO;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws EmailRepetido {
 
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         juan = new Usuario("juan", "aa22", "juan@yahoo.com.ar");
 
         inmueble1 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION,"lavalle",987);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, new SinDevolucion(),"lavalle",987);
 
         inmueble2 = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, PoliticasDeCancelacion.SIN_RETRIBUCION,"pelegrini",123);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), juan, new SinDevolucion(),"pelegrini",123);
 
         emptyImages = Collections.emptyList();
         inmueble1.setAvailableDays(Collections.emptyList());
         inmueble2.setAvailableDays(Collections.emptyList());
 
         List<DiasDeLaSemana> diasDTOInmueble = List.of(DiasDeLaSemana.LUNES);
-        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "FLEXIBLE", "Balcarce", 50);
+        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
 
         mockImage = new MockMultipartFile(
                 "image",
@@ -81,6 +79,9 @@ public class InmuebleServiceImplTest {
         );
 
         removeImagesDTO = new InmuebleRemoveImagesDTO(List.of(0));
+
+        userService.create(jorge);
+        userService.create(juan);
     }
 
     @Test
@@ -118,8 +119,7 @@ public class InmuebleServiceImplTest {
 
     @Test
     void sePersistenVariasPropiedades() throws EmailRepetido {
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
         inmuebleService.create(inmueble2,emptyImages);
 
@@ -135,7 +135,7 @@ public class InmuebleServiceImplTest {
         for (int i = 0; i < 10; i++) {
             Inmueble inm = new Inmueble(
                     "Plaza" + i, "Es un lugar espacioso", 200d, "Quilmes", 100, "No romper nada",
-                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, PoliticasDeCancelacion.SIN_RETRIBUCION, "lavalle", 987);
+                    LocalTime.of(12, 30), LocalTime.of(14, 30), jorge, new SinDevolucion(), "lavalle", 987);
             inm.setAvailableDays(Collections.emptyList());
             inmuebleService.create(inm, emptyImages);
         }
@@ -180,8 +180,7 @@ public class InmuebleServiceImplTest {
 
     @Test
     void noPuedenHaberDosUsuariosConElInmueble() throws EmailRepetido {
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         assertThrows(InmuebleRepetidoException.class, () -> {inmuebleService.create(inmueble1,emptyImages);});
@@ -189,8 +188,7 @@ public class InmuebleServiceImplTest {
 
     @Test
     void seActualizaUnInmuebleYCambiaSuNombreAlNuevo() throws EmailRepetido, ParametroIncorrecto {
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -203,8 +201,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSuDescripcionALaNueva() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -217,8 +214,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSuLocalidadALaNueva() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -231,8 +227,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSuPrecioAlNuevo() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -246,8 +241,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSuCapacidadALaNueva() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -260,8 +254,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSusCondicionesALasNuevas() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -274,8 +267,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleParcialmenteYCambiaSusCondicionesALasNuevas() throws EmailRepetido, ParametroIncorrecto {
         inmuebleDTO1 = new InmuebleModifyRequestDTO(null, "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", null, null, "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -288,8 +280,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSusHorariosALosNuevos() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -303,8 +294,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSusDiasDisponiblesALosNuevos() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -318,23 +308,21 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleYCambiaSuPoliticaDeCancelacionALaNueva() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
 
         Inmueble inmuebleFromDb = inmuebleService.findById(inmueble1.getId()).get();
 
-        assertEquals(PoliticasDeCancelacion.FLEXIBLE, inmuebleFromDb.getCancellation());
+        assertEquals(Flexible.class, inmuebleFromDb.getCancellation().getClass());
 
     }
 
     @Test
     void seActualizaUnInmuebleYCambiaSuDireccionALaNueva() throws EmailRepetido, ParametroIncorrecto {
 //        inmuebleDTO1 = new InmuebleModifyRequestDTO("Palacio de la bondad", "full bondad pa", "Quilmes", 18000d, 35, "romper todo", "10:00", "18:00", diasDTOInmueble, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -349,8 +337,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleParcialmenteYCambiaSuDireccionALaNueva() throws EmailRepetido, ParametroIncorrecto {
         inmuebleDTO1 = new InmuebleModifyRequestDTO(null, "full bondad pa", null, 18000d, 35, "romper todo", "10:00", "18:00", null, "Flexible", "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -365,8 +352,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seActualizaUnInmuebleParcialmenteYCambianLasCosasQueSeEspecifican() throws EmailRepetido, ParametroIncorrecto {
         inmuebleDTO1 = new InmuebleModifyRequestDTO(null, null, null, 18000d, 35, null, "10:00", "18:00", null, null, "Balcarce", 50);
-        userService.create(jorge);
-        userService.create(juan);
+
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.update(inmueble1.getId(), inmuebleDTO1);
@@ -385,8 +371,7 @@ public class InmuebleServiceImplTest {
     @Test
     void noSeActualizaLaImagenDeUnInmuebleCuandoSeMandaNada() throws EmailRepetido, ParametroIncorrecto {
         inmuebleDTO1 = new InmuebleModifyRequestDTO(null, null, null, null, null, null, null, null, null, null, null, null);
-        userService.create(jorge);
-        userService.create(juan);
+
 
         inmueble1.setImages(Collections.singletonList("c://pepe.png"));
         inmuebleService.create(inmueble1,emptyImages);
@@ -401,8 +386,7 @@ public class InmuebleServiceImplTest {
 
     @Test
     void seAgregaUnaImagenDeUnInmueble() throws EmailRepetido, ParametroIncorrecto {
-        userService.create(jorge);
-        userService.create(juan);
+
 
         inmueble1.setImages(Collections.singletonList("c://pepe.png"));
         inmuebleService.create(inmueble1,emptyImages);
@@ -417,8 +401,7 @@ public class InmuebleServiceImplTest {
 
     @Test
     void seQuitaUnaImagenDeUnInmueble() throws EmailRepetido, ParametroIncorrecto {
-        userService.create(jorge);
-        userService.create(juan);
+
 
         inmuebleService.create(inmueble1,List.of(mockImage)); // 1
 
@@ -433,8 +416,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seQuitanTodasLasImagenesDeUnInmueble() throws EmailRepetido, ParametroIncorrecto {
         removeImagesDTO = new InmuebleRemoveImagesDTO(List.of(0, 1));
-        userService.create(jorge);
-        userService.create(juan);
+
 
         inmuebleService.create(inmueble1,List.of(mockImage, mockImage)); // 2
 
@@ -449,8 +431,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seQuitanImagenesDeUnInmuebleSalteadas() throws EmailRepetido, ParametroIncorrecto {
         removeImagesDTO = new InmuebleRemoveImagesDTO(List.of(0, 1, 3));
-        userService.create(jorge);
-        userService.create(juan);
+
 
         inmuebleService.create(inmueble1,List.of(mockImage, mockImage, mockImage, mockImage)); // 4
 
@@ -465,8 +446,7 @@ public class InmuebleServiceImplTest {
     @Test
     void seQuitanImagenesDeUnInmuebleSalteadasDePrincipioAFin() throws EmailRepetido, ParametroIncorrecto {
         removeImagesDTO = new InmuebleRemoveImagesDTO(List.of(0, 3));
-        userService.create(jorge);
-        userService.create(juan);
+
 
         inmuebleService.create(inmueble1,List.of(mockImage, mockImage, mockImage, mockImage)); // 4
 

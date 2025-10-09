@@ -13,15 +13,14 @@ public class Vigente extends EstadoDePeticion {
     @Override
     public void cancelar(Peticion peticion) {
         peticion.setEstado(new Cancelado());
+        double monto = peticion.getPoliticaCancelacion().aplicarPolitica(peticion);
     }
 
     @Override
     public void rechazar(Peticion peticion) {
-
     }
 
     @Override
     public void finalizar(Peticion peticion) {
-
     }
 }
