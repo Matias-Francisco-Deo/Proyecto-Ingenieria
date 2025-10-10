@@ -41,7 +41,7 @@ export default function DatosUsuarioPage() {
       } catch (err) {
         if (!cancelled) {
           setServerError(true);
-          toastError("Hubo un error inesperado."); 
+          toastError("Hubo un error inesperado.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -53,7 +53,7 @@ export default function DatosUsuarioPage() {
     return () => {
       cancelled = true;
     };
-  }, [userId, toastError]);
+  }, [userId]);
 
   if (loading) {
     return (
@@ -73,6 +73,37 @@ export default function DatosUsuarioPage() {
     );
   }
 
+  const actualizarCampo = async (campo: "nombre" | "email", valor: string) => {
+    try {
+      const endpointMap = {
+        nombre: "modifyUserName",
+        email: "modifyUserEmail",
+      };
+
+      const res = await fetch(
+        `http://localhost:8081/auth/${endpointMap[campo]}/${userId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ valor }),
+        }
+      );
+
+      if (!res.ok) throw new Error(`No se pudo actualizar ${campo}`);
+
+      setUsuario((prev) =>
+        prev
+          ? {
+              ...prev,
+              [campo]: valor,
+            }
+          : prev
+      );
+    } catch (err: any) {
+      toastError(err.message || `Error al actualizar ${campo}`);
+    }
+  };
+
   return (
     <div className="flex justify-center pt-24 px-4 min-h-screen">
       <div className="flex flex-col w-full max-w-2xl h-[600px] p-12 bg-[#0f1a2a] rounded-3xl shadow-xl text-left">
@@ -84,19 +115,22 @@ export default function DatosUsuarioPage() {
           <CampoEditableUser
             label="Usuario"
             valor={usuario!.nombre}
-            onEdit={() => console.log("Editar usuario")}
+            tipo="nombre"
+            onUpdate={(nuevoValor) => actualizarCampo("nombre", nuevoValor)}
           />
 
           <CampoEditableUser
             label="Email"
             valor={usuario!.email}
-            onEdit={() => console.log("Editar email")}
+            tipo="email"
+            onUpdate={(nuevoValor) => actualizarCampo("email", nuevoValor)}
           />
 
           <CampoPassword
             password={usuario!.password}
             mostrarPassword={mostrarPassword}
             setMostrarPassword={setMostrarPassword}
+            userId={userId}
           />
 
           <div className="text-center">
