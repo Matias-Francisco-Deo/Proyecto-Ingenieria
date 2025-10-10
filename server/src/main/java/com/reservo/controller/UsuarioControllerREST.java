@@ -1,10 +1,12 @@
 package com.reservo.controller;
 
+import com.reservo.controller.dto.Inmueble.InmuebleResponseDTO;
 import com.reservo.controller.dto.Usuario.CredentialsDTO;
 import com.reservo.controller.dto.Usuario.LoginRequestDTO;
 import com.reservo.controller.dto.Usuario.UsuarioRequestDTO;
 import com.reservo.controller.dto.Usuario.UsuarioResponseDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
+import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
@@ -34,7 +36,7 @@ public final class UsuarioControllerREST {
     }
 
     @PostMapping("/login/")
-    public ResponseEntity<CredentialsDTO> getUsuarioById(@RequestBody LoginRequestDTO loginRequestDTO) throws CredencialesIncorrectas {
+    public ResponseEntity<CredentialsDTO> loginById(@RequestBody LoginRequestDTO loginRequestDTO) throws CredencialesIncorrectas {
 
         Credentials userCredentials = new Credentials(loginRequestDTO.email(), loginRequestDTO.password());
 
@@ -48,6 +50,13 @@ public final class UsuarioControllerREST {
         return ResponseEntity.ok(this.usuarioService.findAll().stream()
                 .map(UsuarioResponseDTO::desdeModelo)
                 .collect(Collectors.toSet()));
+    }
+
+    @GetMapping("/datos-usuario/{id}")
+    public ResponseEntity<UsuarioResponseDTO> getUsuarioById(@PathVariable Long id) {
+        if(this.usuarioService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
+        Usuario usuario = this.usuarioService.findById(id).get();
+        return ResponseEntity.ok(UsuarioResponseDTO.desdeModelo(usuario));
     }
 
 }
