@@ -46,13 +46,7 @@ jobs:
 
             - name: Run Backend Tests inside Docker
               run: |
-                  docker run --rm \
-                    -e DB_HOST=postgres \
-                    -e DB_PORT=5432 \
-                    -e DB_NAME=reservo \
-                    -e DB_USER=postgres \
-                    -e DB_PASSWORD=root \
-                    reservo-backend:latest \
+                  docker exec -i $(docker ps -q -f name=backend-container) \
                     sh -c "mvn -B clean verify || exit 1"
 
             - name: Publish Test Results
