@@ -48,6 +48,7 @@ jobs:
               run: |
                   docker run --rm \
                     --add-host=host.docker.internal:host-gateway \
+                    -e TZ=America/Argentina/Buenos_Aires \
                     -e DB_HOST=host.docker.internal \
                     -e DB_PORT=5432 \
                     -e DB_NAME=reservo \
