@@ -5,6 +5,7 @@ on:
         branches:
             - main
             - dev
+              - feature/imagenDocker
     pull_request:
         branches:
             - main
