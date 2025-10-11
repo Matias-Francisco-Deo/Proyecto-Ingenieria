@@ -69,23 +69,69 @@ jobs:
               run: docker rm -f reservo-test || true
 
     frontend:
-        name: Frontend - React
+        name: Frontend - React (Docker)
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Build Frontend Docker image
+              run: docker build -t reservo-frontend:latest ./client
+
+            - name: Run Frontend Build inside Docker
+              run: |
+                  docker run --rm \
+                    -v ${PWD}/client/dist:/app/dist \
+                    reservo-frontend:latest \
+                    sh -c "npm run nottscbuild"
+
+            - name: Verify Build Output
+              run: |
+                  echo "📁 Contenido del directorio dist:"
+                  ls -la ./client/dist/
+
+                  if [ -f "./client/dist/index.html" ]; then
+                      echo "✅ Build exitoso - index.html encontrado"
+                  else
+                      echo "❌ Build fallido - no se encontró index.html"
+                      exit 1
+                  fi
+
+            - name: Smoke Test - Start Frontend Dev Server
+              run: |
+                  echo "🚀 Starting frontend container for smoke test..."
+                  docker run -d --name reservo-frontend-test \
+                    -p 5173:5173 \
+                    reservo-frontend:latest
+
+                  echo "⏳ Waiting for frontend to start (max 30s)..."
+                  for i in {1..6}; do
+                    if curl -fs http://localhost:5173 > /dev/null; then
+                      echo "✅ Frontend dev server is running!"
+                      break
+                    fi
+                    echo "Waiting... ($i/6)"
+                    sleep 5
+                  done
+
+                  if ! curl -fs http://localhost:5173 > /dev/null; then
+                    echo "❌ Frontend failed to start. Showing logs:"
+                    docker logs reservo-frontend-test
+                    exit 1
+                  fi
+
+                  echo "✅ Frontend smoke test passed!"
+
+            - name: Stop Frontend Container
+              if: always()
+              run: docker rm -f reservo-frontend-test || true
+
+            - name: Upload Build Artifact
+              uses: actions/upload-artifact@v4
               with:
-                  node-version: "20"
-                  cache: npm
-
-            - name: Install dependencies
-              run: npm install
-              working-directory: client
-
-            - name: Build frontend
-              run: npm run nottscbuild
-              working-directory: client
+                  name: frontend-build
+                  path: client/dist/
