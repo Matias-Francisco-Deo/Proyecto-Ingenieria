@@ -21,7 +21,6 @@ jobs:
                 ports:
                     - 5432:5432
                 options: >-
-                    # La opción 'options: >-' no soporta comentarios en línea, por eso esta línea se eliminó.
                     --health-cmd="pg_isready -U postgres"
                     --health-interval=10s
                     --health-timeout=5s
@@ -37,22 +36,26 @@ jobs:
             - name: Build Backend Docker image
               run: docker build -t reservo-backend:latest ./server
 
+            - name: Wait for Postgres to be ready
+              run: |
+                  for i in {1..10}; do
+                    nc -z postgres 5432 && echo "✅ Postgres is up" && break
+                    echo "⏳ Waiting for Postgres..."
+                    sleep 5
+                  done
+
             - name: Run Backend Tests inside Docker
               run: |
-                  echo "🏃 Running Maven tests inside a temporary container..."
-                  # Utilizamos 'docker run' para ejecutar el comando Maven directamente.
-                  # Las variables DB_HOST/DB_PORT/etc. DEBEN apuntar al nombre del servicio 'postgres'.
                   docker run --rm \
-                      --name reservo-tests-runner \
-                      -v ${{ github.workspace }}:/app \
-                      -w /app/server \
-                      -e DB_HOST=postgres \
-                      -e DB_PORT=5432 \
-                      -e DB_NAME=reservo \
-                      -e DB_USER=postgres \
-                      -e DB_PASSWORD=root \
-                      reservo-backend:latest \
-                      sh -c "mvn -B clean verify || exit 1"
+                    -e DB_HOST=postgres \
+                    -e DB_PORT=5432 \
+                    -e DB_NAME=reservo \
+                    -e DB_USER=postgres \
+                    -e DB_PASSWORD=root \
+                    -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
+                    -e "SPRING_MAIL_PASSWORD=bmfj mmkz sgaw jnbv" \
+                    reservo-backend:latest \
+                    sh -c "mvn -B clean verify || exit 1"
 
             - name: Publish Test Results
               if: always()
@@ -64,21 +67,18 @@ jobs:
             - name: Smoke Test - Verify app starts (timeout 40s)
               run: |
                   echo "🚀 Starting container for smoke test..."
-                  # Ejecutamos la imagen de la aplicación en el puerto 8081 y enlazamos a 'postgres'.
                   docker run -d --name reservo-test \
-                      -p 8081:8081 \
-                      -e DB_HOST=postgres \
-                      -e DB_PORT=5432 \
-                      -e DB_NAME=reservo \
-                      -e DB_USER=postgres \
-                      -e DB_PASSWORD=root \
-                      -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
-                      -e "SPRING_MAIL_PASSWORD=..." \
-                      reservo-backend:latest
+                    -e DB_HOST=postgres \
+                    -e DB_PORT=5432 \
+                    -e DB_NAME=reservo \
+                    -e DB_USER=postgres \
+                    -e DB_PASSWORD=root \
+                    -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
+                    -e "SPRING_MAIL_PASSWORD=bmfj mmkz sgaw jnbv" \
+                    reservo-backend:latest
 
                   echo "⏳ Waiting for app to start (max 40s)..."
                   for i in {1..8}; do
-                    # El health check se realiza desde el runner (host) al puerto 8081 mapeado.
                     if curl -fs http://localhost:8081/actuator/health > /dev/null; then
                       echo "✅ App is healthy!"
                       break
