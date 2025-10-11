@@ -12,7 +12,7 @@ interface Usuario {
 }
 
 export default function DatosUsuarioPage() {
-  const { getId } = useUser();
+  const { getId, setUsername } = useUser();
   const userId = getId();
   const { toastError } = useToast();
 
@@ -99,6 +99,9 @@ export default function DatosUsuarioPage() {
             }
           : prev
       );
+      if (campo === "nombre") {
+      setUsername(valor);
+    }
     } catch (err: any) {
       toastError(err.message || `Error al actualizar ${campo}`);
     }

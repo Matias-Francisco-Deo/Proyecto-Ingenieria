@@ -1,6 +1,7 @@
 import { useAuth } from "../hooks/useAuth";
 import { useUser } from "../hooks/useUser";
 import { Link } from "wouter";
+import { useEffect, useState } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -10,6 +11,23 @@ export function Header({ ...props }: HeaderProps) {
 
     const { getUsername } = useUser();
     const { isAuthenticated } = useAuth();
+    const [username, setUsername] = useState(getUsername());
+
+    useEffect(() => {
+
+            const originalSetItem = localStorage.setItem;
+
+        localStorage.setItem = function (key, value) {
+            originalSetItem.apply(this, [key, value]);
+            if (key === "username") {
+                setUsername(value);
+            }
+        };
+
+        return () => {
+            localStorage.setItem = originalSetItem;
+        };
+    }, []);
 
     return (
         <header
