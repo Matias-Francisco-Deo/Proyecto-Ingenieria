@@ -1,37 +1,19 @@
-
-FROM node:18-alpine AS build
+# Dockerfile para desarrollo Vite
+FROM node:20-alpine
 
 WORKDIR /app
 
-ARG VITE_API_URL=http://localhost:8081
+# Copiamos solo package.json y package-lock.json
+COPY package*.json ./
 
+# Instalamos dependencias dentro del contenedor
+RUN npm install
 
-RUN apk add --no-cache git python3 make g++
-
-
-RUN npm install -g pnpm
-
-RUN npm install -g typescript
-
-COPY package.json pnpm-lock.yaml ./
-
-ENV NODE_ENV=development
-RUN pnpm install --frozen-lockfile
-
-
+# Copiamos el resto del código (node_modules está ignorado por .dockerignore)
 COPY . .
 
+# Exponemos puerto de Vite
+EXPOSE 5173
 
-ENV VITE_API_URL=${VITE_API_URL}
-
-
-RUN tsc -b && npx vite build
-
-
-FROM nginx:alpine
-
-
-COPY --from=build /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Comando por defecto
+CMD ["npm", "run", "dev"]
