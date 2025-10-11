@@ -5,11 +5,12 @@ on:
         branches:
             - main
             - dev
-              - feature/imagenDocker
+            - feature/imagenDocker
     pull_request:
         branches:
             - main
             - dev
+            - feature/imagenDocker
 
 jobs:
     backend-tests:
