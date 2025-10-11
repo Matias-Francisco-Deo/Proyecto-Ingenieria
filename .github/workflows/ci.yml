@@ -11,21 +11,17 @@ jobs:
         name: Backend - Tests (Docker + Postgres)
         runs-on: ubuntu-latest
 
-        # 1. Configuración del Servicio de Base de Datos
-        # GitHub Actions garantiza que este servicio esté saludable antes de ejecutar los pasos.
         services:
             postgres:
                 image: postgres:15
                 env:
-                    # Estas variables son usadas por el servicio Postgres
                     POSTGRES_USER: postgres
                     POSTGRES_PASSWORD: root
                     POSTGRES_DB: reservo
-                # Exponemos el puerto para que el runner (y los contenedores en la misma red) puedan acceder.
                 ports:
                     - 5432:5432
                 options: >-
-                    # Health check para asegurar que Postgres esté listo
+                    # La opción 'options: >-' no soporta comentarios en línea, por eso esta línea se eliminó.
                     --health-cmd="pg_isready -U postgres"
                     --health-interval=10s
                     --health-timeout=5s
@@ -39,10 +35,8 @@ jobs:
               uses: docker/setup-buildx-action@v3
 
             - name: Build Backend Docker image
-              # Construye la imagen localmente.
               run: docker build -t reservo-backend:latest ./server
 
-            # 2. Ejecutar Tests - Usando docker run --rm en la red de servicios
             - name: Run Backend Tests inside Docker
               run: |
                   echo "🏃 Running Maven tests inside a temporary container..."
@@ -67,7 +61,6 @@ jobs:
                   name: backend-test-results
                   path: server/target/surefire-reports/
 
-            # 3. Smoke Test - Verificar que la app inicia y se conecta a la DB
             - name: Smoke Test - Verify app starts (timeout 40s)
               run: |
                   echo "🚀 Starting container for smoke test..."
