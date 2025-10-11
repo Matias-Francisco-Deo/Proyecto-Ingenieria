@@ -39,22 +39,21 @@ jobs:
             - name: Wait for Postgres to be ready
               run: |
                   for i in {1..10}; do
-                    nc -z localhost 5432 && echo "✅ Postgres is up" && break
+                    nc -z postgres 5432 && echo "✅ Postgres is up" && break
                     echo "⏳ Waiting for Postgres..."
                     sleep 5
                   done
 
-            # 🧪 Ejecutamos los tests sin colgar el job
             - name: Run Backend Tests inside Docker
               run: |
-                  docker run --rm --network host \
-                    -e DB_HOST=localhost \
+                  docker run --rm \
+                    -e DB_HOST=postgres \
                     -e DB_PORT=5432 \
                     -e DB_NAME=reservo \
                     -e DB_USER=postgres \
                     -e DB_PASSWORD=root \
                     -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
-                    -e "SPRING_MAIL_PASSWORD=bmfj mmkz sgaw jnbv" \
+                    -e "SPRING_MAIL_PASSWORD=..." \
                     reservo-backend:latest \
                     sh -c "mvn -B clean verify || exit 1"
 
@@ -65,18 +64,17 @@ jobs:
                   name: backend-test-results
                   path: server/target/surefire-reports/
 
-            # ✅ Nuevo: smoke test controlado (timeout corto y con logs)
             - name: Smoke Test - Verify app starts (timeout 40s)
               run: |
                   echo "🚀 Starting container for smoke test..."
-                  docker run -d --name reservo-test --network host \
-                    -e DB_HOST=localhost \
+                  docker run -d --name reservo-test \
+                    -e DB_HOST=postgres \
                     -e DB_PORT=5432 \
                     -e DB_NAME=reservo \
                     -e DB_USER=postgres \
                     -e DB_PASSWORD=root \
                     -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
-                    -e "SPRING_MAIL_PASSWORD=bmfj mmkz sgaw jnbv" \
+                    -e "SPRING_MAIL_PASSWORD=..." \
                     reservo-backend:latest
 
                   echo "⏳ Waiting for app to start (max 40s)..."
@@ -89,7 +87,6 @@ jobs:
                     sleep 5
                   done
 
-                  # Si no responde, mostrar logs y fallar
                   if ! curl -fs http://localhost:8081/actuator/health > /dev/null; then
                     echo "❌ App failed to start. Showing logs:"
                     docker logs reservo-test
