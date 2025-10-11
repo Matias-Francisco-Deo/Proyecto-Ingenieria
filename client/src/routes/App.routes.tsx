@@ -16,6 +16,7 @@ const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const CancelarReservaPage = lazy(() => import("../pages/CancelarReservaPage"));
 const PublicacionesPage = lazy(() => import("../pages/ListaDePublicaciones"));
 const PetitionPage = lazy(() => import("../pages/PetitionPage"));
+const DatosUsuarioPage = lazy(() => import("../pages/DatosUsuarioPage"));
 
 const Page404 = () => <div>Page Not Found</div>;
 
@@ -76,6 +77,11 @@ export function AppRoutes() {
                     <Route
                         path="/mis-publicaciones"
                         component={PublicacionesPage}
+                    />
+
+                    <Route
+                        path="/mis-datos"
+                        component={DatosUsuarioPage}
                     />
 
                     {/* Rutas protegidas */}
