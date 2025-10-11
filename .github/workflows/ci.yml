@@ -48,12 +48,10 @@ jobs:
               run: |
                   docker run --rm \
                     -e DB_HOST=postgres \
-                    -e DB_PORT=5432 \
+                    -e DB_PORT=5432 \            
                     -e DB_NAME=reservo \
                     -e DB_USER=postgres \
                     -e DB_PASSWORD=root \
-                    -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
-                    -e "SPRING_MAIL_PASSWORD=..." \
                     reservo-backend:latest \
                     sh -c "mvn -B clean verify || exit 1"
 
