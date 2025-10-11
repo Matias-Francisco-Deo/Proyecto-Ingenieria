@@ -9,8 +9,24 @@ COPY . .
 # Construir la aplicación
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Imagen ligera para ejecución
-FROM openjdk:21-jdk-slim
+# Etapa 2: Imagen para desarrollo y tests
+FROM maven:3.9.6-eclipse-temurin-21 AS development
+
+WORKDIR /app
+
+# Copiar el código fuente y el .jar
+COPY --from=build /app/target/reservo-0.0.1.jar app.jar
+COPY --from=build /app/src ./src
+COPY --from=build /app/pom.xml .
+
+# Exponer el puerto de la aplicación
+EXPOSE 8081
+
+# Comando para ejecutar tests o la aplicación
+ENTRYPOINT ["sh", "-c", "if [ \"$1\" = 'test' ]; then mvn -B clean verify; else java -jar app.jar; fi", "--"]
+
+# Etapa 3: Imagen ligera para producción
+FROM openjdk:21-jdk-slim AS production
 
 WORKDIR /app
 
@@ -18,7 +34,7 @@ WORKDIR /app
 COPY --from=build /app/target/reservo-0.0.1.jar app.jar
 
 # Exponer el puerto de la aplicación
-EXPOSE 8080
+EXPOSE 8081
 
 # Ejecutar la aplicación
-ENTRYPOINT ["sh", "-c", "if [ \"$1\" = 'test' ]; then mvn -B clean verify; else java -jar app.jar; fi", "--"]
+CMD ["java", "-jar", "app.jar"]
