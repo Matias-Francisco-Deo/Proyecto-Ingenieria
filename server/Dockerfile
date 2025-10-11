@@ -20,7 +20,7 @@ COPY --from=build /app/src ./src
 COPY --from=build /app/pom.xml .
 
 # Exponer el puerto de la aplicación
-EXPOSE 8081
+EXPOSE 8080
 
 # Comando para ejecutar tests o la aplicación
 ENTRYPOINT ["sh", "-c", "if [ \"$1\" = 'test' ]; then mvn -B clean verify; else java -jar app.jar; fi", "--"]
@@ -34,7 +34,7 @@ WORKDIR /app
 COPY --from=build /app/target/reservo-0.0.1.jar app.jar
 
 # Exponer el puerto de la aplicación
-EXPOSE 8081
+EXPOSE 8080
 
 # Ejecutar la aplicación
 CMD ["java", "-jar", "app.jar"]
