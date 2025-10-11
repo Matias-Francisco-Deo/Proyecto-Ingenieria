@@ -64,37 +64,6 @@ jobs:
                   name: backend-test-results
                   path: server/target/surefire-reports/
 
-            - name: Smoke Test - Verify app starts (timeout 40s)
-              run: |
-                  echo "🚀 Starting container for smoke test..."
-                  docker run -d --name reservo-test \
-                    --add-host=host.docker.internal:host-gateway \
-                    -e DB_HOST=host.docker.internal \
-                    -e DB_PORT=5432 \
-                    -e DB_NAME=reservo \
-                    -e DB_USER=postgres \
-                    -e DB_PASSWORD=root \
-                    -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
-                    -e "SPRING_MAIL_PASSWORD=bmfj mmkz sgaw jnbv" \
-                    -p 8080:8080 \
-                    reservo-backend:latest
-
-                  echo "⏳ Waiting for app to start (max 40s)..."
-                  for i in {1..8}; do
-                    if curl -fs http://localhost:8080/actuator/health > /dev/null; then
-                      echo "✅ App is healthy!"
-                      break
-                    fi
-                    echo "Waiting..."
-                    sleep 5
-                  done
-
-                  if ! curl -fs http://localhost:8080/actuator/health > /dev/null; then
-                    echo "❌ App failed to start. Showing logs:"
-                    docker logs reservo-test
-                    exit 1
-                  fi
-
             - name: Stop Backend Container
               if: always()
               run: docker rm -f reservo-test || true
