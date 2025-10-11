@@ -11,16 +11,21 @@ jobs:
         name: Backend - Tests (Docker + Postgres)
         runs-on: ubuntu-latest
 
+        # 1. Configuración del Servicio de Base de Datos
+        # GitHub Actions garantiza que este servicio esté saludable antes de ejecutar los pasos.
         services:
             postgres:
                 image: postgres:15
                 env:
+                    # Estas variables son usadas por el servicio Postgres
                     POSTGRES_USER: postgres
                     POSTGRES_PASSWORD: root
                     POSTGRES_DB: reservo
+                # Exponemos el puerto para que el runner (y los contenedores en la misma red) puedan acceder.
                 ports:
                     - 5432:5432
                 options: >-
+                    # Health check para asegurar que Postgres esté listo
                     --health-cmd="pg_isready -U postgres"
                     --health-interval=10s
                     --health-timeout=5s
@@ -34,20 +39,26 @@ jobs:
               uses: docker/setup-buildx-action@v3
 
             - name: Build Backend Docker image
+              # Construye la imagen localmente.
               run: docker build -t reservo-backend:latest ./server
 
-            - name: Wait for Postgres to be ready
-              run: |
-                  for i in {1..10}; do
-                    nc -z postgres 5432 && echo "✅ Postgres is up" && break
-                    echo "⏳ Waiting for Postgres..."
-                    sleep 5
-                  done
-
+            # 2. Ejecutar Tests - Usando docker run --rm en la red de servicios
             - name: Run Backend Tests inside Docker
               run: |
-                  docker exec -i $(docker ps -q -f name=backend-container) \
-                    sh -c "mvn -B clean verify || exit 1"
+                  echo "🏃 Running Maven tests inside a temporary container..."
+                  # Utilizamos 'docker run' para ejecutar el comando Maven directamente.
+                  # Las variables DB_HOST/DB_PORT/etc. DEBEN apuntar al nombre del servicio 'postgres'.
+                  docker run --rm \
+                      --name reservo-tests-runner \
+                      -v ${{ github.workspace }}:/app \
+                      -w /app/server \
+                      -e DB_HOST=postgres \
+                      -e DB_PORT=5432 \
+                      -e DB_NAME=reservo \
+                      -e DB_USER=postgres \
+                      -e DB_PASSWORD=root \
+                      reservo-backend:latest \
+                      sh -c "mvn -B clean verify || exit 1"
 
             - name: Publish Test Results
               if: always()
@@ -56,21 +67,25 @@ jobs:
                   name: backend-test-results
                   path: server/target/surefire-reports/
 
+            # 3. Smoke Test - Verificar que la app inicia y se conecta a la DB
             - name: Smoke Test - Verify app starts (timeout 40s)
               run: |
                   echo "🚀 Starting container for smoke test..."
+                  # Ejecutamos la imagen de la aplicación en el puerto 8081 y enlazamos a 'postgres'.
                   docker run -d --name reservo-test \
-                    -e DB_HOST=postgres \
-                    -e DB_PORT=5432 \
-                    -e DB_NAME=reservo \
-                    -e DB_USER=postgres \
-                    -e DB_PASSWORD=root \
-                    -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
-                    -e "SPRING_MAIL_PASSWORD=..." \
-                    reservo-backend:latest
+                      -p 8081:8081 \
+                      -e DB_HOST=postgres \
+                      -e DB_PORT=5432 \
+                      -e DB_NAME=reservo \
+                      -e DB_USER=postgres \
+                      -e DB_PASSWORD=root \
+                      -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
+                      -e "SPRING_MAIL_PASSWORD=..." \
+                      reservo-backend:latest
 
                   echo "⏳ Waiting for app to start (max 40s)..."
                   for i in {1..8}; do
+                    # El health check se realiza desde el runner (host) al puerto 8081 mapeado.
                     if curl -fs http://localhost:8081/actuator/health > /dev/null; then
                       echo "✅ App is healthy!"
                       break
