@@ -39,11 +39,18 @@ export default function ListaReservas({
                             </h2>
                         </div>
 
-                        <div className="px-20 bg-gray flex items-center ">
+                        <div className="px-20 bg-gray flex flex-col items-start justify-center">
                             <p>
                                 <strong>Emitida: </strong>
                                 {reserva.dateEmision}
                             </p>
+
+                            
+                            {reserva.pagado !== undefined && (
+                                <p className="text-orange-400 text-lg font-bold mt-1">
+                                    {reserva.pagado ? "Pagado" : "No pagado"}
+                                </p>
+                            )}
                         </div>
                     </li>
                 </Link>

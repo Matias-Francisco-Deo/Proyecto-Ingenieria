@@ -1,10 +1,10 @@
 import type { UserInfo } from "../types/types";
 import { useUser } from "../hooks/useUser";
 import { createContext, useState } from "react";
+import { useToast } from "@/hooks/useToast";
 
 type AuthContextType = {
     isAuthenticated: boolean;
-    // setIsAuthenticated: unknown;
     login: (email: string, password: string) => Promise<UserInfo>;
     logout: () => void;
     signIn: (
@@ -21,16 +21,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
         return JSON.parse(localStorage.getItem("isAuthenticated") || "false");
     });
-    const { setUsername, setKey,setId } = useUser();
+    const { setUsername, setKey, setId } = useUser();
+    const { toastError } = useToast();
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const login = async (email: string, password: string) => {
         const userInfo = await getUserInfo(email, password);
-
+        if (!userInfo) return;
         if (userInfo.error) return userInfo;
 
         setKey(userInfo.key);
         setUsername(userInfo.username);
-        setId(userInfo.id); 
+        setId(userInfo.id);
         setIsAuthenticated(true);
 
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
@@ -42,18 +44,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const getUserInfo = async (
         email: string,
         password: string
-    ): Promise<UserInfo> => {
-        const resp = await fetch(`http://localhost:8081/auth/login/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        });
-        return resp.json();
+    ): Promise<UserInfo | undefined> => {
+        try {
+            const resp = await fetch(`${apiUrl}/auth/login/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
+            });
+            return resp.json();
+        } catch (error) {
+            console.log(error);
+            toastError("Hubo un error inesperado.");
+            Error("Hubo un error inesperado.");
+        }
     };
 
     const signIn = async (
@@ -61,17 +69,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password: string,
         email: string
     ) => {
-        return await fetch("http://localhost:8081/auth", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                name: username,
-                password,
-                email,
-            }),
-        });
+        try {
+            return await fetch(`${apiUrl}/auth`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: username,
+                    password,
+                    email,
+                }),
+            });
+        } catch (error) {
+            console.log(error);
+            toastError("Hubo un error inesperado.");
+        }
     };
 
     const logout = () => {

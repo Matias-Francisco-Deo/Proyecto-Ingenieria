@@ -1,5 +1,6 @@
 package com.reservo.modelo.reserva;
 
+import com.reservo.modelo.property.PoliticaDeCancelacion;
 import com.reservo.modelo.reserva.estadosReservas.EstadoDePeticion;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.property.Inmueble;
@@ -37,7 +38,6 @@ public class Peticion {
     @Column(nullable = false)
     private LocalDate fechaDelEvento;
 
-
     @Column(nullable = false)
     private LocalTime horaInicio;
 
@@ -52,9 +52,14 @@ public class Peticion {
     private EstadoDePeticion estado;
 
     @Column(length = 150)
-    private String motivoRechazo;
+    private String motivoCancelacionRechazo;
 
-    private PoliticasDeCancelacion politicaCancelacion;
+    @Column(nullable = false)
+    private Boolean pagado;
+
+    @ManyToOne( fetch = FetchType.EAGER)
+    @JoinColumn(name = "politicaId")
+    private PoliticaDeCancelacion politicaCancelacion;
 
     public Peticion(Usuario cliente,Inmueble inmueble,LocalDate fechaDelEvento,LocalTime horaInicio
                     ,LocalTime horaFin,Double price){
@@ -67,24 +72,29 @@ public class Peticion {
         this.estado = new Pendiente() ;
         this.politicaCancelacion = inmueble.getCancellation();
         this.fechaEmision = LocalDate.now();
+        this.pagado = false;
     }
 
     public void aprobar(){
         this.estado.aprobar(this);
     }
 
-    public void cancelar(String motivo){
-        this.estado.cancelar(this);
-        this.setMotivoRechazo(motivo);
+    public double cancelar(String motivo){
+        this.setMotivoCancelacionRechazo(motivo);
+        return this.estado.cancelar(this);
     }
 
     public void rechazar(String motivo){
         this.estado.rechazar(this);
-        this.setMotivoRechazo(motivo);
+        this.setMotivoCancelacionRechazo(motivo);
     }
 
     public void finalizar(){
         this.estado.finalizar(this);
+    }
+
+    public void declararPago(){
+        this.pagado = true;
     }
 
 

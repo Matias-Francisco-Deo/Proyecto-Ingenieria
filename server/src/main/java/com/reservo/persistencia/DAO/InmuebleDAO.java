@@ -26,4 +26,7 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
             "WHERE LOWER(i.name) LIKE CONCAT(LOWER(:#{#f.nombre}), '%') " +
             "AND LOWER(i.ubication) LIKE CONCAT(LOWER(:#{#f.localidad}), '%')")
     Page<Inmueble> findByFiltro(@Param("f") Filtro filtro, Pageable pageable);
+
+    @Query("FROM Inmueble i WHERE i.owner.id = :id")
+    Page<Inmueble> getAllByOwnerId(@Param("id") Long id, Pageable pageable);
 }

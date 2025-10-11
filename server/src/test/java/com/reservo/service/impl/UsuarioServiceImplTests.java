@@ -12,12 +12,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public class UsuarioServiceImplTests {
 
@@ -68,14 +71,6 @@ public class UsuarioServiceImplTests {
 
         assertEquals(2, usersDeDb.size());
     }
-
-//    @Test
-//    void seTomaAUnUsuarioPorEmailYTieneEseMail(){
-//        usuarioService.create(jorge);
-//        Optional<Usuario> userDeDb = usuarioService.findByEmail("jorge@yahoo.com.ar");
-//
-//        assertEquals("jorge@yahoo.com.ar", userDeDb.get().getEmail());
-//    }
 
     @Test
     void noPuedenHaberDosUsuariosConElMismoEmail() throws EmailRepetido {

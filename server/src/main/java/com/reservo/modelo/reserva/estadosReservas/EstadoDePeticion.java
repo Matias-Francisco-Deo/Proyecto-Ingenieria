@@ -10,11 +10,15 @@ public abstract class EstadoDePeticion {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    public abstract void aprobar(Peticion peticion);
+    public void aprobar(Peticion peticion) {}
 
-    public abstract void cancelar(Peticion peticion);
+    public double cancelar(Peticion peticion) {
+        return 0;
+    }
 
-    public abstract void rechazar(Peticion peticion);
 
-    public abstract void finalizar(Peticion peticion);
+    public void finalizar(Peticion peticion) {}
+
+
+    public void rechazar(Peticion peticion) {}
 }

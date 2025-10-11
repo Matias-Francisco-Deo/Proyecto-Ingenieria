@@ -9,17 +9,6 @@ export interface UserInfo {
     error?: string;
 }
 
-export interface Inmueble {
-    id: number;
-    name: string;
-    ubication: string;
-    price: number;
-    nameDelDuenio: string;
-    email: string;
-    imageURL: string;
-    error?: string;
-}
-
 export interface PendingPetitionDraft {
     id: number;
     client_name: string;
@@ -31,6 +20,7 @@ export interface PendingPetitionDraft {
     created_date: string;
     event_date: string;
     error?: string;
+    pagado: boolean;
 }
 
 export interface CancelledRejectedPetitionDraft {
@@ -76,15 +66,19 @@ export interface Inmueble {
     description: string;
     ubication: string;
     price: number; // precio por hora
+    capacity: number
     condition: string;
     start: string;
     end: string;
     cancellation: string;
+    ownerId: number;            // nuevo
+    ownerName: string;
+    ownerEmail: string;
     availableDays: string[];
     street: string;
     number: number;
-    // ¡NUEVO!
     imageURL: string;
+    error?: string;
 }
 
 export interface HorarioDTO {
@@ -106,6 +100,7 @@ export interface ReservaDTO {
     horaFin: string;
     nameInmueble: string;
     dateEmision: string;
+    pagado:boolean;
 }
 
 interface ReservaCanceladasDTO {

@@ -13,7 +13,8 @@ public record ReservaVigenteDTO(
         LocalTime horaFin,
         LocalDate dateEmision,
         String email,
-        String nameOwner
+        String nameOwner,
+        Boolean pagado
 ){
     public static ReservaVigenteDTO desdeModelo(Peticion prop) {
         return new ReservaVigenteDTO(
@@ -24,7 +25,8 @@ public record ReservaVigenteDTO(
                 prop.getHoraFin(),
                 prop.getFechaEmision(),
                 prop.getInmueble().getOwner().getEmail(),
-                prop.getInmueble().getOwner().getName()
+                prop.getInmueble().getOwner().getName(),
+                prop.getPagado()
         );
     }
 }

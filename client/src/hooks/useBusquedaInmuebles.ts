@@ -20,6 +20,7 @@ export interface UseBusquedaInmueblesResult {
 }
 
 export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [nombre, setNombre] = useState("");
     const [localidad, setLocalidad] = useState("");
     const [data, setData] = useState<
@@ -44,16 +45,13 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
                     page: page,
                 };
 
-                const res = await fetch(
-                    `http://localhost:8081/property/buscar`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(body),
-                    }
-                );
+                const res = await fetch(`${apiUrl}/property/buscar`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                });
 
                 if (!res.ok) {
                     if (res.status === 404) {

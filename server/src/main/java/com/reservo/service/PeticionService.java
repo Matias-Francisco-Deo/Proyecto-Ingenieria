@@ -21,6 +21,7 @@ public interface PeticionService {
     void reject(RechazoDTO  rechazoDTO);
     void approve(Long id);
     void cancel(CancelacionDTO cancelacionDTO);
+    void declararPago(Long id);
     Page<Peticion> findAllPendientByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllApproveByOwnerId(Long id, Pageable pageable);
     Page<Peticion> findAllRejectByOwnerId(Long id, Pageable pageable);

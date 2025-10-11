@@ -12,7 +12,8 @@ public record PeticionResponseDTO(
         LocalTime requested_date_start,
         LocalTime requested_date_end,
         String property_name,
-        LocalDate created_date
+        LocalDate created_date,
+        Boolean pagado
 )  {
     public static PeticionResponseDTO desdeModelo(Peticion prop) {
         return new PeticionResponseDTO(
@@ -21,7 +22,8 @@ public record PeticionResponseDTO(
                 prop.getHoraInicio(),
                 prop.getHoraFin(),
                 prop.getInmueble().getName(),
-                prop.getFechaEmision()
+                prop.getFechaEmision(),
+                prop.getPagado()
         );
     }
 

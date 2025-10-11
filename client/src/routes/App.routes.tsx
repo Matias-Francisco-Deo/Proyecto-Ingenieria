@@ -14,10 +14,10 @@ const Publicacion = lazy(() => import("../pages/Publicacion"));
 const PeticionForm = lazy(() => import("../pages/HacerReservaPage"));
 const PetitionsPage = lazy(() => import("../pages/PetitionsPage"));
 const CancelarReservaPage = lazy(() => import("../pages/CancelarReservaPage"));
+const PublicacionesPage = lazy(() => import("../pages/ListaDePublicaciones"));
+const PetitionPage = lazy(() => import("../pages/PetitionPage"));
+const DatosUsuarioPage = lazy(() => import("../pages/DatosUsuarioPage"));
 
-const ReservaPendientePage = lazy(
-    () => import("../pages/ReservaPendientePage")
-);
 const Page404 = () => <div>Page Not Found</div>;
 
 export function AppRoutes() {
@@ -51,9 +51,8 @@ export function AppRoutes() {
                     />
                     <Route
                         path="/peticion/pendiente"
-                        component={ReservaPendientePage}
+                        component={PetitionPage}
                     />
-
                     <Route
                         path="/mis-peticiones/:estado"
                         component={PetitionsPage}
@@ -74,6 +73,17 @@ export function AppRoutes() {
                         path="/reserva/:estado"
                         component={CancelarReservaPage}
                     />
+
+                    <Route
+                        path="/mis-publicaciones"
+                        component={PublicacionesPage}
+                    />
+
+                    <Route
+                        path="/mis-datos"
+                        component={DatosUsuarioPage}
+                    />
+
                     {/* Rutas protegidas */}
                     {/* <Route path="/home" component={HomePage} />
 

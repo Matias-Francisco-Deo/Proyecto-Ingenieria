@@ -17,7 +17,12 @@ export function Header({ ...props }: HeaderProps) {
             className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 bg-amber-600 text-white"
         >
             <div className="flex items-center gap-4">
-                {getUsername()}
+                <Link 
+                    to="/mis-datos" 
+                    className="font-medium no-underline hover:no-underline focus:no-underline"
+                >
+                    {getUsername()}
+                </Link>
 
                 <Link
                     to="/home"
@@ -45,6 +50,13 @@ export function Header({ ...props }: HeaderProps) {
                     className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
                 >
                     Ver reservas
+                </Link>
+
+                <Link
+                    to={isAuthenticated ? "/mis-publicaciones" : "/signin"}
+                    className="bg-amber-500 hover:bg-amber-700 text-white px-3 py-1 rounded transition-colors"
+                >
+                    Mis publicaciones
                 </Link>
             </div>
 

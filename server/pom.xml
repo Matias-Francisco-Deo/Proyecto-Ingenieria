@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.reservo</groupId>
 	<artifactId>reservo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>reservo</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -70,6 +70,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>3.1.5</version>
+        </dependency>
 	</dependencies>
 
 	<build>

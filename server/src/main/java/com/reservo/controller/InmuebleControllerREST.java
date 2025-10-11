@@ -1,9 +1,7 @@
 package com.reservo.controller;
 
-import com.reservo.controller.dto.Inmueble.BusquedaInmueblesDTO;
-import com.reservo.controller.dto.Inmueble.InmuebleRequestDTO;
-import com.reservo.controller.dto.Inmueble.InmuebleResponseDTO;
-import com.reservo.controller.dto.Inmueble.InmuebleSummaryDTO;
+import com.reservo.controller.dto.Inmueble.*;
+import com.reservo.controller.exception.DTOResponseError;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.Usuario;
@@ -50,10 +48,28 @@ public final class InmuebleControllerREST {
     }
 
     @GetMapping
-    public ResponseEntity<Set<InmuebleResponseDTO>> getAllUbicaciones() {
+    public ResponseEntity<Set<InmuebleResponseDTO>> getAllInmuebles() {
         return ResponseEntity.ok(this.inmuebleService.findAll().stream()
                 .map(InmuebleResponseDTO::desdeModelo)
                 .collect(Collectors.toSet()));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DTOResponseError> modifyInmueble(@PathVariable Long id, @RequestBody InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto {
+        this.inmuebleService.update(id, inmuebleDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}/addImages")
+    public ResponseEntity<DTOResponseError> addImages(@PathVariable Long id, @RequestPart("images") List<MultipartFile> imagesToAdd) throws ParametroIncorrecto {
+        this.inmuebleService.addImages(id, imagesToAdd);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}/removeImages")
+    public ResponseEntity<DTOResponseError> removeImages(@PathVariable Long id, @RequestBody InmuebleRemoveImagesDTO inmuebleRemoveImagesDTO) throws ParametroIncorrecto {
+        this.inmuebleService.removeImages(id, inmuebleRemoveImagesDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/{id}")
@@ -88,5 +104,19 @@ public final class InmuebleControllerREST {
                     return ResponseEntity.ok(imagePaths);
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<Page<InmuebleResponseDTO>> getAllPropertiesByIdOwner(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Page<Inmueble> allPropertiesByOwner = this.inmuebleService.getAllByOwnerId(id, PageRequest.of(page, 10));
+
+        if (allPropertiesByOwner.isEmpty()) return ResponseEntity.status(404).body(null);
+
+        Page<InmuebleResponseDTO> inmuebles = allPropertiesByOwner.map(InmuebleResponseDTO::desdeModelo);
+
+        return ResponseEntity.ok(inmuebles);
     }
 }
