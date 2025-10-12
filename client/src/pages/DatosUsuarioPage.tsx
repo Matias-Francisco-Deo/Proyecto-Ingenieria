@@ -12,7 +12,7 @@ interface Usuario {
 }
 
 export default function DatosUsuarioPage() {
-  const { getId } = useUser();
+  const { getId, setUsername } = useUser();
   const userId = getId();
   const { toastError } = useToast();
 
@@ -21,13 +21,20 @@ export default function DatosUsuarioPage() {
   const [loading, setLoading] = useState(true);
   const [serverError, setServerError] = useState(false);
 
+
   useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
 
     const fetchUsuario = async () => {
       try {
+        console.log("Fetching usuario for id:", userId);
         const res = await fetch(`http://localhost:8081/auth/datos-usuario/${userId}`);
-        if (!res.ok) throw new Error("Error al recuperar usuario");
+        if (!res.ok) throw new Error("Hubo un error inesperado.");
         const data = await res.json();
 
         if (!cancelled) {
@@ -38,10 +45,10 @@ export default function DatosUsuarioPage() {
           });
           setServerError(false);
         }
-      } catch (err) {
+      } catch (err: any) {
         if (!cancelled) {
           setServerError(true);
-          toastError("Hubo un error inesperado."); 
+          toastError(err.message || "Hubo un error inesperado.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -53,7 +60,49 @@ export default function DatosUsuarioPage() {
     return () => {
       cancelled = true;
     };
-  }, [userId, toastError]);
+  }, [userId]);
+
+  const actualizarCampo = async (campo: "nombre" | "email", valor: string) => {
+    try {
+      const endpointMap = {
+        nombre: "modifyUserName",
+        email: "modifyUserEmail",
+      };
+
+      const res = await fetch(
+        `http://localhost:8081/auth/${endpointMap[campo]}/${userId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ valor }),
+        }
+      );
+
+      if (!res.ok) {
+        if (res.status === 400) {
+          const data = await res.json();
+          throw new Error(data.error || "Error de validación");
+        } else {
+          throw new Error("Hubo un error inesperado.");
+        }
+      }
+
+      setUsuario((prev) =>
+        prev
+          ? {
+              ...prev,
+              [campo]: valor,
+            }
+          : prev
+      );
+
+      if (campo === "nombre") {
+        setUsername(valor);
+      }
+    } catch (err: any) {
+      throw err;
+    }
+  };
 
   if (loading) {
     return (
@@ -63,7 +112,7 @@ export default function DatosUsuarioPage() {
     );
   }
 
-  if (serverError) {
+  if (serverError || !usuario) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <span className="text-red-500 text-xl font-semibold">
@@ -83,20 +132,23 @@ export default function DatosUsuarioPage() {
 
           <CampoEditableUser
             label="Usuario"
-            valor={usuario!.nombre}
-            onEdit={() => console.log("Editar usuario")}
+            valor={usuario.nombre}
+            tipo="nombre"
+            onUpdate={(nuevoValor) => actualizarCampo("nombre", nuevoValor)}
           />
 
           <CampoEditableUser
             label="Email"
-            valor={usuario!.email}
-            onEdit={() => console.log("Editar email")}
+            valor={usuario.email}
+            tipo="email"
+            onUpdate={(nuevoValor) => actualizarCampo("email", nuevoValor)}
           />
 
           <CampoPassword
-            password={usuario!.password}
+            password={usuario.password}
             mostrarPassword={mostrarPassword}
             setMostrarPassword={setMostrarPassword}
+            userId={userId}
           />
 
           <div className="text-center">

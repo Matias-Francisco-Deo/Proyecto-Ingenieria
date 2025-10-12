@@ -20,13 +20,13 @@ public class Usuario {
     private Long id;
 
     @Column(nullable = false)
-    private final String password;
+    private String password;
 
     @Column(nullable = false, length = 100)
-    private final String name;
+    private String name;
 
     @Column(nullable = false)
-    private final String email;
+    private String email;
 
     public Usuario(String name, String password, String email) {
         this.name = name;

@@ -1,6 +1,8 @@
 package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Usuario.CredentialsDTO;
+import com.reservo.controller.exception.ParametroIncorrecto;
+import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.AuthInfo;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
@@ -9,6 +11,8 @@ import com.reservo.persistencia.DAO.user.UsuarioDAO;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +47,14 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioDAO.findAll();
     }
 
-    @Override
+    @Override//configurado para reemplazar sin condiciones en los datos que no son id
     public void update(Usuario usuario) {
+        if (usuario.getId() == null) throw new IllegalArgumentException("El usuario debe tener un ID para poder actualizarse.");
 
+        if (usuarioDAO.findById(usuario.getId()).isEmpty())
+            throw new EntityNotFoundException("Usuario no encontrado");
+
+        usuarioDAO.save(usuario);
     }
 
     @Override
@@ -66,9 +75,19 @@ public class UsuarioServiceImpl implements UsuarioService {
         return (new CredentialsDTO(user.getId(),authInfo.getId(), username));
     }
 
+    @Override
+    public void emailRepetido(String email, Long idActual) throws EmailRepetido{
+
+        if (usuarioDAO.existeEmail(email, idActual)) {
+            throw new EmailRepetido("El email ya está registrado por otro usuario.");
+        }
+
+    }
+
     private void removePreviousKey(Usuario user) {
         Optional<AuthInfo> infoDeUsuario = authInfoDAO.getInfoDeUsuario(user.getId());
         infoDeUsuario.ifPresent(authInfoDAO::delete);
         authInfoDAO.flush(); // ESTE FLUSH es importante, sino sigue en la misma transacción y quiere borrar LUEGO de haber puesto la nueva entrada. Lo cual rompe todo.
     }
+
 }
