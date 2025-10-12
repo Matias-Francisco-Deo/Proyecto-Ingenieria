@@ -37,4 +37,4 @@ COPY --from=build /app/target/reservo-0.0.1.jar app.jar
 EXPOSE 8080
 
 # Ejecutar la aplicación
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "--enable-preview", "-jar", "app.jar"]
