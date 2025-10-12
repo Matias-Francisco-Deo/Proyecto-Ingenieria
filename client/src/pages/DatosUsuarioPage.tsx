@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUser } from "../hooks/useUser";
 import { useToast } from "../hooks/useToast";
 import CampoEditableUser from "../components/userDatos/CampoEditableUser";
@@ -21,13 +21,18 @@ export default function DatosUsuarioPage() {
   const [loading, setLoading] = useState(true);
   const [serverError, setServerError] = useState(false);
 
+  const mountedRef = useRef(false);
+
   useEffect(() => {
+    if (mountedRef.current) return; 
+    mountedRef.current = true;
+
     let cancelled = false;
 
     const fetchUsuario = async () => {
       try {
         const res = await fetch(`http://localhost:8081/auth/datos-usuario/${userId}`);
-        if (!res.ok) throw new Error("Error al recuperar usuario");
+        if (!res.ok) throw new Error("Hubo un error inesperado.");
         const data = await res.json();
 
         if (!cancelled) {
@@ -38,7 +43,7 @@ export default function DatosUsuarioPage() {
           });
           setServerError(false);
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
           setServerError(true);
           toastError("Hubo un error inesperado.");
@@ -53,7 +58,49 @@ export default function DatosUsuarioPage() {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, toastError]);
+
+  const actualizarCampo = async (campo: "nombre" | "email", valor: string) => {
+    try {
+      const endpointMap = {
+        nombre: "modifyUserName",
+        email: "modifyUserEmail",
+      };
+
+      const res = await fetch(
+        `http://localhost:8081/auth/${endpointMap[campo]}/${userId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ valor }),
+        }
+      );
+
+      if (!res.ok) {
+        if (res.status === 400) {
+          const data = await res.json();
+          throw new Error(data.error || "Error de validación");
+        } else {
+          throw new Error("Hubo un error inesperado.");
+        }
+      }
+
+      setUsuario((prev) =>
+        prev
+          ? {
+              ...prev,
+              [campo]: valor,
+            }
+          : prev
+      );
+
+      if (campo === "nombre") {
+        setUsername(valor);
+      }
+    } catch (err: any) {
+      throw err;
+    }
+  };
 
   if (loading) {
     return (
@@ -72,40 +119,6 @@ export default function DatosUsuarioPage() {
       </div>
     );
   }
-
-  const actualizarCampo = async (campo: "nombre" | "email", valor: string) => {
-    try {
-      const endpointMap = {
-        nombre: "modifyUserName",
-        email: "modifyUserEmail",
-      };
-
-      const res = await fetch(
-        `http://localhost:8081/auth/${endpointMap[campo]}/${userId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ valor }),
-        }
-      );
-
-      if (!res.ok) throw new Error(`No se pudo actualizar ${campo}`);
-
-      setUsuario((prev) =>
-        prev
-          ? {
-              ...prev,
-              [campo]: valor,
-            }
-          : prev
-      );
-      if (campo === "nombre") {
-      setUsername(valor);
-    }
-    } catch (err: any) {
-      toastError(err.message || `Error al actualizar ${campo}`);
-    }
-  };
 
   return (
     <div className="flex justify-center pt-24 px-4 min-h-screen">

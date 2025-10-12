@@ -75,9 +75,19 @@ public class UsuarioServiceImpl implements UsuarioService {
         return (new CredentialsDTO(user.getId(),authInfo.getId(), username));
     }
 
+    @Override
+    public void emailRepetido(String email, Long idActual) throws EmailRepetido{
+
+        if (usuarioDAO.existeEmail(email, idActual)) {
+            throw new EmailRepetido("El email ya está registrado por otro usuario.");
+        }
+
+    }
+
     private void removePreviousKey(Usuario user) {
         Optional<AuthInfo> infoDeUsuario = authInfoDAO.getInfoDeUsuario(user.getId());
         infoDeUsuario.ifPresent(authInfoDAO::delete);
         authInfoDAO.flush(); // ESTE FLUSH es importante, sino sigue en la misma transacción y quiere borrar LUEGO de haber puesto la nueva entrada. Lo cual rompe todo.
     }
+
 }

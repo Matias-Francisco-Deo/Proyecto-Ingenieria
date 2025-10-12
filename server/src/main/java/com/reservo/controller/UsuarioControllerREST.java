@@ -74,11 +74,14 @@ public final class UsuarioControllerREST {
 
     @PutMapping("/modifyUserEmail/{id}")
     public ResponseEntity<DTOResponseError> modifyUserEmail(@PathVariable Long id,
-                                                            @RequestBody CampoActualizadoDTO valorDTO) {
+                                                            @RequestBody CampoActualizadoDTO valorDTO) throws EmailRepetido {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
         if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
 
         Usuario usuario = optUsuario.get();
+
+        usuarioService.emailRepetido(valorDTO.valor(), usuario.getId());
+
         //agregar cualquier validacion extra para contraseña
 
         usuario.setEmail(valorDTO.valor());
