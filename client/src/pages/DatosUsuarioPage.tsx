@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "../hooks/useUser";
 import { useToast } from "../hooks/useToast";
 import CampoEditableUser from "../components/userDatos/CampoEditableUser";
@@ -21,15 +21,15 @@ export default function DatosUsuarioPage() {
   const [loading, setLoading] = useState(true);
   const [serverError, setServerError] = useState(false);
 
-  const mountedRef = useRef(false);
-
   useEffect(() => {
-    if (mountedRef.current) return; 
-    mountedRef.current = true;
-
     let cancelled = false;
 
     const fetchUsuario = async () => {
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await fetch(`http://localhost:8081/auth/datos-usuario/${userId}`);
         if (!res.ok) throw new Error("Hubo un error inesperado.");
@@ -110,7 +110,7 @@ export default function DatosUsuarioPage() {
     );
   }
 
-  if (serverError) {
+  if (serverError || !usuario) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <span className="text-red-500 text-xl font-semibold">
@@ -130,20 +130,20 @@ export default function DatosUsuarioPage() {
 
           <CampoEditableUser
             label="Usuario"
-            valor={usuario!.nombre}
+            valor={usuario.nombre}
             tipo="nombre"
             onUpdate={(nuevoValor) => actualizarCampo("nombre", nuevoValor)}
           />
 
           <CampoEditableUser
             label="Email"
-            valor={usuario!.email}
+            valor={usuario.email}
             tipo="email"
             onUpdate={(nuevoValor) => actualizarCampo("email", nuevoValor)}
           />
 
           <CampoPassword
-            password={usuario!.password}
+            password={usuario.password}
             mostrarPassword={mostrarPassword}
             setMostrarPassword={setMostrarPassword}
             userId={userId}
