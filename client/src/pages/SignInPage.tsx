@@ -1,5 +1,6 @@
 import { useAuth } from "../hooks/useAuth";
 import { useState, type FormEvent } from "react";
+import { useToast } from "@/hooks/useToast";
 
 type SignInResponse = {
     error?: string;
@@ -8,6 +9,7 @@ type SignInResponse = {
 
 export default function SignInPage() {
     const { login, signIn } = useAuth();
+    const { toastError } = useToast();
 
     const [emailErrorMessage, setEmailErrorMessage] = useState<string>("");
     const [hasEmailError, setHasEmailError] = useState<boolean>(false);
@@ -43,6 +45,7 @@ export default function SignInPage() {
         setHasEmailError(emailIsBlank);
 
         if (usernameIsBlank || passwordIsBlank || emailIsBlank) {
+            toastError("Complete los campos faltantes.");
             setGeneralErrorMessage("Complete los campos faltantes.");
             resetBlankError();
             return;
@@ -55,6 +58,7 @@ export default function SignInPage() {
             setEmailErrorMessage(
                 "El mail debe ser del formato example@email.com"
             );
+            toastError("Formato de email inválido.");
             resetEmailError();
             return;
         }
@@ -67,15 +71,18 @@ export default function SignInPage() {
             );
 
             if (response.error) {
+                toastError(response.error);
                 setHasEmailError(true);
                 setEmailErrorMessage(response.error);
                 resetEmailError();
                 return;
             }
 
+            // Login automático después del registro
             await login(email, password);
         } catch (error) {
             console.error(error);
+            toastError("Hubo un error inesperado.");
             setGeneralErrorMessage("Hubo un error inesperado.");
             resetBlankError();
         }

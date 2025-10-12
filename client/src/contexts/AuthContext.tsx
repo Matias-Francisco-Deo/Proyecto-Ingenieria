@@ -92,11 +92,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 body: JSON.stringify({ name, password, email }),
             });
 
-            // Intentamos convertir la respuesta a JSON, incluso si el status es 400/500
             const data: SignInResponse = await resp.json();
 
             if (!resp.ok) {
-                // Si hay error HTTP, devolvemos el error del backend o un mensaje genérico
                 return { error: data.error || "Error al registrarse" };
             }
 
