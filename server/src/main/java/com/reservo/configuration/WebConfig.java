@@ -7,29 +7,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/public/**")
-                .allowedOrigins("http://localhost:5173")
-                .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-        registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:5173")
-                .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-        registry.addMapping("/auth/**")
-                .allowedOrigins("http://localhost:5173")
-                .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+        String frontendLocal = "http://localhost:5173";
+        String frontendVercel = "https://proyecto-ingenieria-git-main-matias-deos-projects.vercel.app";
+
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins(frontendLocal, frontendVercel)
                 .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Mapea /uploads/** a la carpeta local uploads/
