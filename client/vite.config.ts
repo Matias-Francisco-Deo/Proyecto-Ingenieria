@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
 
     return {
         plugins: [react(), tailwindcss()],
+        base: "/", // Ensures assets are referenced correctly
         server: {
             proxy: {
                 "/api": {
@@ -20,6 +21,10 @@ export default defineConfig(({ mode }) => {
             alias: {
                 "@": path.resolve(__dirname, "src"),
             },
+        },
+        build: {
+            outDir: "dist", // Ensures Vercel knows where to find the static output
+            emptyOutDir: true, // Cleans old files before build
         },
     };
 });

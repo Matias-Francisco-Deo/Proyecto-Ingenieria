@@ -74,7 +74,7 @@ export default function PeticionForm() {
                 const dateStr = `${yyyy}-${mm}-${dd}`;
 
                 const res = await fetch(
-                    `http://localhost:8081/peticion/vigentes/${inmueble.id}/${dateStr}`
+                    `${apiUrl}/peticion/vigentes/${inmueble.id}/${dateStr}`
                 );
                 if (!res.ok)
                     throw new Error("Error al traer horarios ocupados.");
@@ -159,7 +159,7 @@ export default function PeticionForm() {
                 precioTotal,
             };
 
-            const res = await fetch("http://localhost:8081/peticion/enviar", {
+            const res = await fetch(`${apiUrl}/peticion/enviar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

@@ -25,16 +25,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { toastError } = useToast();
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    const login = async (email: string, password: string) => {
+    const login = async (
+        email: string,
+        password: string
+    ): Promise<UserInfo> => {
         const userInfo = await getUserInfo(email, password);
-        if (!userInfo) return;
-        if (userInfo.error) return userInfo;
+
+        if (!userInfo) {
+            toastError("Usuario no encontrado.");
+            throw new Error("Usuario no encontrado.");
+        }
+
+        if ("error" in userInfo && userInfo.error) {
+            toastError(userInfo.error);
+            throw new Error(userInfo.error);
+        }
 
         setKey(userInfo.key);
         setUsername(userInfo.username);
         setId(userInfo.id);
         setIsAuthenticated(true);
-
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
 
         location.href = "/home";
@@ -44,23 +54,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const getUserInfo = async (
         email: string,
         password: string
-    ): Promise<UserInfo | undefined> => {
+    ): Promise<UserInfo> => {
         try {
             const resp = await fetch(`${apiUrl}/auth/login/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
+                body: JSON.stringify({ email, password }),
             });
-            return resp.json();
+
+            if (!resp.ok) {
+                throw new Error("Credenciales incorrectas");
+            }
+
+            const data: UserInfo = await resp.json();
+            return data;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toastError("Hubo un error inesperado.");
-            Error("Hubo un error inesperado.");
+            throw new Error("Hubo un error inesperado.");
         }
     };
 
@@ -68,9 +81,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         username: string,
         password: string,
         email: string
-    ) => {
+    ): Promise<Response> => {
         try {
-            return await fetch(`${apiUrl}/auth`, {
+            const resp = await fetch(`${apiUrl}/auth`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -81,9 +94,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     email,
                 }),
             });
+
+            if (!resp.ok) {
+                throw new Error("Error al registrarse");
+            }
+
+            return resp;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toastError("Hubo un error inesperado.");
+            throw new Error("Hubo un error inesperado.");
         }
     };
 
