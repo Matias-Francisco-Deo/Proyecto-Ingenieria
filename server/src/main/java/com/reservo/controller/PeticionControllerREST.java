@@ -116,19 +116,34 @@ public class PeticionControllerREST {
 
     @GetMapping("/pendiente/{id}/images")
     public ResponseEntity<List<String>> getInmuebleImages(@PathVariable Long id) {
+        Optional<Peticion> optionalPeticion = peticionService.findById(id);
+        if (optionalPeticion.isEmpty()) {
+            System.out.println("No existe la peticion con id " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
 
-        Peticion pt = peticionService.findById(id).get();
+        Peticion pt = optionalPeticion.get();
+        System.out.println("Peticion encontrada: " + pt.getId());
+
+        if (pt.getInmueble() == null) {
+            System.out.println("La peticion no tiene inmueble asociado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
 
         return inmuebleService.findById(pt.getInmueble().getId())
                 .map(inmueble -> {
-                    List<String> imagePaths =
-                        inmueble.getImages()
-                        .stream()
-                        .map(filename -> "/uploads/" + filename)
-                        .toList();
+                    System.out.println("Inmueble encontrado: " + inmueble.getId());
+                    List<String> imagePaths = inmueble.getImages() == null
+                            ? List.of()
+                            : inmueble.getImages().stream()
+                            .map(filename -> "/uploads/" + filename)
+                            .toList();
                     return ResponseEntity.ok(imagePaths);
                 })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+                .orElseGet(() -> {
+                    System.out.println("Inmueble no encontrado en DB");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                });
     }
 
     @PatchMapping("/aprobar")
