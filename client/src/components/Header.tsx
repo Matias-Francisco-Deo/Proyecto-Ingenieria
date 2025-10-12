@@ -11,11 +11,10 @@ export function Header({ ...props }: HeaderProps) {
 
     const { getUsername } = useUser();
     const { isAuthenticated } = useAuth();
-    const [username, setUsername] = useState(getUsername());
+    const [, setUsername] = useState(getUsername());
 
     useEffect(() => {
-
-            const originalSetItem = localStorage.setItem;
+        const originalSetItem = localStorage.setItem;
 
         localStorage.setItem = function (key, value) {
             originalSetItem.apply(this, [key, value]);
@@ -35,8 +34,8 @@ export function Header({ ...props }: HeaderProps) {
             className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 bg-amber-600 text-white"
         >
             <div className="flex items-center gap-4">
-                <Link 
-                    to="/mis-datos" 
+                <Link
+                    to="/mis-datos"
                     className="font-medium no-underline hover:no-underline focus:no-underline"
                 >
                     {getUsername()}

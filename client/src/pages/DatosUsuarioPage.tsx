@@ -21,7 +21,6 @@ export default function DatosUsuarioPage() {
     const [loading, setLoading] = useState(true);
     const [serverError, setServerError] = useState(false);
 
-    // ✅ Base URL configurable (Vercel)
     const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
@@ -70,7 +69,6 @@ export default function DatosUsuarioPage() {
         };
     }, [userId, API_URL, toastError]);
 
-    // ✅ Sin try/catch innecesario
     const actualizarCampo = async (
         campo: "nombre" | "email",
         valor: string
