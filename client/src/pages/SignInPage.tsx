@@ -1,60 +1,56 @@
 import { useAuth } from "../hooks/useAuth";
-import type { SignInError as SignInError } from "@/types/types";
 import { useState, type FormEvent } from "react";
+
+type SignInResponse = {
+    error?: string;
+    message?: string;
+};
 
 export default function SignInPage() {
     const { login, signIn } = useAuth();
-    /*
-  Constante para usar directamente sobre el <p> definido arriba del input de email
-  */
-    const [emailErrorMessage, setEmailErrorMessage] = useState("");
 
-    /* Se usa para poner en rojo aquellos campos con errores */
-    const [hasEmailError, setHasEmailError] = useState(false);
-    const [hasUsernameError, setHasUsernameError] = useState(false);
-    const [hasPasswordError, setHasPasswordError] = useState(false);
-
-    /* Se usa para poner el mensaje de error abajo del último input */
-    const [generalErrorMessage, setGeneralErrorMessage] = useState("");
+    const [emailErrorMessage, setEmailErrorMessage] = useState<string>("");
+    const [hasEmailError, setHasEmailError] = useState<boolean>(false);
+    const [hasUsernameError, setHasUsernameError] = useState<boolean>(false);
+    const [hasPasswordError, setHasPasswordError] = useState<boolean>(false);
+    const [generalErrorMessage, setGeneralErrorMessage] = useState<string>("");
 
     async function handleLogin(
         event: FormEvent<HTMLFormElement>
     ): Promise<void> {
         event.preventDefault();
 
-        /*
-    Toma los datos de los input y los envía al backend a /auth
-    También si algo falla muestra el error (en este caso encima del campo de email)
-    */
-
         const form = event.target as HTMLFormElement;
-        const username = form.elements.namedItem(
+        const usernameInput = form.elements.namedItem(
             "username"
         ) as HTMLInputElement;
-        const password = form.elements.namedItem(
+        const passwordInput = form.elements.namedItem(
             "password"
         ) as HTMLInputElement;
-        const email = form.elements.namedItem("email") as HTMLInputElement;
+        const emailInput = form.elements.namedItem("email") as HTMLInputElement;
 
-        const passwordIsBlank = password.value == "";
-        const usernameIsBlank = username.value == "";
-        const emailIsBlank = email.value == "";
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        const email = emailInput.value.trim();
 
-        /* Pone en rojo a los campos que falten  */
-        checkHasNoBlanks();
+        // Validación de campos vacíos
+        const usernameIsBlank = username === "";
+        const passwordIsBlank = password === "";
+        const emailIsBlank = email === "";
 
-        /* Si faltan campos, tira error */
-        if (passwordIsBlank || usernameIsBlank || emailIsBlank) {
+        setHasUsernameError(usernameIsBlank);
+        setHasPasswordError(passwordIsBlank);
+        setHasEmailError(emailIsBlank);
+
+        if (usernameIsBlank || passwordIsBlank || emailIsBlank) {
             setGeneralErrorMessage("Complete los campos faltantes.");
             resetBlankError();
             return;
         }
 
-        /* Si el formato del mail es erróneo, tira error */
+        // Validación de formato de email
         const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-        const hasWrongEmailFormat = !emailRegex.test(email.value);
-
-        if (hasWrongEmailFormat) {
+        if (!emailRegex.test(email)) {
             setHasEmailError(true);
             setEmailErrorMessage(
                 "El mail debe ser del formato example@email.com"
@@ -63,43 +59,42 @@ export default function SignInPage() {
             return;
         }
 
-        const response = await signIn(
-            username.value,
-            password.value,
-            email.value
-        );
+        try {
+            const response: SignInResponse = await signIn(
+                username,
+                password,
+                email
+            );
 
-        /*
-    Manejo de error: Email se encuentra registrado
-    */
-
-        if (!response.ok) {
-            const { error } = (await response.json()) as SignInError;
-
-            console.error(error);
-
-            setEmailErrorMessage(error);
-            setHasEmailError(true);
-            resetEmailError();
-
-            return;
-        }
-
-        login(email.value, password.value);
-
-        function checkHasNoBlanks() {
-            if (passwordIsBlank) {
-                setHasPasswordError(true);
-            }
-
-            if (usernameIsBlank) {
-                setHasUsernameError(true);
-            }
-
-            if (emailIsBlank) {
+            if (response.error) {
                 setHasEmailError(true);
+                setEmailErrorMessage(response.error);
+                resetEmailError();
+                return;
             }
+
+            await login(email, password);
+        } catch (error) {
+            console.error(error);
+            setGeneralErrorMessage("Hubo un error inesperado.");
+            resetBlankError();
         }
+    }
+
+    function resetBlankError() {
+        setTimeout(() => {
+            setHasEmailError(false);
+            setHasPasswordError(false);
+            setHasUsernameError(false);
+            setGeneralErrorMessage("");
+        }, 3000);
+    }
+
+    function resetEmailError() {
+        setTimeout(() => {
+            setHasEmailError(false);
+            setEmailErrorMessage("");
+        }, 5000);
     }
 
     return (
@@ -110,6 +105,7 @@ export default function SignInPage() {
             noValidate
         >
             <p>¡Únase a nuestra comunidad!</p>
+
             <div>
                 <label
                     htmlFor="email"
@@ -127,11 +123,10 @@ export default function SignInPage() {
                         id="email"
                         name="email"
                         type="email"
-                        required
                         autoComplete="email"
-                        className={`${
+                        className={`loginInput block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6 ${
                             hasEmailError ? "inputError" : ""
-                        } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                        }`}
                     />
                 </div>
             </div>
@@ -147,35 +142,30 @@ export default function SignInPage() {
                     <input
                         id="username"
                         name="username"
-                        type="username"
-                        required
                         autoComplete="username"
-                        className={`${
+                        className={`loginInput block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6 ${
                             hasUsernameError ? "inputError" : ""
-                        } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                        }`}
                     />
                 </div>
             </div>
 
             <div>
-                <div className="flex items-center justify-between">
-                    <label
-                        htmlFor="password"
-                        className="block font-medium text-sm/6"
-                    >
-                        Contraseña
-                    </label>
-                </div>
+                <label
+                    htmlFor="password"
+                    className="block font-medium text-sm/6"
+                >
+                    Contraseña
+                </label>
                 <div className="mt-2">
                     <input
                         id="password"
                         name="password"
                         type="password"
-                        required
                         autoComplete="current-password"
-                        className={`${
+                        className={`loginInput block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6 ${
                             hasPasswordError ? "inputError" : ""
-                        } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
+                        }`}
                     />
                     {generalErrorMessage && (
                         <p className="mt-2 text-sm text-red-600">
@@ -195,20 +185,4 @@ export default function SignInPage() {
             </div>
         </form>
     );
-
-    function resetBlankError() {
-        setTimeout(() => {
-            setHasEmailError(false);
-            setHasPasswordError(false);
-            setHasUsernameError(false);
-            setGeneralErrorMessage("");
-        }, 3000);
-    }
-
-    function resetEmailError() {
-        setTimeout(() => {
-            setHasEmailError(false);
-            setEmailErrorMessage("");
-        }, 5000);
-    }
 }

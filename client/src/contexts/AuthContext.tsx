@@ -11,7 +11,12 @@ type AuthContextType = {
         name: string,
         password: string,
         email: string
-    ) => Promise<Response>;
+    ) => Promise<SignInResponse>;
+};
+
+type SignInResponse = {
+    error?: string;
+    message?: string;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -58,9 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const resp = await fetch(`${apiUrl}/auth/login/`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
 
@@ -81,29 +84,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         name: string,
         password: string,
         email: string
-    ): Promise<Response> => {
+    ): Promise<SignInResponse> => {
         try {
             const resp = await fetch(`${apiUrl}/auth`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: name,
-                    password,
-                    email,
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, password, email }),
             });
 
+            // Intentamos convertir la respuesta a JSON, incluso si el status es 400/500
+            const data: SignInResponse = await resp.json();
+
             if (!resp.ok) {
-                throw new Error("Error al registrarse");
+                // Si hay error HTTP, devolvemos el error del backend o un mensaje genérico
+                return { error: data.error || "Error al registrarse" };
             }
 
-            return resp;
+            return data;
         } catch (error) {
             console.error(error);
             toastError("Hubo un error inesperado.");
-            throw new Error("Hubo un error inesperado.");
+            return { error: "Hubo un error inesperado" };
         }
     };
 
