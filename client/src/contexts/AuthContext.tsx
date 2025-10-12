@@ -8,7 +8,7 @@ type AuthContextType = {
     login: (email: string, password: string) => Promise<UserInfo>;
     logout: () => void;
     signIn: (
-        username: string,
+        name: string,
         password: string,
         email: string
     ) => Promise<Response>;
@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const signIn = async (
-        username: string,
+        name: string,
         password: string,
         email: string
     ): Promise<Response> => {
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    name: username,
+                    name: name,
                     password,
                     email,
                 }),
@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setKey("");
         setUsername("");
         localStorage.removeItem("key");
-        localStorage.removeItem("username");
+        localStorage.removeItem("name");
         localStorage.removeItem("userId");
         localStorage.setItem("isAuthenticated", JSON.stringify(false));
         location.href = "/signin";

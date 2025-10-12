@@ -66,12 +66,12 @@ export interface Inmueble {
     description: string;
     ubication: string;
     price: number; // precio por hora
-    capacity: number
+    capacity: number;
     condition: string;
     start: string;
     end: string;
     cancellation: string;
-    ownerId: number;            // nuevo
+    ownerId: number; // nuevo
     ownerName: string;
     ownerEmail: string;
     availableDays: string[];
@@ -100,7 +100,7 @@ export interface ReservaDTO {
     horaFin: string;
     nameInmueble: string;
     dateEmision: string;
-    pagado:boolean;
+    pagado: boolean;
 }
 
 interface ReservaCanceladasDTO {
