@@ -50,4 +50,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+
+
 }

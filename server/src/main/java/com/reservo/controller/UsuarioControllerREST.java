@@ -1,12 +1,8 @@
 package com.reservo.controller;
 
-import com.reservo.controller.dto.Inmueble.InmuebleResponseDTO;
-import com.reservo.controller.dto.Usuario.CredentialsDTO;
-import com.reservo.controller.dto.Usuario.LoginRequestDTO;
-import com.reservo.controller.dto.Usuario.UsuarioRequestDTO;
-import com.reservo.controller.dto.Usuario.UsuarioResponseDTO;
+import com.reservo.controller.dto.Usuario.*;
+import com.reservo.controller.exception.DTOResponseError;
 import com.reservo.controller.exception.ParametroIncorrecto;
-import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
@@ -16,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,6 +54,57 @@ public final class UsuarioControllerREST {
         if(this.usuarioService.findById(id).isEmpty()) return ResponseEntity.status(404).body(null);
         Usuario usuario = this.usuarioService.findById(id).get();
         return ResponseEntity.ok(UsuarioResponseDTO.desdeModelo(usuario));
+    }
+
+    @PutMapping("/modifyUserName/{id}")
+    public ResponseEntity<DTOResponseError> modifyUserName(@PathVariable Long id,
+                                                           @RequestBody CampoActualizadoDTO valorDTO) {
+        Optional<Usuario> optUsuario = usuarioService.findById(id);
+        if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
+
+        Usuario usuario = optUsuario.get();
+        //agregar cualquier validacion extra para contraseña
+
+        usuario.setName(valorDTO.valor());
+
+        usuarioService.update(usuario);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/modifyUserEmail/{id}")
+    public ResponseEntity<DTOResponseError> modifyUserEmail(@PathVariable Long id,
+                                                            @RequestBody CampoActualizadoDTO valorDTO) throws EmailRepetido {
+        Optional<Usuario> optUsuario = usuarioService.findById(id);
+        if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
+
+        Usuario usuario = optUsuario.get();
+
+        usuarioService.emailRepetido(valorDTO.valor(), usuario.getId());
+
+        //agregar cualquier validacion extra para contraseña
+
+        usuario.setEmail(valorDTO.valor());
+
+        usuarioService.update(usuario);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/modifyUserPassword/{id}")
+    public ResponseEntity<DTOResponseError> modifyUserPassword(@PathVariable Long id,
+                                                               @RequestBody CampoActualizadoDTO valorDTO) {
+        Optional<Usuario> optUsuario = usuarioService.findById(id);
+        if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
+
+        Usuario usuario = optUsuario.get();
+        //agregar cualquier validacion extra para contraseña
+
+        usuario.setPassword(valorDTO.valor());
+
+        usuarioService.update(usuario);
+
+        return ResponseEntity.ok().build();
     }
 
 }

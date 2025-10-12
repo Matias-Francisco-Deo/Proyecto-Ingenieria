@@ -16,4 +16,5 @@ public interface UsuarioService {
     void update(Usuario usuario);
     void delete(Usuario usuario);
     CredentialsDTO login(Credentials credentials) throws CredencialesIncorrectas;
+    void emailRepetido(String email, Long idActual) throws EmailRepetido;
 }
