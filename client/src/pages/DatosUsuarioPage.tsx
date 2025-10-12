@@ -21,16 +21,18 @@ export default function DatosUsuarioPage() {
   const [loading, setLoading] = useState(true);
   const [serverError, setServerError] = useState(false);
 
+
   useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
 
     const fetchUsuario = async () => {
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
-
       try {
+        console.log("Fetching usuario for id:", userId);
         const res = await fetch(`http://localhost:8081/auth/datos-usuario/${userId}`);
         if (!res.ok) throw new Error("Hubo un error inesperado.");
         const data = await res.json();
@@ -43,10 +45,10 @@ export default function DatosUsuarioPage() {
           });
           setServerError(false);
         }
-      } catch {
+      } catch (err: any) {
         if (!cancelled) {
           setServerError(true);
-          toastError("Hubo un error inesperado.");
+          toastError(err.message || "Hubo un error inesperado.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -58,7 +60,7 @@ export default function DatosUsuarioPage() {
     return () => {
       cancelled = true;
     };
-  }, [userId, toastError]);
+  }, [userId]);
 
   const actualizarCampo = async (campo: "nombre" | "email", valor: string) => {
     try {
