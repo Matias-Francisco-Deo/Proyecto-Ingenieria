@@ -8,10 +8,15 @@ type AuthContextType = {
     login: (email: string, password: string) => Promise<UserInfo>;
     logout: () => void;
     signIn: (
-        username: string,
+        name: string,
         password: string,
         email: string
-    ) => Promise<Response>;
+    ) => Promise<SignInResponse>;
+};
+
+type SignInResponse = {
+    error?: string;
+    message?: string;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -58,9 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const resp = await fetch(`${apiUrl}/auth/login/`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
 
@@ -78,32 +81,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const signIn = async (
-        username: string,
+        name: string,
         password: string,
         email: string
-    ): Promise<Response> => {
+    ): Promise<SignInResponse> => {
         try {
             const resp = await fetch(`${apiUrl}/auth`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: username,
-                    password,
-                    email,
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, password, email }),
             });
 
+            const data: SignInResponse = await resp.json();
+
             if (!resp.ok) {
-                throw new Error("Error al registrarse");
+                return { error: data.error || "Error al registrarse" };
             }
 
-            return resp;
+            return data;
         } catch (error) {
             console.error(error);
             toastError("Hubo un error inesperado.");
-            throw new Error("Hubo un error inesperado.");
+            return { error: "Hubo un error inesperado" };
         }
     };
 
@@ -112,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setKey("");
         setUsername("");
         localStorage.removeItem("key");
-        localStorage.removeItem("username");
+        localStorage.removeItem("name");
         localStorage.removeItem("userId");
         localStorage.setItem("isAuthenticated", JSON.stringify(false));
         location.href = "/signin";
