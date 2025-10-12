@@ -100,12 +100,15 @@ export default function CampoPassword({
 
             <button
               type="button"
-              onClick={() => setMostrarPassword(prev => !prev)}
+              onClick={() => setMostrarPassword((prev) => !prev)}
               className="text-gray-400 hover:text-white transition cursor-pointer"
               title={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5S14.76 17 12 17zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5S14.76 17 12 17zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                {mostrarPassword && (
+                  <line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" strokeWidth="2" />
+                )}
               </svg>
             </button>
 
@@ -130,10 +133,22 @@ export default function CampoPassword({
             </button>
           </div>
         ) : (
-          <>
-            <span>
-              {mostrarPassword ? displayPassword : "•".repeat(displayPassword.length)}
-            </span>
+          <div className="flex items-center gap-2">
+            <span>{mostrarPassword ? displayPassword : "•".repeat(displayPassword.length)}</span>
+
+            <button
+              type="button"
+              onClick={() => setMostrarPassword((prev) => !prev)}
+              className="text-gray-400 hover:text-white transition cursor-pointer ml-2"
+              title={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5S14.76 17 12 17zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                {mostrarPassword && (
+                  <line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" strokeWidth="2" />
+                )}
+              </svg>
+            </button>
 
             <button
               type="button"
@@ -142,10 +157,10 @@ export default function CampoPassword({
               title="Editar contraseña"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M4 14v-2h7v2zm0-4V8h11v2zm0-4V4h11v2zm9 14v-3.075l5.525-5.5q.225-.225.5-.325t.55-.1q.3 0 .575.113t.5.337l.925.925q.2.225.313.5t.112.55t-.1.563t-.325.512l-5.5 5.5z" />
+                <path d="M4 14v-2h7v2zm0-4V8h11v2zm0-4V4h11v2zm9 14v-3.075l5.525-5.5q.225-.225.5-.325t.55-.1q.3 0 .575.113t.5.337l.925.925q.2.225.313.5t.112.55t-.1.563t-.325.512l-5.5 5.5z"/>
               </svg>
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
