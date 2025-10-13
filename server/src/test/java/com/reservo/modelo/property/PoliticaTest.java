@@ -1,5 +1,6 @@
 package com.reservo.modelo.property;
 
+import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
 import com.reservo.modelo.politicasDeCancelacion.Severo;
 import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;

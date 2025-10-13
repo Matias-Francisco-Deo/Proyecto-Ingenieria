@@ -1,6 +1,7 @@
 package com.reservo.testUtils;
 
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.*;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.politicasDeCancelacion.Severo;
