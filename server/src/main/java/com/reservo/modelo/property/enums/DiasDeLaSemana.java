@@ -1,4 +1,4 @@
-package com.reservo.modelo.property;
+package com.reservo.modelo.property.enums;
 
 import lombok.Getter;
 

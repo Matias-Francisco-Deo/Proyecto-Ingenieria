@@ -2,15 +2,15 @@ package com.reservo.testUtils;
 
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.property.*;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.politicasDeCancelacion.Severo;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.EmailRepetido;
-import com.reservo.service.impl.InmuebleServiceImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

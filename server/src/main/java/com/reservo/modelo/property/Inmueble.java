@@ -1,10 +1,11 @@
 package com.reservo.modelo.property;
 
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
 import com.reservo.modelo.user.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Inmueble {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "politicaId")
-    private  PoliticaDeCancelacion cancellation;
+    private PoliticaDeCancelacion cancellation;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> images = new ArrayList<>();

@@ -1,7 +1,5 @@
-package com.reservo.modelo.property;
+package com.reservo.modelo.politicasDeCancelacion;
 
-import com.reservo.modelo.reserva.Peticion;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
@@ -15,6 +13,11 @@ public class SinDevolucion extends PoliticaDeCancelacion {
     @Override
     public double calcularDeuda(double monto,Long diasAnticipacion){
         return monto;
+    }
+
+    @Override
+    public String getTipo() {
+        return "Sin Devolución";
     }
 
 }

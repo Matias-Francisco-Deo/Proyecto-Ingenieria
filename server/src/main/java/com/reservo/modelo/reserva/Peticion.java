@@ -1,10 +1,9 @@
 package com.reservo.modelo.reserva;
 
-import com.reservo.modelo.property.PoliticaDeCancelacion;
+import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
 import com.reservo.modelo.reserva.estadosReservas.EstadoDePeticion;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;

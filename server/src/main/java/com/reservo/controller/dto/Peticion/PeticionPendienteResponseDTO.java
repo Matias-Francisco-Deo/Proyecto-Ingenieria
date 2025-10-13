@@ -1,7 +1,7 @@
 package com.reservo.controller.dto.Peticion;
 
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticaDeCancelacion;
+import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
 import com.reservo.modelo.reserva.Peticion;
 
 

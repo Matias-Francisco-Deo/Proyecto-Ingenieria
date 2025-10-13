@@ -1,8 +1,8 @@
 package com.reservo.controller.dto.Inmueble;
 
-import com.reservo.modelo.property.DiasDeLaSemana;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticaDeCancelacion;
+import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
 
 import java.util.List;
 

@@ -1,12 +1,12 @@
 package com.reservo.persitencia.dao;
 
-import com.reservo.modelo.property.DiasDeLaSemana;
-import com.reservo.modelo.property.SinDevolucion;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.enums.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.persistencia.DAO.InmuebleDAO;
 import com.reservo.persistencia.DAO.PeticionDAO;
@@ -17,8 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;

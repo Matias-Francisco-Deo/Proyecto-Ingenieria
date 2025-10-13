@@ -1,4 +1,4 @@
-package com.reservo.modelo.property;
+package com.reservo.modelo.politicasDeCancelacion;
 
 import com.reservo.modelo.reserva.Peticion;
 import jakarta.persistence.*;
@@ -27,4 +27,5 @@ public abstract class PoliticaDeCancelacion {
 
     public abstract double calcularReintegro(double monto,Long diasAnticipacion);
     public abstract double calcularDeuda(double monto,Long diasAnticipacion);
+    public abstract String getTipo();
 }

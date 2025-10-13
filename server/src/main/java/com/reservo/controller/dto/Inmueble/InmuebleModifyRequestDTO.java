@@ -2,10 +2,12 @@ package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.*;
-import com.reservo.modelo.user.Usuario;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
+import com.reservo.modelo.politicasDeCancelacion.Severo;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public record InmuebleModifyRequestDTO(
