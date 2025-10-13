@@ -1,4 +1,4 @@
-package com.reservo.modelo.property;
+package com.reservo.modelo.property.enums;
 
 public enum PoliticasDeCancelacion {
     SIN_RETRIBUCION,

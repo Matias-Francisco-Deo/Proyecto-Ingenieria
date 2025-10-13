@@ -2,10 +2,10 @@ package com.reservo.service.impl;
 
 import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
-import com.reservo.modelo.property.DiasDeLaSemana;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
-import com.reservo.modelo.property.SinDevolucion;
+import com.reservo.modelo.property.enums.PoliticasDeCancelacion;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.EmailService;

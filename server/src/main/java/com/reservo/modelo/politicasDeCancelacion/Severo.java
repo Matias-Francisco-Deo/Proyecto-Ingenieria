@@ -1,6 +1,5 @@
-package com.reservo.modelo.property;
+package com.reservo.modelo.politicasDeCancelacion;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
@@ -26,6 +25,11 @@ public class Severo extends PoliticaDeCancelacion {
         } else {
             return monto;
         }
+    }
+
+    @Override
+    public String getTipo() {
+        return "Severo";
     }
 
 }
