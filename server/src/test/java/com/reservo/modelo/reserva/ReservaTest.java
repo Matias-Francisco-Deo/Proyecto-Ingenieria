@@ -1,9 +1,8 @@
 package com.reservo.modelo.reserva;
 
-import com.reservo.modelo.property.SinDevolucion;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.user.Usuario;
 import org.junit.jupiter.api.BeforeEach;

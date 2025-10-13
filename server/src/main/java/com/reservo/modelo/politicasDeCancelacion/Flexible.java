@@ -1,4 +1,4 @@
-package com.reservo.modelo.property;
+package com.reservo.modelo.politicasDeCancelacion;
 
 import jakarta.persistence.Entity;
 
@@ -21,6 +21,11 @@ public class Flexible extends PoliticaDeCancelacion {
         } else {
             return monto * 0.3;
         }
+    }
+
+    @Override
+    public String getTipo() {
+        return "Flexible";
     }
 
 }

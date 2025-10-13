@@ -1,14 +1,14 @@
 package com.reservo.service.impl;
 
-import com.reservo.modelo.property.DiasDeLaSemana;
-import com.reservo.modelo.property.SinDevolucion;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.PoliticasDeCancelacion;
+import com.reservo.modelo.property.enums.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.InmuebleService;

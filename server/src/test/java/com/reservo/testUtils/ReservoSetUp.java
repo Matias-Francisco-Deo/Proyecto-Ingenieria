@@ -1,16 +1,17 @@
 package com.reservo.testUtils;
 
 import com.reservo.controller.dto.Peticion.RechazoDTO;
+import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.*;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.politicasDeCancelacion.Severo;
+import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.EmailRepetido;
-import com.reservo.service.impl.InmuebleServiceImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class ReservoSetUp {
     Usuario jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
     Usuario juanito = new Usuario("juanito", "bb22", "juanito@yahoo.com.ar");
     Usuario pepe = new Usuario("pepe", "cc33", "pepe@gmail.com");
+    Usuario dueño = new Usuario("Matias", "123", "reservoapptmmj@gmail.com");
+    Usuario cliente = new Usuario("Tomas", "123", "tm1453766@gmail.com");
     List<DiasDeLaSemana> availableDays = List.of(DiasDeLaSemana.LUNES, DiasDeLaSemana.MIERCOLES, DiasDeLaSemana.SABADO);
 
     Inmueble inmueble1 = new Inmueble(
@@ -88,9 +91,20 @@ public class ReservoSetUp {
     Inmueble inmueble15 = new Inmueble(
             "Boliche Buroro", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
             LocalTime.of(12, 30), LocalTime.of(14, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"), juanito, "pelegrini",123);
+    Inmueble inmuebleMatiasFlexible = new Inmueble(
+            "QuinchoFlexible", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
+            LocalTime.of(12, 30), LocalTime.of(23, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+Inmueble inmuebleMatiasSinDevolucion = new Inmueble(
+            "QuinchoSinDevolucion", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
+            LocalTime.of(12, 30), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+Inmueble inmuebleMatiasSevero = new Inmueble(
+            "QuinchoSevero", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
+            LocalTime.of(12, 30), LocalTime.of(23, 30),availableDays, new Severo(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+
+
 
     List<Inmueble> inmuebles = List.of(inmueble1, inmueble2, inmueble3, inmueble4, inmueble5, inmueble6, inmueble7, inmueble8, inmueble9,
-            inmueble10, inmueble11, inmueble12, inmueble13, inmueble14, inmueble15 );
+            inmueble10, inmueble11, inmueble12, inmueble13, inmueble14, inmueble15, inmuebleMatiasFlexible, inmuebleMatiasSinDevolucion, inmuebleMatiasSevero );
 
     @Autowired
     private InmuebleService inmuebleService;
@@ -104,6 +118,8 @@ public class ReservoSetUp {
         usuarioService.create(jorge);
         usuarioService.create(juanito);
         usuarioService.create(pepe);
+        usuarioService.create(dueño);
+        usuarioService.create(cliente);
 
         for (Inmueble inmueble : inmuebles) {
             inmuebleService.create(inmueble, List.of());
@@ -128,13 +144,21 @@ public class ReservoSetUp {
         Long ownerId5 = peticiones.get(5).getInmueble().getOwner().getId();
         peticionService.reject(new RechazoDTO(ownerId5, peticiones.get(5).getId(), "Se me complicó") );
 
+        Peticion peticionClienteADueño = getPeticionNueva(cliente, inmuebleMatiasFlexible, 2);
+        peticionService.create(peticionClienteADueño);
+
+        Peticion peticionClienteADueñoSevero = getPeticionNueva(cliente, inmuebleMatiasSevero, 3);
+        peticionService.create(peticionClienteADueñoSevero);
+        Peticion peticionClienteADueñoSinDevolucion = getPeticionNueva(cliente, inmuebleMatiasSinDevolucion, 3);
+        peticionService.create(peticionClienteADueñoSinDevolucion);
+
     }
 
     private Peticion getPeticionNueva(Usuario user, Inmueble inmueble, int masDias) {
         return new Peticion(user, inmueble, LocalDate.now().plusDays(1 + masDias), LocalTime.of(12, 30), LocalTime.of(13, 30), 100D);
     }
 
-//    @AfterEach
+    //@AfterEach
     //@Test
     //@Disabled("Ejecutar con cuidado, borra TODO")
     void teardown() {
