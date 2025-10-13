@@ -1,6 +1,7 @@
 package com.reservo.controller.dto.Inmueble;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
+import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.*;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.politicasDeCancelacion.PoliticaDeCancelacion;
