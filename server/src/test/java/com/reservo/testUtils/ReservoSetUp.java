@@ -59,7 +59,7 @@ public class ReservoSetUp {
             LocalTime.of(12, 30), LocalTime.of(14, 30), availableDays, new Flexible(), List.of("quincho-para-reuniones.jpg"),jorge, "lavalle",987);
 
     Inmueble inmueble6 = new Inmueble(
-            "Casa de té", "Es un lugar con mucho té", 200d,"Quilmes", 100, "No romper nada",
+            "Casa de té", "Es un lugar con mucho té", 200d,"Morón", 100, "No romper nada",
             LocalTime.of(12, 30), LocalTime.of(14, 30), availableDays, new Flexible(), List.of("café2.jpg"),juanito, "Balcarce",100);
     Inmueble inmueble7 = new Inmueble(
             "Pizzería Espacial", "Es alta pizzería, mucho espacio y alta calidad", 200d,"Berazategui", 100, "No romper nada",
@@ -69,7 +69,7 @@ public class ReservoSetUp {
             "Cafetería del mar", "Amo los caracoles, y acá puse todos los que tengo", 200d,"Varela", 100, "No romper nada",
             LocalTime.of(12, 30), LocalTime.of(14, 30), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "San Martín",100);
     Inmueble inmueble9 = new Inmueble(
-            "Montaña privada del este", "Perfecto para acampados", 200d,"Varela", 100, "No romper nada",
+            "Montaña privada del este", "Perfecto para acampados", 200d,"Moron", 100, "No romper nada",
             LocalTime.of(12, 30), LocalTime.of(14, 30), availableDays, new Flexible(), List.of("quincho-para-reuniones.jpg"),jorge, "Lavalle",100);
 
     Inmueble inmueble10 = new Inmueble(
@@ -159,8 +159,8 @@ Inmueble inmuebleMatiasSevero = new Inmueble(
     }
 
     //@AfterEach
-    //@Test
-    //@Disabled("Ejecutar con cuidado, borra TODO")
+    @Test
+    @Disabled("Ejecutar con cuidado, borra TODO")
     void teardown() {
         testService.eliminarPeticiones();
         testService.eliminarInmuebles();

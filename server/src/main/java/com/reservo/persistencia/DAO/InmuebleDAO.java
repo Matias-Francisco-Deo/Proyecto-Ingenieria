@@ -22,9 +22,22 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%') AND i.ubication = :unaLocalidad")
     Page<Inmueble> findByNameAndLocalidad(@Param("unName") String nombre,@Param("unaLocalidad") String localidad, Pageable pageable);
 
-    @Query("FROM Inmueble i " +
-            "WHERE LOWER(i.name) LIKE CONCAT(LOWER(:#{#f.nombre}), '%') " +
-            "AND LOWER(i.ubication) LIKE CONCAT(LOWER(:#{#f.localidad}), '%')")
+@Query(
+        value = "SELECT * FROM inmueble i " +
+                "WHERE unaccent(LOWER(i.name)) LIKE unaccent(CONCAT(LOWER(CAST(:#{#f.nombre} AS text)), '%')) " +
+                "AND (" +
+                ":#{#f.localidad} IS NULL OR " +
+                ":#{#f.localidad} = '' OR " +
+                "unaccent(LOWER(i.ubication)) = unaccent(LOWER(CAST(:#{#f.localidad} AS text)))" +
+                ")",
+        countQuery = "SELECT COUNT(*) FROM inmueble i " +
+                "WHERE unaccent(LOWER(i.name)) LIKE unaccent(CONCAT(LOWER(CAST(:#{#f.nombre} AS text)), '%')) " +
+                "AND (" +
+                ":#{#f.localidad} IS NULL OR " +
+                ":#{#f.localidad} = '' OR " +
+                "unaccent(LOWER(i.ubication)) = unaccent(LOWER(CAST(:#{#f.localidad} AS text)))" +
+                ")",  nativeQuery = true
+)
     Page<Inmueble> findByFiltro(@Param("f") Filtro filtro, Pageable pageable);
 
     @Query("FROM Inmueble i WHERE i.owner.id = :id")
