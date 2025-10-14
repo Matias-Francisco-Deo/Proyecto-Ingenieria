@@ -2,12 +2,10 @@ import ReservasPage from "@/pages/ReservasPage";
 import { MainLayout } from "../layouts/MainLayout";
 import { Suspense, lazy } from "react";
 import { Route, Switch } from "wouter";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 // Pages
 const HomePage = lazy(() => import("../pages/HomePage"));
-
-// const Page404 = lazy(() => import("../pages/Page404"));
-
 const AuthPage = lazy(() => import("../pages/AuthPage"));
 const PropertyPage = lazy(() => import("../pages/PropertyPage"));
 const Publicacion = lazy(() => import("../pages/Publicacion"));
@@ -18,88 +16,42 @@ const PublicacionesPage = lazy(() => import("../pages/ListaDePublicaciones"));
 const PetitionPage = lazy(() => import("../pages/PetitionPage"));
 const DatosUsuarioPage = lazy(() => import("../pages/DatosUsuarioPage"));
 
-const Page404 = () => <div>Page Not Found</div>;
+const Page404 = () => <div>Página no encontrada</div>;
 
 export function AppRoutes() {
-    return (
-        <MainLayout>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Switch>
-                    <Route
-                        path="/"
-                        component={HomePage}
-                    />
-                    <Route
-                        path="/home"
-                        component={HomePage}
-                    />
-                    <Route
-                        path="/signin"
-                        component={AuthPage}
-                    />
-                    <Route
-                        path="/alta-inmueble"
-                        component={PropertyPage}
-                    />
-                    <Route
-                        path="/publicacion"
-                        component={Publicacion}
-                    />
-                    <Route
-                        path="/hacer-reserva"
-                        component={PeticionForm}
-                    />
-                    <Route
-                        path="/peticion/pendiente"
-                        component={PetitionPage}
-                    />
-                    <Route
-                        path="/mis-peticiones/:estado"
-                        component={PetitionsPage}
-                    />
-                    <Route
-                        path="/mis-peticiones"
-                        component={PetitionsPage}
-                    />
-                    <Route
-                        path="/reservas/:estado"
-                        component={ReservasPage}
-                    />
-                    <Route
-                        path="/reservas"
-                        component={ReservasPage}
-                    />
-                    <Route
-                        path="/reserva/:estado"
-                        component={CancelarReservaPage}
-                    />
+  return (
+    <MainLayout>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          <Route path="/" component={HomePage} />
+          <Route path="/home" component={HomePage} />
+          <Route path="/signin" component={AuthPage} />
+          <ProtectedRoute path="/alta-inmueble" component={PropertyPage} />
+          <Route path="/publicacion" component={Publicacion} />
+          <ProtectedRoute path="/hacer-reserva" component={PeticionForm} />
+          <ProtectedRoute path="/peticion/pendiente" component={PetitionPage} />
+          <ProtectedRoute
+            path="/mis-peticiones/:estado"
+            component={PetitionsPage}
+          />
+          <ProtectedRoute path="/mis-peticiones" component={PetitionsPage} />
+          <ProtectedRoute path="/reservas/:estado" component={ReservasPage} />
+          <ProtectedRoute path="/reservas" component={ReservasPage} />
+          <ProtectedRoute
+            path="/reserva/:estado"
+            component={CancelarReservaPage}
+          />
 
-                    <Route
-                        path="/mis-publicaciones"
-                        component={PublicacionesPage}
-                    />
+          <ProtectedRoute
+            path="/mis-publicaciones"
+            component={PublicacionesPage}
+          />
 
-                    <Route
-                        path="/mis-datos"
-                        component={DatosUsuarioPage}
-                    />
+          <ProtectedRoute path="/mis-datos" component={DatosUsuarioPage} />
 
-                    {/* Rutas protegidas */}
-                    {/* <Route path="/home" component={HomePage} />
-
-          <Route path="/search/:query?" component={SearchPage} />
-          <Route path="/gif/:id" component={GifsDetails} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/user/:id" component={UserGifsPage} />
-
-          <ProtectedRoute path="/upload" component={UploadPage} /> */}
-
-                    {/* Ruta 404 */}
-                    {/* Ruta 404 */}
-
-                    <Route component={Page404} />
-                </Switch>
-            </Suspense>
-        </MainLayout>
-    );
+          <Route component={Page404} />
+        </Switch>
+      </Suspense>
+    </MainLayout>
+  );
 }
