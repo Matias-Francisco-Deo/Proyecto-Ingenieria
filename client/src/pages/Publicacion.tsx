@@ -220,7 +220,7 @@ export default function Publicacion() {
                   setSelectedFiles([]);
                   setPreviewImages([]);
                   setEditando(false);
-                //   location.href = `/publicacion?id=${inmueble.id}`;
+                  location.href = `/publicacion?id=${inmueble.id}`;
                 }}
               />
             </div>
