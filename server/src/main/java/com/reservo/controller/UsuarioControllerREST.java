@@ -107,5 +107,11 @@ public final class UsuarioControllerREST {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DTOResponseError> modifyUserPassword(@PathVariable Long id) {
+        usuarioService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
 }
 
