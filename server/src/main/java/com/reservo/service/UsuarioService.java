@@ -14,7 +14,7 @@ public interface UsuarioService {
     Optional<Usuario> findById(Long userId);
     List<Usuario> findAll();
     void update(Usuario usuario);
-    void delete(Usuario usuario);
+    void delete(Long userID);
     CredentialsDTO login(Credentials credentials) throws CredencialesIncorrectas;
     void emailRepetido(String email, Long idActual) throws EmailRepetido;
 }

@@ -6,6 +6,7 @@ import com.reservo.modelo.user.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -63,4 +64,12 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
 
     @Query("FROM Peticion p WHERE p.cliente.id= :userId AND TYPE(p.estado) = :estado ORDER BY p.fechaDelEvento asc")
     Page<Peticion> findAllReservasByEstado(@Param("userId") Long userId, Pageable page, @Param("estado") Class<?> estado);
+
+    @Modifying
+    @Query("DELETE FROM Peticion p WHERE p.cliente.id = :userId")
+    void deleteByClient(@Param("userId") Long userId);
+
+    @Modifying
+    @Query("DELETE FROM Peticion p WHERE p.inmueble.owner.id = :userId")
+    void deleteByOwner(@Param("userId") Long userId);
 }
