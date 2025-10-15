@@ -108,7 +108,7 @@ public final class UsuarioControllerREST {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DTOResponseError> modifyUserPassword(@PathVariable Long id) {
+    public ResponseEntity<DTOResponseError> deleteUser(@PathVariable Long id) {
         usuarioService.delete(id);
         return ResponseEntity.ok().build();
     }

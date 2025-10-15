@@ -68,9 +68,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (usuarioDAO.tieneReservasVigentes(userId)) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas en proceso.");
         if (usuarioDAO.tienePeticionesVigentes(userId)) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene peticiones de sus inmuebles, todavía en proceso.");
 
-        peticionDAO.deleteByClient(userId);
+        peticionDAO.deleteByClient(userId); // la cascada del papu >:V
         peticionDAO.deleteByOwner(userId);
         inmuebleDAO.deleteByOwner(userId);
+        authInfoDAO.deleteByUserId(userId);
         usuarioDAO.deleteById(userId);
     }
 
