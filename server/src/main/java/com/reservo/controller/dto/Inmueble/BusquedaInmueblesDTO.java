@@ -13,7 +13,7 @@ public record BusquedaInmueblesDTO(
         int page
 ) {
     public Filtro aModelo() throws ParametroIncorrecto {
-        boolean tieneRangoDePrecios = !this.rangoPrecios.isEmpty();
+        boolean tieneRangoDePrecios = this.rangoPrecios != null && !this.rangoPrecios.isEmpty();
         verificarRango(tieneRangoDePrecios);
         return new Filtro(
                 this.localidad,
