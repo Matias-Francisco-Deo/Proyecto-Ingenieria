@@ -19,7 +19,6 @@ public interface InmuebleService {
     Inmueble delete(Inmueble inmueble);
     Optional<Inmueble> findById(Long inmuebleId);
     List<Inmueble> findAll();
-    Page<Inmueble> findByName(String name, Pageable pageable);
 
     Page<Inmueble> findByFiltro(Filtro filtro);
     Page<Inmueble> getAllByOwnerId(Long id, Pageable pageable);

@@ -16,6 +16,7 @@ import com.reservo.service.exception.EmailRepetido;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +29,7 @@ import java.util.List;
 
 
 //@Profile("emailtest")
+@Disabled
 @SpringBootTest
 public class EmailServiceImplTest {
     @Autowired

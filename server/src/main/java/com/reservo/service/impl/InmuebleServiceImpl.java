@@ -5,7 +5,7 @@ import com.reservo.controller.dto.Inmueble.InmuebleRemoveImagesDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.persistencia.DAO.InmuebleDAO;
+import com.reservo.persistencia.DAO.inmueble.InmuebleDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
 import org.springframework.data.domain.Page;
@@ -60,13 +60,12 @@ public class InmuebleServiceImpl implements InmuebleService {
     }
 
     @Override
-    public Page<Inmueble> findByName(String name, Pageable pageable) {
-        return inmuebleDAO.findByNameContainingIgnoreCase(name, pageable);
-    }
-
-    @Override
     public Page<Inmueble> findByFiltro(Filtro filtro) {
-        return inmuebleDAO.findByFiltro(filtro, filtro.getPage());
+        return inmuebleDAO.findByFiltros(filtro.getNombre(),
+                filtro.getLocalidad(),
+                filtro.getPrecioMin(),
+                filtro.getPrecioMax(),
+                filtro.getPage());
     }
 
     @Override

@@ -82,7 +82,7 @@ public final class InmuebleControllerREST {
     @PostMapping("/buscar")
     public ResponseEntity<Page<InmuebleSummaryDTO>> buscarInmuebles(
             @RequestBody BusquedaInmueblesDTO filtros
-    ) {
+    ) throws ParametroIncorrecto {
         Page<Inmueble> findByNameAndLocalidad = this.inmuebleService.findByFiltro(filtros.aModelo());
 
         if (findByNameAndLocalidad.isEmpty()) {
