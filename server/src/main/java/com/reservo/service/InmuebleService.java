@@ -16,7 +16,7 @@ public interface InmuebleService {
     Inmueble create(Inmueble inmueble,List<MultipartFile> images);
     void update(Long inmuebleId, InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto;
     void addImages(Long inmuebleId, List<MultipartFile> images) throws ParametroIncorrecto;
-    Inmueble delete(Inmueble inmueble);
+    void delete(Long inmuebleId);
     Optional<Inmueble> findById(Long inmuebleId);
     List<Inmueble> findAll();
     Page<Inmueble> findByName(String name, Pageable pageable);

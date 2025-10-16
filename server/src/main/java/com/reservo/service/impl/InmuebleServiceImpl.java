@@ -6,8 +6,10 @@ import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.persistencia.DAO.InmuebleDAO;
+import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
+import com.reservo.service.exception.TienePeticionVigenteException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,9 +31,11 @@ import java.util.UUID;
 public class InmuebleServiceImpl implements InmuebleService {
 
     private final InmuebleDAO inmuebleDAO;
+    private final PeticionDAO peticionDAO;
 
-    public InmuebleServiceImpl(InmuebleDAO dao) {
+    public InmuebleServiceImpl(InmuebleDAO dao, PeticionDAO peticionDAO) {
         this.inmuebleDAO = dao;
+        this.peticionDAO = peticionDAO;
     }
 
     @Override
@@ -45,8 +49,14 @@ public class InmuebleServiceImpl implements InmuebleService {
     }
 
     @Override
-    public Inmueble delete(Inmueble inmueble) {
-        return null;
+    public void delete(Long inmuebleId) {
+        if (!inmuebleDAO.existeInmueble(inmuebleId)) return;
+
+        if (inmuebleDAO.tienePeticionesVigentes(inmuebleId))
+            throw new TienePeticionVigenteException("El inmueble tiene peticiones vigentes todavía");
+
+        peticionDAO.deleteByInmueble(inmuebleId);
+        inmuebleDAO.deleteById(inmuebleId);
     }
 
     @Override

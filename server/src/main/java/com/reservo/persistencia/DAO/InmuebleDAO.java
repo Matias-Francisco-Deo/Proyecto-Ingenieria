@@ -29,4 +29,7 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
 
     @Query("FROM Inmueble i WHERE i.owner.id = :id")
     Page<Inmueble> getAllByOwnerId(@Param("id") Long id, Pageable pageable);
+
+    @Query("SELECT COUNT(p) > 0 FROM Peticion p WHERE p.inmueble.id = :unId AND TYPE(p.estado) = Vigente")
+    boolean tienePeticionesVigentes(@Param("unId") Long id);
 }
