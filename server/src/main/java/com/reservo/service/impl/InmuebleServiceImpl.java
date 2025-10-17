@@ -9,6 +9,7 @@ import com.reservo.persistencia.DAO.InmuebleDAO;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
+import com.reservo.service.exception.NoExisteInmuebleExpcetion;
 import com.reservo.service.exception.TienePeticionVigenteException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +51,8 @@ public class InmuebleServiceImpl implements InmuebleService {
 
     @Override
     public void delete(Long inmuebleId) {
-        if (!inmuebleDAO.existeInmueble(inmuebleId)) return;
+        if (!inmuebleDAO.existeInmueble(inmuebleId))
+            throw new NoExisteInmuebleExpcetion("No existe la publicación que quiere modificar");
 
         if (inmuebleDAO.tienePeticionesVigentes(inmuebleId))
             throw new TienePeticionVigenteException("El inmueble tiene peticiones vigentes todavía");
@@ -88,6 +90,8 @@ public class InmuebleServiceImpl implements InmuebleService {
 
     @Override
     public void update(Long inmuebleId, InmuebleModifyRequestDTO inmuebleDTO) throws ParametroIncorrecto {
+        if (!inmuebleDAO.existeInmueble(inmuebleId))
+            throw new NoExisteInmuebleExpcetion("No existe la publicación que quiere modificar");
 
         Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
         Inmueble inmuebleModificado = inmuebleDTO.aModeloModificado(inmueble);
@@ -97,6 +101,9 @@ public class InmuebleServiceImpl implements InmuebleService {
 
     @Override
     public void addImages(Long inmuebleId, List<MultipartFile> images) throws ParametroIncorrecto {
+        if (!inmuebleDAO.existeInmueble(inmuebleId))
+            throw new NoExisteInmuebleExpcetion("Ya no existe el inmueble al que se quiere acceder");
+
         if (images.isEmpty()) return;
 
         Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
@@ -109,6 +116,10 @@ public class InmuebleServiceImpl implements InmuebleService {
 
     @Override
     public void removeImages(Long inmuebleId, InmuebleRemoveImagesDTO images) throws ParametroIncorrecto {
+        if (!inmuebleDAO.existeInmueble(inmuebleId))
+            throw new NoExisteInmuebleExpcetion("Ya no existe el inmueble al que se quiere acceder");
+
+
         List<Integer> imagesToRemove = images.imagesToRemove();
         if (images.imagesToRemove().isEmpty()) return;
 

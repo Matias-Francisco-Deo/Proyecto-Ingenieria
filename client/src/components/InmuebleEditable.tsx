@@ -50,12 +50,12 @@ export default function InmuebleEditable({
     requiredFields.forEach((field) => {
       if (!formData[field as keyof Inmueble]) {
         newErrors[field] = true;
+        toast.error("Faltan campos por llenar");
       }
     });
 
     setErrors(newErrors);
     
-    toast.error("Faltan campos por llenar");
     return Object.keys(newErrors).length === 0;
   };
 

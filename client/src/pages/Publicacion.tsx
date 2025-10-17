@@ -175,6 +175,9 @@ export default function Publicacion() {
     const cancelErrorResponse = (await response.json()) as ErrorResponse;
     if (cancelErrorResponse.error) {
       toast.error(cancelErrorResponse.error);
+      setTimeout(() => {
+        location.href = "/mis-publicaciones";
+      }, 2500);
       return;
     }
   }
@@ -250,12 +253,15 @@ export default function Publicacion() {
                 inmueble={inmueble}
                 onCancelar={() => setEditando(false)}
                 onGuardar={async (data) => {
-                  await fetch(`${apiUrl}/property/${inmueble.id}`, {
+                  const response = await fetch(`${apiUrl}/property/${inmueble.id}`, {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data),
+                  }).catch(() => {
+                    toast.error("Hubo un error inesperado.");
+                    return;
                   });
 
                   if (selectedFiles.length > 0) {
@@ -270,10 +276,24 @@ export default function Publicacion() {
                     });
                   }
 
-                  setSelectedFiles([]);
-                  setPreviewImages([]);
-                  setEditando(false);
-                  location.href = `/publicacion?id=${inmueble.id}`;
+                  if (!response) return;
+                  
+                  if (response.ok) {
+                    setSelectedFiles([]);
+                    setPreviewImages([]);
+                    setEditando(false);
+                    location.href = `/publicacion?id=${inmueble.id}`;
+                  }
+                  
+                  const updateError = (await response.json()) as ErrorResponse;
+                  console.log(updateError.error);
+                  if (updateError.error) {
+                    toast.error(updateError.error);
+                    setTimeout(() => {
+                      location.href = "/mis-publicaciones";
+                    }, 2500);
+                    return;
+                  }
                 }}
               />
             </div>
