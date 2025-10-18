@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 const width = 20; // width of handle in pixels
 
 export default function PriceRangeSlider({ setRangoPrecio }: PriceProps) {
+  const [zMin, setZMin] = useState("");
   const [minHandlePos, setMin] = useState(0);
   const [maxHandlePositionSimulado, setMax] = useState(100);
   const [minPrecio, setMinPrecio] = useState(0);
@@ -42,6 +43,8 @@ export default function PriceRangeSlider({ setRangoPrecio }: PriceProps) {
     if (dragging.current === "min") {
       const newPrice = positionToPrice(newPos);
       if (newPrice > maxPrecio) return;
+      if (newPrice > 99999) setZMin("z-10");
+      if (newPrice < 99999) setZMin("");
       setMin(newPos);
       setMinPrecio(newPrice);
       setRangoPrecio([newPrice, maxPrecio]);
@@ -89,7 +92,10 @@ export default function PriceRangeSlider({ setRangoPrecio }: PriceProps) {
             }}
           />
           <div
-            className="absolute w-5 h-5 bg-amber-500 rounded-full cursor-pointer border-2 border-neutral-800 shadow-md transition duration-100 hover:scale-110"
+            className={
+              zMin +
+              " absolute w-5 h-5 bg-amber-500 rounded-full cursor-pointer border-2 border-neutral-800 shadow-md transition duration-100 hover:scale-110"
+            }
             style={{
               left: `calc(${minHandlePos}% - ${width / 2}px)`,
               top: "50%",
