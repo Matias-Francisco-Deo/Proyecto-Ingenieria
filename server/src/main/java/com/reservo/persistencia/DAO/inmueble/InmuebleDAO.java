@@ -32,7 +32,17 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
 
     String FIND_BY_PRECIO_QUERY_PART = "(:precioMin IS NULL OR :precioMax IS NULL OR (i.price BETWEEN :precioMin AND :precioMax))";
 
-    String FIND_BY_HORARIO_QUERY_PART = "(i.hora_inicio >= :horarioMin AND i.hora_fin <= :horarioMax)";
+    String FIND_BY_HORARIO_QUERY_PART =
+            "(i.hora_inicio >= :horarioMin AND i.hora_fin <= :horarioMax) " +
+                    "AND NOT EXISTS (" +
+                    "   SELECT 1 FROM peticion p " +
+                    "   JOIN estado_de_peticion e ON e.id = p.estado_id " +
+                    "   WHERE p.inmueble_id = i.id " +
+                    "   AND e.dtype = 'Vigente' " +
+                    "   AND p.fecha_del_evento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days' " +
+                    "   AND p.hora_inicio < :horarioMax " +
+                    "   AND p.hora_fin > :horarioMin" +
+                    ")";
 
     String FIND_BY_FILTRO_QUERY =
             "FROM inmueble i " +
