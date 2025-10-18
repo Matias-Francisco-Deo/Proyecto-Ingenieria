@@ -170,7 +170,7 @@ export default function PeticionForm() {
             if (peticionError.error) {
                 toast.error(peticionError.error);
                 setTimeout(() => {
-                    location.href = "/mis-publicaciones";
+                    location.href = "/home";
                 }, 2500);
                 return;
             }
