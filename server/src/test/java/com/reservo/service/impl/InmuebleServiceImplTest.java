@@ -152,6 +152,8 @@ public class InmuebleServiceImplTest {
                 "P",
                 null,
                 null,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -166,6 +168,8 @@ public class InmuebleServiceImplTest {
         Filtro filtroPagina2 = new Filtro(
                 "",
                 "P",
+                null,
+                null,
                 null,
                 null,
                 PageRequest.of(1, pageSize)
@@ -484,6 +488,8 @@ public class InmuebleServiceImplTest {
                 "q",
                 null,
                 null,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Inmueble inmueble = inmuebleService.findByFiltro(filtroPagina1).toList().getFirst();
@@ -510,6 +516,8 @@ public class InmuebleServiceImplTest {
         Filtro filtroPagina1 = new Filtro(
                 "moron",
                 "q",
+                null,
+                null,
                 null,
                 null,
                 PageRequest.of(0, pageSize)
@@ -540,6 +548,8 @@ public class InmuebleServiceImplTest {
                 "í",
                 null,
                 null,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Inmueble inmueble = inmuebleService.findByFiltro(filtroPagina1).toList().getFirst();
@@ -566,6 +576,8 @@ public class InmuebleServiceImplTest {
         Filtro filtroPagina1 = new Filtro(
                 "",
                 "i",
+                null,
+                null,
                 null,
                 null,
                 PageRequest.of(0, pageSize)
@@ -596,6 +608,8 @@ public class InmuebleServiceImplTest {
                 "q",
                 null,
                 null,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -621,6 +635,8 @@ public class InmuebleServiceImplTest {
         Filtro filtroPagina1 = new Filtro(
                 "Morón",
                 "q",
+                null,
+                null,
                 null,
                 null,
                 PageRequest.of(0, pageSize)
@@ -650,6 +666,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 500,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -677,6 +695,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 500,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -704,6 +724,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 500,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -731,6 +753,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 200,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -758,6 +782,8 @@ public class InmuebleServiceImplTest {
                 "",
                 700,
                 900,
+                null,
+                null,
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);

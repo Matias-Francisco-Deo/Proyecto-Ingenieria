@@ -83,13 +83,13 @@ public final class InmuebleControllerREST {
     public ResponseEntity<Page<InmuebleSummaryDTO>> buscarInmuebles(
             @RequestBody BusquedaInmueblesDTO filtros
     ) throws ParametroIncorrecto {
-        Page<Inmueble> findByNameAndLocalidad = this.inmuebleService.findByFiltro(filtros.aModelo());
+        Page<Inmueble> findByFiltro = this.inmuebleService.findByFiltro(filtros.aModelo());
 
-        if (findByNameAndLocalidad.isEmpty()) {
+        if (findByFiltro.isEmpty()) {
             return ResponseEntity.status(404).body(null);
         }
 
-        Page<InmuebleSummaryDTO> inmuebles = findByNameAndLocalidad.map(InmuebleSummaryDTO::desdeModelo);
+        Page<InmuebleSummaryDTO> inmuebles = findByFiltro.map(InmuebleSummaryDTO::desdeModelo);
 
         return ResponseEntity.ok(inmuebles);
     }

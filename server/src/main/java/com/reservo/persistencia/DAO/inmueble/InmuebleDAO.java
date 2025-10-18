@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalTime;
+
 @Repository
 public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("select count(i) > 0 from Inmueble i where i.id = :unId")
@@ -30,16 +32,24 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
 
     String FIND_BY_PRECIO_QUERY_PART = "(:precioMin IS NULL OR :precioMax IS NULL OR (i.price BETWEEN :precioMin AND :precioMax))";
 
+    String FIND_BY_HORARIO_QUERY_PART = "(i.hora_inicio >= :horarioMin AND i.hora_fin <= :horarioMax)";
+
     String FIND_BY_FILTRO_QUERY =
             "FROM inmueble i " +
                     "WHERE " + FIND_BY_NAME_QUERY_PART + " " +
                     "AND " + FIND_BY_LOCALIDAD_QUERY_PART + " " +
-                    "AND " + FIND_BY_PRECIO_QUERY_PART;
+                    "AND " + FIND_BY_PRECIO_QUERY_PART + " " +
+                    "AND " + FIND_BY_HORARIO_QUERY_PART;
 
     @Query(value = "SELECT * " + FIND_BY_FILTRO_QUERY, countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY, nativeQuery = true)
     Page<Inmueble> findByFiltros(@Param("nombre") String nombre,
                                  @Param("localidad") String localidad,
                                  @Param("precioMin") Integer precioMin,
                                  @Param("precioMax") Integer precioMax,
+                                 @Param("horarioMin") LocalTime horarioMin,
+                                 @Param("horarioMax") LocalTime horarioMax,
                                  Pageable pageable);
+    /*
+    FALTA AGREGAR A LA QUERY EL TEMA DE QUE LOS HORARIOS DEBEN ESTAR DISPONIBLES DURANTE ESA SEMANA
+     */
 }

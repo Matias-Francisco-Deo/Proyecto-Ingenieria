@@ -3,9 +3,10 @@ package com.reservo.modelo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -15,5 +16,7 @@ public class Filtro {
     private String nombre;
     private Integer precioMin;
     private Integer precioMax;
+    private LocalTime horarioMin;
+    private LocalTime horarioMax;
     private Pageable page;
 }
