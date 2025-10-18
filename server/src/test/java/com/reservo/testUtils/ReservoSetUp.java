@@ -93,13 +93,13 @@ public class ReservoSetUp {
             LocalTime.of(12, 0), LocalTime.of(15, 0),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"), juanito, "pelegrini",123);
     Inmueble inmuebleMatiasFlexible = new Inmueble(
             "QuinchoFlexible", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
 Inmueble inmuebleMatiasSinDevolucion = new Inmueble(
             "QuinchoSinDevolucion", "Bola de disco, muchas luces.", 350d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
 Inmueble inmuebleMatiasSevero = new Inmueble(
             "QuinchoSevero", "Bola de disco, muchas luces.", 10000d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Severo(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Severo(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
 
 
 
