@@ -61,7 +61,7 @@ public final class UsuarioControllerREST {
     public ResponseEntity<DTOResponseError> modifyUserName(@PathVariable Long id,
                                                            @RequestBody CampoActualizadoDTO valorDTO) {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar");
+        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar.");
 
         Usuario usuario = optUsuario.get();
         //agregar cualquier validacion extra para contraseña
@@ -77,7 +77,7 @@ public final class UsuarioControllerREST {
     public ResponseEntity<DTOResponseError> modifyUserEmail(@PathVariable Long id,
                                                             @RequestBody CampoActualizadoDTO valorDTO) throws EmailRepetido {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar");
+        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar.");
 
         Usuario usuario = optUsuario.get();
 
@@ -96,7 +96,7 @@ public final class UsuarioControllerREST {
     public ResponseEntity<DTOResponseError> modifyUserPassword(@PathVariable Long id,
                                                                @RequestBody CampoActualizadoDTO valorDTO) {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar");
+        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar.");
 
         Usuario usuario = optUsuario.get();
         //agregar cualquier validacion extra para contraseña

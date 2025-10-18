@@ -11,6 +11,7 @@ import com.reservo.persistencia.DAO.user.UsuarioDAO;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.user.UsuarioNoExiste;
 import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void delete(Long userId) {
         Optional<Usuario> usuario = usuarioDAO.findById(userId);
-        if (usuario.isEmpty()) return;
+        if (usuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere eliminar.");
         if (usuarioDAO.tieneReservasVigentes(userId)) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas en proceso.");
         if (usuarioDAO.tienePeticionesVigentes(userId)) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene peticiones de sus inmuebles, todavía en proceso.");
 
