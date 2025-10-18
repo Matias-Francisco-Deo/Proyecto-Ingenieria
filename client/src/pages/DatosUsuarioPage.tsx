@@ -14,6 +14,7 @@ interface Usuario {
 }
 
 export default function DatosUsuarioPage() {
+  const { logoutSPA } = useAuth();
   const { getId, setUsername } = useUser();
   const userId = getId();
   const { toastError } = useToast();
@@ -87,6 +88,7 @@ export default function DatosUsuarioPage() {
       if (!res.ok) {
         const data = await res.json();
         toastError(data.error);
+        logoutSPA();
         return;
       }
 
@@ -135,11 +137,12 @@ export default function DatosUsuarioPage() {
       if (!res.ok) {
         const data = await res.json();
         toastError(data.error);
+        if (data.error == "No existe el usuario que quiere eliminar.")
+          logoutSPA();
         return;
       }
-
-      setShowDeletePopup(false);
       logout();
+      setShowDeletePopup(false);
     } catch (error) {
       console.error(error);
       toastError("Hubo un error inesperado.");

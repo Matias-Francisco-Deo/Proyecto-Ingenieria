@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useToast } from "../../hooks/useToast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CampoPasswordUser {
   password: string;
@@ -14,6 +15,7 @@ export default function CampoPassword({
   setMostrarPassword,
   userId,
 }: CampoPasswordUser) {
+  const { logoutSPA } = useAuth();
   const [editando, setEditando] = useState(false);
   const [nuevaPassword, setNuevaPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,6 +50,7 @@ export default function CampoPassword({
       if (!res.ok) {
         const data = await res.json();
         toastError(data.error);
+        logoutSPA()
       }
 
       setDisplayPassword(nuevaPassword);

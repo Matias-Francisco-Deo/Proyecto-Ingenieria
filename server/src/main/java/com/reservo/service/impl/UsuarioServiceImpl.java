@@ -66,8 +66,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     public void delete(Long userId) {
         Optional<Usuario> usuario = usuarioDAO.findById(userId);
         if (usuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere eliminar.");
-        if (usuarioDAO.tieneReservasVigentes(userId)) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas en proceso.");
-        if (usuarioDAO.tienePeticionesVigentes(userId)) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene peticiones de sus inmuebles, todavía en proceso.");
+
+        boolean tieneReservasVigentes = usuarioDAO.tieneReservasVigentes(userId);
+        boolean peticionesVigentes = usuarioDAO.tienePeticionesVigentes(userId);
+
+        if (peticionesVigentes && tieneReservasVigentes) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas y peticiones en proceso.");
+        if (tieneReservasVigentes) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas en proceso.");
+        if (peticionesVigentes) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene peticiones de sus inmuebles, todavía en proceso.");
 
         peticionDAO.deleteByClient(userId); // la cascada del papu >:V
         peticionDAO.deleteByOwner(userId);
