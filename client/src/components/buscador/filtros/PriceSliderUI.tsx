@@ -41,11 +41,14 @@ export default function PriceRangeSlider({ setRangoPrecio }: PriceProps) {
 
     if (dragging.current === "min") {
       const newPrice = positionToPrice(newPos);
+      if (newPrice > maxPrecio) return;
       setMin(newPos);
       setMinPrecio(newPrice);
       setRangoPrecio([newPrice, maxPrecio]);
     } else if (dragging.current === "max") {
-      const newPrice = positionToPrice(newPos);
+      let newPrice = positionToPrice(newPos);
+      if (newPrice < minPrecio) return;
+      if (newPrice < 1) newPrice = 1;
       setMax(newPos);
       setMaxPrecio(newPrice);
       setRangoPrecio([minPrecio, newPrice]);
