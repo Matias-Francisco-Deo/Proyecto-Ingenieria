@@ -12,7 +12,7 @@ import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
-import com.reservo.service.exception.UsuarioNoPuedeSerEliminado;
+import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

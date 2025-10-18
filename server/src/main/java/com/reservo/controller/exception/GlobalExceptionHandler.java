@@ -2,7 +2,8 @@ package com.reservo.controller.exception;
 
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
-import com.reservo.service.exception.UsuarioNoPuedeSerEliminado;
+import com.reservo.service.exception.user.UsuarioNoExiste;
+import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.service.exception.peticion.HorarioOcupado;
 import com.reservo.service.exception.peticion.PeticionVencida;
 import com.reservo.service.impl.PeticionYaVigente;
@@ -54,6 +55,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UsuarioNoPuedeSerEliminado.class)
     public ResponseEntity<DTOResponseError> usuarioNoPuedeSerEliminado(UsuarioNoPuedeSerEliminado ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UsuarioNoExiste.class)
+    public ResponseEntity<DTOResponseError> usuarioNoExiste(UsuarioNoExiste ex) {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

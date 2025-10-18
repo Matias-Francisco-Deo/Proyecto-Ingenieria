@@ -74,33 +74,37 @@ export default function DatosUsuarioPage() {
       nombre: "modifyUserName",
       email: "modifyUserEmail",
     };
+    try {
+      const res = await fetch(
+        `${API_URL}/auth/${endpointMap[campo]}/${userId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ valor }),
+        }
+      );
 
-    const res = await fetch(`${API_URL}/auth/${endpointMap[campo]}/${userId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ valor }),
-    });
-
-    if (!res.ok) {
-      if (res.status === 400) {
+      if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Error de validación");
-      } else {
-        throw new Error("Hubo un error inesperado.");
+        toastError(data.error);
+        return;
       }
-    }
 
-    setUsuario((prev) =>
-      prev
-        ? {
-            ...prev,
-            [campo]: valor,
-          }
-        : prev
-    );
+      setUsuario((prev) =>
+        prev
+          ? {
+              ...prev,
+              [campo]: valor,
+            }
+          : prev
+      );
 
-    if (campo === "nombre") {
-      setUsername(valor);
+      if (campo === "nombre") {
+        setUsername(valor);
+      }
+    } catch (error) {
+      console.log(error);
+      toastError("Hubo un error inesperado");
     }
   };
 

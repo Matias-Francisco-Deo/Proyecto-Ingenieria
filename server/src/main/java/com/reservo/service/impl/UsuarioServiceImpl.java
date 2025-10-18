@@ -11,7 +11,7 @@ import com.reservo.persistencia.DAO.user.UsuarioDAO;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
-import com.reservo.service.exception.UsuarioNoPuedeSerEliminado;
+import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

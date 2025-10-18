@@ -8,6 +8,7 @@ import com.reservo.modelo.user.Usuario;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.user.UsuarioNoExiste;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,7 @@ public final class UsuarioControllerREST {
     public ResponseEntity<DTOResponseError> modifyUserName(@PathVariable Long id,
                                                            @RequestBody CampoActualizadoDTO valorDTO) {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
+        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar");
 
         Usuario usuario = optUsuario.get();
         //agregar cualquier validacion extra para contraseña
@@ -76,7 +77,7 @@ public final class UsuarioControllerREST {
     public ResponseEntity<DTOResponseError> modifyUserEmail(@PathVariable Long id,
                                                             @RequestBody CampoActualizadoDTO valorDTO) throws EmailRepetido {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
+        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar");
 
         Usuario usuario = optUsuario.get();
 
@@ -95,7 +96,7 @@ public final class UsuarioControllerREST {
     public ResponseEntity<DTOResponseError> modifyUserPassword(@PathVariable Long id,
                                                                @RequestBody CampoActualizadoDTO valorDTO) {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty()) {return ResponseEntity.status(404).body(null);}
+        if (optUsuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere modificar");
 
         Usuario usuario = optUsuario.get();
         //agregar cualquier validacion extra para contraseña
