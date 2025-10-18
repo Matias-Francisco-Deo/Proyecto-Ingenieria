@@ -15,6 +15,7 @@ export interface UseBusquedaInmueblesResult {
   rangoPrecio: number[];
   setRangoPrecio: (rangoPrecio: number[]) => void;
   setCapacity: (capacity: number) => void;
+  capacity: number | null;
   data: InmueblesSummaryResponse | undefined | null;
   loading: boolean;
   hasResults: boolean;
@@ -99,6 +100,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     localidad,
     setLocalidad,
     setCapacity,
+    capacity,
     rangoPrecio: rangoPrecios,
     setRangoPrecio,
     data,

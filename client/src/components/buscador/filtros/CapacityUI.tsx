@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 interface CapacityProps {
   setCapacity: (capacity: number) => void;
@@ -10,7 +10,6 @@ function CapacityUI({ setCapacity }: CapacityProps) {
 
   const updateCapacity = () => {
     const value = Number(inputRef.current?.value);
-    if (value === 0) return;
     setCapacity(value);
   };
 
@@ -24,8 +23,6 @@ function CapacityUI({ setCapacity }: CapacityProps) {
         ref={inputRef}
         onKeyDown={(e) => {
           if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
-
-          // console.log("updateado");
         }}
         onKeyUp={() => updateCapacity()}
         type="number"
