@@ -14,6 +14,7 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
     localidad,
     setLocalidad,
     setRangoPrecio,
+    setCapacity,
     data,
     loading,
     handleBuscar,
@@ -46,6 +47,7 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
           localidad={localidad}
           setLocalidad={setLocalidad}
           setRangoPrecio={setRangoPrecio}
+          setCapacity={setCapacity}
           loading={loading}
           isVisible={isFiltrosDropdownOpen}
           onAplicarFiltros={onAplicarFiltros}

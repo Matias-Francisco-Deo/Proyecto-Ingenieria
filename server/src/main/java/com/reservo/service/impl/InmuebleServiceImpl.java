@@ -65,6 +65,7 @@ public class InmuebleServiceImpl implements InmuebleService {
                 filtro.getLocalidad(),
                 filtro.getPrecioMin(),
                 filtro.getPrecioMax(),
+                filtro.getCapacidad(),
                 filtro.getPage());
     }
 

@@ -15,5 +15,8 @@ public class Filtro {
     private String nombre;
     private Integer precioMin;
     private Integer precioMax;
+
+
+    private Integer capacidad;
     private Pageable page;
 }

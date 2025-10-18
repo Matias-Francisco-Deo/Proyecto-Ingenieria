@@ -30,16 +30,20 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
 
     String FIND_BY_PRECIO_QUERY_PART = "(:precioMin IS NULL OR :precioMax IS NULL OR (i.price BETWEEN :precioMin AND :precioMax))";
 
+    String FIND_BY_CAPACIDAD_QUERY_PART = "(:capacidad IS NULL OR (i.capacity >= :capacidad))";
+
     String FIND_BY_FILTRO_QUERY =
             "FROM inmueble i " +
                     "WHERE " + FIND_BY_NAME_QUERY_PART + " " +
                     "AND " + FIND_BY_LOCALIDAD_QUERY_PART + " " +
-                    "AND " + FIND_BY_PRECIO_QUERY_PART;
+                    "AND " + FIND_BY_PRECIO_QUERY_PART + " " +
+                    "AND " + FIND_BY_CAPACIDAD_QUERY_PART;
 
     @Query(value = "SELECT * " + FIND_BY_FILTRO_QUERY, countQuery = "SELECT COUNT(*) " + FIND_BY_FILTRO_QUERY, nativeQuery = true)
     Page<Inmueble> findByFiltros(@Param("nombre") String nombre,
                                  @Param("localidad") String localidad,
                                  @Param("precioMin") Integer precioMin,
                                  @Param("precioMax") Integer precioMax,
+                                 @Param("capacidad") Integer capacidad,
                                  Pageable pageable);
 }
