@@ -52,7 +52,7 @@ public class InmuebleServiceImpl implements InmuebleService {
     @Override
     public void delete(Long inmuebleId) {
         if (!inmuebleDAO.existeInmueble(inmuebleId))
-            throw new NoExisteInmuebleExpcetion("No existe la publicación que quiere modificar");
+            throw new NoExisteInmuebleExpcetion("No existe la publicación que quiere eliminar");
 
         if (inmuebleDAO.tienePeticionesVigentes(inmuebleId))
             throw new TienePeticionVigenteException("El inmueble tiene peticiones vigentes todavía");
