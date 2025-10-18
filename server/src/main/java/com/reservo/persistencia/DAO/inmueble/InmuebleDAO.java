@@ -59,7 +59,4 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
                                  @Param("horarioMin") LocalTime horarioMin,
                                  @Param("horarioMax") LocalTime horarioMax,
                                  Pageable pageable);
-    /*
-    FALTA AGREGAR A LA QUERY EL TEMA DE QUE LOS HORARIOS DEBEN ESTAR DISPONIBLES DURANTE ESA SEMANA
-     */
 }

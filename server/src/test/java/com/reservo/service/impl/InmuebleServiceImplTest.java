@@ -792,6 +792,67 @@ public class InmuebleServiceImplTest {
 
     }
 
+    @Test
+    public void seBuscaInmueblesEnUnHorarioEspecificoYExacto() throws EmailRepetido {
+        userService.create(jorge);
+
+        Inmueble inm = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
+                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+        inm.setAvailableDays(Collections.emptyList());
+        inmuebleService.create(inm, emptyImages);
+
+        int pageSize = 1;
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "",
+                null,
+                null,
+                LocalTime.of(9, 0),
+                LocalTime.of(15, 0),
+                PageRequest.of(0, pageSize)
+        );
+
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
+        assertEquals(1, pagina1.getContent().size());
+    }
+
+    @Test
+    public void seBuscaInmuebleEnUnHorarioPeroNoCoincidePorElMaximo() {
+        // NO debería traer el inmueble
+
+    }
+
+    @Test
+    public void seBuscaInmuebleEnUnHorarioPeroNoCoincidePorElMinimo() {
+        // NO debería traer el inmueble
+
+    }
+
+    @Test
+    public void seBuscaInmuebleEnUnHorarioQueNadaQueVerConLosDisponibles() {
+        // NO debería traer el inmueble
+
+    }
+
+    @Test
+    public void seBuscaInmueblePeroTieneOcupadoElHorarioHoy() {
+        // debería traer el inmueble
+    }
+
+    @Test
+    public void seBuscaInmueblePeroTieneOcupadaTodaLaSemana() {
+        // NO debería traer el inmueble
+
+    }
+
+    @Test
+    public void seBuscaInmuebleQueTieneUnaPeticionVigenteParaElMesQueViene() {
+        // debería traer el inmueble
+    }
+
 
     @AfterEach
     void limpiarDb(){
