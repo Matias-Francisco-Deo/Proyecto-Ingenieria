@@ -5,6 +5,7 @@ import com.reservo.modelo.property.Inmueble;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -46,4 +47,8 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
                                  @Param("precioMax") Integer precioMax,
                                  @Param("capacidad") Integer capacidad,
                                  Pageable pageable);
+
+    @Modifying
+    @Query("DELETE FROM Inmueble i WHERE i.owner.id = :userId")
+    void deleteByOwner(@Param("userId") Long userId);
 }

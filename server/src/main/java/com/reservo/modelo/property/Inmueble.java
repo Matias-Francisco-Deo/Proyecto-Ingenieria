@@ -39,20 +39,20 @@ public class Inmueble {
     @Column(nullable = false)
     private  String conditions;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private  Usuario owner;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Usuario owner;
 
     @Column(nullable = false)
-    private  LocalTime horaInicio;
+    private LocalTime horaInicio;
 
     @Column(nullable = false)
-    private  LocalTime horaFin;
+    private LocalTime horaFin;
 
     @Column(nullable = false)
     private String calle;
 
     @Column(nullable = false)
-    private  Integer altura;
+    private Integer altura;
 
     @Column(nullable = false)
     private List<DiasDeLaSemana> availableDays;

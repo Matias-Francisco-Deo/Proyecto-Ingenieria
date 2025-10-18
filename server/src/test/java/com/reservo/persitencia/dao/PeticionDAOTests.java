@@ -186,10 +186,6 @@ public class PeticionDAOTests {
     @Test
     void laPeticionNoEsDeUnDueñoEspecifico() {
 
-
-
-
-
         peticionDAO.save(peticionDeJorge);
 
         assertFalse(peticionDAO.isPetitionOfOwner(peticionDeJorge.getId(), jorge.getId()));
