@@ -8,8 +8,10 @@ import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.*;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
+import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.EmailRepetido;
 import com.reservo.service.exception.InmuebleRepetidoException;
@@ -25,6 +27,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -43,6 +46,10 @@ public class InmuebleServiceImplTest {
 
     @Autowired
     private UsuarioService userService;
+
+    @Autowired
+    private PeticionService peticionService;
+
 
     private Usuario jorge;
     private Usuario juan;
@@ -152,8 +159,8 @@ public class InmuebleServiceImplTest {
                 "P",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -170,8 +177,8 @@ public class InmuebleServiceImplTest {
                 "P",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(1, pageSize)
         );
         Page<Inmueble> pagina2 = inmuebleService.findByFiltro(filtroPagina2);
@@ -488,8 +495,8 @@ public class InmuebleServiceImplTest {
                 "q",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Inmueble inmueble = inmuebleService.findByFiltro(filtroPagina1).toList().getFirst();
@@ -518,8 +525,8 @@ public class InmuebleServiceImplTest {
                 "q",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Inmueble inmueble = inmuebleService.findByFiltro(filtroPagina1).toList().getFirst();
@@ -548,8 +555,8 @@ public class InmuebleServiceImplTest {
                 "í",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Inmueble inmueble = inmuebleService.findByFiltro(filtroPagina1).toList().getFirst();
@@ -578,8 +585,8 @@ public class InmuebleServiceImplTest {
                 "i",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Inmueble inmueble = inmuebleService.findByFiltro(filtroPagina1).toList().getFirst();
@@ -608,8 +615,8 @@ public class InmuebleServiceImplTest {
                 "q",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -637,8 +644,8 @@ public class InmuebleServiceImplTest {
                 "q",
                 null,
                 null,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -666,8 +673,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 500,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -695,8 +702,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 500,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -724,8 +731,8 @@ public class InmuebleServiceImplTest {
                 "",
                 100,
                 500,
-                null,
-                null,
+                LocalTime.of(0, 0),
+                LocalTime.of(23, 59),
                 PageRequest.of(0, pageSize)
         );
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
@@ -820,39 +827,149 @@ public class InmuebleServiceImplTest {
     }
 
     @Test
-    public void seBuscaInmuebleEnUnHorarioPeroNoCoincidePorElMaximo() {
-        // NO debería traer el inmueble
+    public void seBuscaInmuebleEnUnHorarioPeroNoCoincidePorElMaximo() throws EmailRepetido {
+        userService.create(jorge);
+
+        Inmueble inm = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
+                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+        inm.setAvailableDays(Collections.emptyList());
+        inmuebleService.create(inm, emptyImages);
+
+        int pageSize = 1;
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "",
+                null,
+                null,
+                LocalTime.of(9, 0),
+                LocalTime.of(14, 0),
+                PageRequest.of(0, pageSize)
+        );
+
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
+        assertTrue(pagina1.getContent().isEmpty());
 
     }
 
     @Test
-    public void seBuscaInmuebleEnUnHorarioPeroNoCoincidePorElMinimo() {
-        // NO debería traer el inmueble
+    public void seBuscaInmuebleEnUnHorarioPeroNoCoincidePorElMinimo() throws EmailRepetido {
+        userService.create(jorge);
+
+        Inmueble inm = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
+                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+        inm.setAvailableDays(Collections.emptyList());
+        inmuebleService.create(inm, emptyImages);
+
+        int pageSize = 1;
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "",
+                null,
+                null,
+                LocalTime.of(10, 0),
+                LocalTime.of(15, 0),
+                PageRequest.of(0, pageSize)
+        );
+
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
+        assertTrue(pagina1.getContent().isEmpty());
 
     }
 
     @Test
-    public void seBuscaInmuebleEnUnHorarioQueNadaQueVerConLosDisponibles() {
-        // NO debería traer el inmueble
+    public void seBuscaInmuebleEnUnHorarioQueNadaQueVerConLosDisponibles() throws EmailRepetido {
+        userService.create(jorge);
+
+        Inmueble inm = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
+                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+        inm.setAvailableDays(Collections.emptyList());
+        inmuebleService.create(inm, emptyImages);
+
+        int pageSize = 1;
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "",
+                null,
+                null,
+                LocalTime.of(16, 0),
+                LocalTime.of(22, 0),
+                PageRequest.of(0, pageSize)
+        );
+
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
+        assertTrue(pagina1.getContent().isEmpty());
 
     }
 
     @Test
-    public void seBuscaInmueblePeroTieneOcupadoElHorarioHoy() {
-        // debería traer el inmueble
+    public void seBuscaInmueblePeroTieneOcupadoElHorarioOcupadoUnDia() throws EmailRepetido {
+        userService.create(jorge);
+
+        Inmueble inm = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
+                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+        inm.setAvailableDays(Collections.emptyList());
+        inmuebleService.create(inm, emptyImages);
+
+        peticionService.create(new Peticion(juan, inm, LocalDate.now().plusDays(1), LocalTime.of(10, 0), LocalTime.of(12, 0), 1000D));
+
+        int pageSize = 1;
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "",
+                null,
+                null,
+                LocalTime.of(9, 0),
+                LocalTime.of(15, 0),
+                PageRequest.of(0, pageSize)
+        );
+
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
+        assertEquals(1, pagina1.getContent().size());
     }
 
     @Test
-    public void seBuscaInmueblePeroTieneOcupadaTodaLaSemana() {
-        // NO debería traer el inmueble
+    public void seBuscaInmueblePeroTieneOcupadaTodaLaSemana() throws EmailRepetido {
+        userService.create(jorge);
 
+        Inmueble inm = new Inmueble(
+                "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
+                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+        inm.setAvailableDays(Collections.emptyList());
+        inmuebleService.create(inm, emptyImages);
+
+        // ta mal esto
+        for (int i=0; i < 8; i++) {
+            peticionService.create(new Peticion(juan, inm, LocalDate.now().plusDays(i), LocalTime.of(10, 0), LocalTime.of(12, 0), 1000D));
+        }
+
+        int pageSize = 1;
+
+        Filtro filtroPagina1 = new Filtro(
+                "",
+                "",
+                null,
+                null,
+                LocalTime.of(9, 0),
+                LocalTime.of(15, 0),
+                PageRequest.of(0, pageSize)
+        );
+
+        Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
+
+        assertTrue(pagina1.getContent().isEmpty());
     }
-
-    @Test
-    public void seBuscaInmuebleQueTieneUnaPeticionVigenteParaElMesQueViene() {
-        // debería traer el inmueble
-    }
-
 
     @AfterEach
     void limpiarDb(){
