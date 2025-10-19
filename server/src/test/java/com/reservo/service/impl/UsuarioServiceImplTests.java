@@ -3,6 +3,7 @@ package com.reservo.service.impl;
 import com.reservo.controller.dto.Usuario.CredentialsDTO;
 import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Credentials;
@@ -58,12 +59,13 @@ public class UsuarioServiceImplTests {
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         juanito = new Usuario("juanito", "bb22", "juanito@yahoo.com.ar");
 
+        ReservoImage image1 = new ReservoImage("plaza2", "plaza2.jpg");
         inmueble1 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 0), LocalTime.of(20, 0), DiasDeLaSemana.getTodos(), new Flexible(), List.of("plaza2.jpg"), juanito,"lavalle",987);
+                LocalTime.of(12, 0), LocalTime.of(20, 0), DiasDeLaSemana.getTodos(), new Flexible(), List.of(image1), juanito,"lavalle",987);
         inmueble2 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 0), LocalTime.of(20, 0), DiasDeLaSemana.getTodos(), new Flexible(), List.of("plaza2.jpg"), jorge,"lavalle",987);
+                LocalTime.of(12, 0), LocalTime.of(20, 0), DiasDeLaSemana.getTodos(), new Flexible(), List.of(image1), jorge,"lavalle",987);
 
         peticionDeJorge = new Peticion(jorge, inmueble1, LocalDate.now().plusDays(1), LocalTime.of(12, 0), LocalTime.of(20, 0), 100D);
         peticionDeJuanito = new Peticion(juanito, inmueble2, LocalDate.now().plusDays(1), LocalTime.of(12, 0), LocalTime.of(20, 0), 100D);

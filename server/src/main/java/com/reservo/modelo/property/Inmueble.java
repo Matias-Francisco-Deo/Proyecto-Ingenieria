@@ -17,6 +17,7 @@ import java.util.List;
 
 @Entity
 public class Inmueble {
+    public static final String LOCALHOST_8081_UPLOADS = "http://localhost:8081/uploads/";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -61,13 +62,13 @@ public class Inmueble {
     @JoinColumn(name = "politicaId")
     private PoliticaDeCancelacion cancellation;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> images = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<ReservoImage> images = new ArrayList<>();
 
     public Inmueble(String name, String desc, Double price,
                     String ubi, Integer capacity, String condition,
                     LocalTime horaInicio, LocalTime horaFinal, List<DiasDeLaSemana> availableDays,
-                    PoliticaDeCancelacion cancellation,List<String> images,Usuario owner,String calle,Integer altura) {
+                    PoliticaDeCancelacion cancellation,List<ReservoImage> images,Usuario owner,String calle,Integer altura) {
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -104,7 +105,8 @@ public class Inmueble {
 
     public String getFirstImageURL() {
         if (images != null && !images.isEmpty()) {
-            return "http://localhost:8081/uploads/" + images.get(0);
+//            return LOCALHOST_8081_UPLOADS + images.get(0);
+                return images.getFirst().getUrl();
         }
         return null;
     }

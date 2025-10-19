@@ -376,11 +376,11 @@ public class InmuebleServiceImplTest {
     }
 
     @Test
-    void noSeActualizaLaImagenDeUnInmuebleCuandoSeMandaNada() throws EmailRepetido, ParametroIncorrecto {
+    void noSeActualizaLaImagenDeUnInmuebleCuandoSeMandaNada() throws ParametroIncorrecto {
         inmuebleDTO1 = new InmuebleModifyRequestDTO(null, null, null, null, null, null, null, null, null, null, null, null);
 
 
-        inmueble1.setImages(Collections.singletonList("c://pepe.png"));
+        inmueble1.setImages(List.of(new ReservoImage("pepe", "c://pepe.png")) );
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.addImages(inmueble1.getId(), emptyImages);
@@ -395,7 +395,7 @@ public class InmuebleServiceImplTest {
     void seAgregaUnaImagenDeUnInmueble() throws ParametroIncorrecto {
 
 
-        inmueble1.setImages(Collections.singletonList("c://pepe.png"));
+        inmueble1.setImages(List.of(new ReservoImage("pepe", "c://pepe.png")) );
         inmuebleService.create(inmueble1,emptyImages);
 
         inmuebleService.addImages(inmueble1.getId(), List.of(mockImage));

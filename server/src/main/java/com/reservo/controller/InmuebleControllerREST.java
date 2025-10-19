@@ -4,6 +4,7 @@ import com.reservo.controller.dto.Inmueble.*;
 import com.reservo.controller.exception.DTOResponseError;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
@@ -97,10 +98,7 @@ public final class InmuebleControllerREST {
     public ResponseEntity<List<String>> getInmuebleImages(@PathVariable Long id) {
         return inmuebleService.findById(id)
                 .map(inmueble -> {
-                    List<String> imagePaths = inmueble.getImages()
-                            .stream()
-                            .map(filename -> "/uploads/" + filename)
-                            .toList();
+                    List<String> imagePaths = inmueble.getImages().stream().map(ReservoImage::getUrl).collect(Collectors.toList());
                     return ResponseEntity.ok(imagePaths);
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));

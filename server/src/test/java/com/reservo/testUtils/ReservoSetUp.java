@@ -40,66 +40,85 @@ public class ReservoSetUp {
     Usuario tomas = new Usuario("Tomas", "123", "tm1453766@gmail.com");
     List<DiasDeLaSemana> availableDays = List.of(DiasDeLaSemana.LUNES, DiasDeLaSemana.MIERCOLES, DiasDeLaSemana.SABADO);
 
-    Inmueble inmueble1 = new Inmueble(
-            "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("plaza2.jpg"), jorge,"lavalle",987);
+    Inmueble inmueble1;
+
+    ReservoImage image1 = new ReservoImage("plaza2", "plaza2.jpg");
+    ReservoImage image2 = new ReservoImage("quincho", "quincho.webp");
+    ReservoImage image3 = new ReservoImage("quincho-para-reuniones", "quincho-para-reuniones.jpg");
+    ReservoImage image4 = new ReservoImage("jardín", "jardín.jpeg");
+    ReservoImage image5 = new ReservoImage("café2", "café2.jpg");
+    ReservoImage image6 = new ReservoImage("pizza", "pizza.jpg");
+    ReservoImage CAFÉ_3_JPG = new ReservoImage("café3", "café3.jpg");
+    ReservoImage KARAOKE = new ReservoImage("karaoke", "karaoke.webp");
+    ReservoImage CAFÉ_4_JPG = new ReservoImage("café4", "café4.jpg");
+    ReservoImage BOLICHE1 = new ReservoImage("boliche1", "boliche1.jpg");
+    ReservoImage BOLICHE2 = new ReservoImage("boliche2", "boliche2.webp");
+    ReservoImage BOLICHE3 = new ReservoImage("boliche3", "boliche3.png");
+
+
+    {
+
+        inmueble1 = new Inmueble(
+                "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
+                LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image1), jorge,"lavalle",987);
+    }
 
     Inmueble inmueble2 = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-                LocalTime.of(12, 0), LocalTime.of(15, 0),  availableDays, new Flexible(), List.of("quincho.webp", "quincho-para-reuniones.jpg"), juanito,"pelegrini",123);
+                LocalTime.of(12, 0), LocalTime.of(15, 0),  availableDays, new Flexible(), List.of(image2, image3), juanito,"pelegrini",123);
     Inmueble inmueble3 = new Inmueble(
             "Jardín Onírico", "Es un jardín", 2000d,"Avellaneda", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0),  availableDays, new Flexible(), List.of("jardín.jpeg"),jorge,"Rivadavia",300);
+            LocalTime.of(12, 0), LocalTime.of(15, 0),  availableDays, new Flexible(), List.of(image4),jorge,"Rivadavia",300);
 
     Inmueble inmueble4 = new Inmueble(
             "Lo de Juanito", "Es un lugar espacioso", 200d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("quincho-para-reuniones.jpg"),juanito, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image3),juanito, "pelegrini",123);
     Inmueble inmueble5 = new Inmueble(
             "Lo de Jorge", "Cálido y cómodo.", 200d,"Berazategui", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("quincho-para-reuniones.jpg"),jorge, "lavalle",987);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image3),jorge, "lavalle",987);
 
     Inmueble inmueble6 = new Inmueble(
             "Casa de té", "Es un lugar con mucho té", 2000d,"Morón", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café2.jpg"),juanito, "Balcarce",100);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image5),juanito, "Balcarce",100);
     Inmueble inmueble7 = new Inmueble(
             "Pizzería Espacial", "Es alta pizzería, mucho espacio y alta calidad", 200d,"Berazategui", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("pizza.jpg"),jorge, "lavalle",987);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image6),jorge, "lavalle",987);
 
     Inmueble inmueble8 = new Inmueble(
             "Cafetería del mar", "Amo los caracoles, y acá puse todos los que tengo", 200d,"Varela", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "San Martín",100);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(CAFÉ_3_JPG),juanito, "San Martín",100);
     Inmueble inmueble9 = new Inmueble(
             "Montaña privada del este", "Perfecto para acampados", 200d,"Moron", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("quincho-para-reuniones.jpg"),jorge, "Lavalle",100);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image3),jorge, "Lavalle",100);
 
     Inmueble inmueble10 = new Inmueble(
             "Karaoke party", "Tenemos parlantes muy grandes", 20d,"Bernal", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("karaoke.webp"),juanito, "Dean Funes",10);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(KARAOKE),juanito, "Dean Funes",10);
 
     Inmueble inmueble11 = new Inmueble(
             "Quincho para fiestas de 15", "Muchos árboles y un escenario grande", 200d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("quincho.webp"),juanito, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(image1),juanito, "pelegrini",123);
     Inmueble inmueble12 = new Inmueble(
             "Bar Los Perdidos", "Tenemos equipo de música", 200d,"Avellaneda", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "Mitre",1500);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(CAFÉ_3_JPG),juanito, "Mitre",1500);
     Inmueble inmueble13 = new Inmueble(
             "Bar los piratas", "Espadas de verdad!", 150d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(CAFÉ_3_JPG),juanito, "pelegrini",123);
     Inmueble inmueble14 = new Inmueble(
             "Cafetería Los alpes", "tenemos café", 200d,"Varela", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café4.jpg"),juanito, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of(CAFÉ_4_JPG),juanito, "pelegrini",123);
     Inmueble inmueble15 = new Inmueble(
             "Boliche Buroro", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(15, 0),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"), juanito, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(15, 0),availableDays, new Flexible(), List.of(BOLICHE1, BOLICHE2,BOLICHE3), juanito, "pelegrini",123);
     Inmueble inmuebleMatiasFlexible = new Inmueble(
             "QuinchoFlexible", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Flexible(), List.of(BOLICHE1, BOLICHE2,BOLICHE3),matias, "pelegrini",123);
 Inmueble inmuebleMatiasSinDevolucion = new Inmueble(
             "QuinchoSinDevolucion", "Bola de disco, muchas luces.", 350d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of(BOLICHE1, BOLICHE2,BOLICHE3),matias, "pelegrini",123);
 Inmueble inmuebleMatiasSevero = new Inmueble(
             "QuinchoSevero", "Bola de disco, muchas luces.", 10000d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Severo(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Severo(), List.of(BOLICHE1, BOLICHE2,BOLICHE3),matias, "pelegrini",123);
 
 
 

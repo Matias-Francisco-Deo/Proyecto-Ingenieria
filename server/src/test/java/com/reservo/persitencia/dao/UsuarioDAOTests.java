@@ -2,6 +2,7 @@ package com.reservo.persitencia.dao;
 
 import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
@@ -44,6 +45,7 @@ public class UsuarioDAOTests {
     private Inmueble inmueble2;
     private Peticion peticionDeJorge;
     private Peticion peticionDeJuanito;
+    ReservoImage image1 = new ReservoImage("plaza2", "plaza2.jpg");
 
     @BeforeEach
     void crearInstancias() {
@@ -51,10 +53,10 @@ public class UsuarioDAOTests {
         juanito = new Usuario("juanito", "bb22", "juanito@yahoo.com.ar");
         inmueble1 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), DiasDeLaSemana.getTodos(), new Flexible(), List.of("plaza2.jpg"), juanito,"lavalle",987);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), DiasDeLaSemana.getTodos(), new Flexible(), List.of(image1), juanito,"lavalle",987);
         inmueble2 = new Inmueble(
                 "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
-                LocalTime.of(12, 30), LocalTime.of(14, 30), DiasDeLaSemana.getTodos(), new Flexible(), List.of("plaza2.jpg"), jorge,"lavalle",987);
+                LocalTime.of(12, 30), LocalTime.of(14, 30), DiasDeLaSemana.getTodos(), new Flexible(), List.of(image1), jorge,"lavalle",987);
 
         peticionDeJorge = new Peticion(jorge, inmueble1, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);
         peticionDeJuanito = new Peticion(juanito, inmueble2, LocalDate.now(),LocalTime.now().plusMinutes(40), LocalTime.now().plusMinutes(50), 100D);

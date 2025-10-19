@@ -1,10 +1,14 @@
 package com.reservo.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.reservo.controller.dto.Inmueble.InmuebleModifyRequestDTO;
 import com.reservo.controller.dto.Inmueble.InmuebleRemoveImagesDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
+import com.reservo.persistencia.DAO.inmueble.ImageDAO;
 import com.reservo.persistencia.DAO.inmueble.InmuebleDAO;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.exception.InmuebleRepetidoException;
@@ -15,29 +19,26 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
 public class InmuebleServiceImpl implements InmuebleService {
 
     private final InmuebleDAO inmuebleDAO;
+    private final ImageDAO imageDAO;
+    private final Cloudinary cloudinary;
 
-    public InmuebleServiceImpl(InmuebleDAO dao) {
+    public InmuebleServiceImpl(InmuebleDAO dao, ImageDAO imageDAO, Cloudinary cloudinary) {
         this.inmuebleDAO = dao;
+        this.imageDAO = imageDAO;
+        this.cloudinary = cloudinary;
     }
 
     @Override
     public Inmueble create(Inmueble inmueble,List<MultipartFile> images) {
 
-        List<String> imagePaths = saveImages(images);
+        List<ReservoImage> imagePaths = saveImages(images);
         inmueble.getImages().addAll(imagePaths);
 
         if (inmuebleDAO.existeInmueble(inmueble.getId())) throw new InmuebleRepetidoException("El inmueble ya está registrado.");
@@ -89,7 +90,7 @@ public class InmuebleServiceImpl implements InmuebleService {
         if (images.isEmpty()) return;
 
         Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
-        List<String> imagePaths = saveImages(images);
+        List<ReservoImage> imagePaths = saveImages(images);
         inmueble.getImages().addAll(imagePaths);
 
         inmuebleDAO.save(inmueble);
@@ -103,60 +104,84 @@ public class InmuebleServiceImpl implements InmuebleService {
 
         Inmueble inmueble = inmuebleDAO.findById(inmuebleId).orElseThrow(() -> new ParametroIncorrecto("El inmueble no existe."));
 
-        List<String> pathsToDelete = new ArrayList<>();
+        List<ReservoImage> dbImagesToDelete = new ArrayList<>();
         for (Integer index : imagesToRemove) {
-            String path = inmueble.getImages().get(index);
-            pathsToDelete.add(path);
+            ReservoImage reservoImage = inmueble.getImages().get(index);
+            dbImagesToDelete.add(reservoImage);
         }
 
-        removeImages(pathsToDelete);
-        for (String path : pathsToDelete) {
-            inmueble.getImages().remove(path);
+        removeImages(dbImagesToDelete);
+        for (ReservoImage reservoImage : dbImagesToDelete) {
+            inmueble.getImages().remove(reservoImage);
         }
 
         inmuebleDAO.save(inmueble);
     }
 
-    private List<String> saveImages(List<MultipartFile> images) {
-        List<String> paths = new ArrayList<>();
-        Path uploadDir = Paths.get("uploads");
-
+    private List<ReservoImage> saveImages(List<MultipartFile> images) {
+        List<ReservoImage> reservoImages = new ArrayList<>();
         try {
-
-            Files.createDirectories(uploadDir);// Crear la carpeta si no existe
-
             for (MultipartFile file : images) {
-                String originalFilename = file.getOriginalFilename();
-
-                String filename = UUID.randomUUID() + "_" + originalFilename;
-                Path filePath = uploadDir.resolve(filename);
-
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);// Guardar archivo
-
-                paths.add(filename);
+                Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                        ObjectUtils.asMap());
+                ReservoImage image = new ReservoImage((String) uploadResult.get("public_id"),(String) uploadResult.get("secure_url"));
+                imageDAO.save(image);
+                reservoImages.add(image);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar las imágenes");
         }
 
-        return paths;
+//        List<String> paths = new ArrayList<>();
+//        Path uploadDir = Paths.get("uploads");
+//
+//        try {
+//
+//            Files.createDirectories(uploadDir);// Crear la carpeta si no existe
+//
+//            for (MultipartFile file : images) {
+//                String originalFilename = file.getOriginalFilename();
+//
+//                String filename = UUID.randomUUID() + "_" + originalFilename;
+//                Path filePath = uploadDir.resolve(filename);
+//
+//                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);// Guardar archivo
+//
+//                paths.add(filename);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException("Error al guardar las imágenes");
+//        }
+//
+        return reservoImages;
     }
 
-    private void removeImages(List<String> images) {
-        Path uploadDir = Paths.get("uploads");
-
+    private void removeImages(List<ReservoImage> images) {
+//        Path uploadDir = Paths.get("uploads");
+//
+//        try {
+//
+//            for (String pathString : images) {
+//
+//                String pathToImage = uploadDir + "/" + pathString;
+//
+//                Files.delete(Path.of(pathToImage));
+//
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException("Error al eliminar las imágenes");
+//        }
         try {
+            for (ReservoImage image : images) {
+                cloudinary.uploader().destroy(
+                        image.getPublicId(),
+                        ObjectUtils.asMap("resource_type", "image")
+                );
 
-            for (String pathString : images) {
-
-                String pathToImage = uploadDir + "/" + pathString;
-
-                Files.delete(Path.of(pathToImage));
 
             }
         } catch (IOException e) {
             throw new RuntimeException("Error al eliminar las imágenes");
         }
-
     }
 }
