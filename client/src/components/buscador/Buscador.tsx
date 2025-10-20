@@ -33,7 +33,7 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
   };
 
   const onAplicarFiltros = () => {
-    if (capacity == 0) {
+    if (capacity && capacity == 0) {
       toastError("La capacidad mínima es 1.");
       return;
     }
