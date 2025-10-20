@@ -18,6 +18,9 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%')")
     Page<Inmueble> findByNameContainingIgnoreCase(String unName, Pageable pageable);
 
+    @Query("SELECT COUNT(p) > 0 FROM Peticion p WHERE p.inmueble.id = :unId AND TYPE(p.estado) = Vigente")
+    boolean tienePeticionesVigentes(@Param("unId") Long id);
+
 //    @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%') AND i.ubication = :unaLocalidad")
 //    Page<Inmueble> findByNameAndLocalidad(@Param("unName") String nombre,@Param("unaLocalidad") String localidad, Pageable pageable);
 
