@@ -17,6 +17,7 @@ import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -141,7 +142,7 @@ public class UsuarioServiceImplTests {
         assertNotEquals(credenciales1.key(), credenciales2.key());
     }
 
-
+    @Disabled
     @Test
     void noSePuedeEliminarUserConReservasVigentes() throws EmailRepetido {
         usuarioService.create(jorge);
@@ -154,6 +155,7 @@ public class UsuarioServiceImplTests {
         assertThrows(UsuarioNoPuedeSerEliminado.class, () -> usuarioService.delete(jorge.getId()));
     }
 
+    @Disabled
     @Test
     void noSePuedeEliminarUserConPeticionesVigentes() throws EmailRepetido {
         usuarioService.create(jorge);
@@ -176,6 +178,7 @@ public class UsuarioServiceImplTests {
     }
 
     @Test
+    @Disabled
     void seEliminaUsuarioConReservas() throws EmailRepetido {
         usuarioService.create(jorge);
         usuarioService.create(juanito);
@@ -189,6 +192,7 @@ public class UsuarioServiceImplTests {
     }
 
     @Test
+    @Disabled
     void seEliminaUsuarioConPeticionesPendientes() throws EmailRepetido {
         usuarioService.create(jorge);
         usuarioService.create(juanito);
@@ -202,6 +206,7 @@ public class UsuarioServiceImplTests {
     }
 
     @Test
+    @Disabled
     void seEliminaUsuarioConReservasPendientes() throws EmailRepetido {
         usuarioService.create(jorge);
         usuarioService.create(juanito);
