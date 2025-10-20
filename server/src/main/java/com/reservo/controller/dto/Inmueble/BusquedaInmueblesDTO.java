@@ -26,8 +26,8 @@ public record BusquedaInmueblesDTO(
                 this.nombre,
                 tieneRangoDePrecios ? this.rangoPrecios.getFirst() : null, // min
                 tieneRangoDePrecios ? this.rangoPrecios.getLast() : null, // max
-                tieneRangoHorarios ? this.rangoHorarios.getFirst() : LocalTime.of(0, 0),
-                tieneRangoHorarios ? this.rangoHorarios.getLast() : LocalTime.of(23, 59),
+                tieneRangoHorarios ? this.rangoHorarios.getFirst() : null,
+                tieneRangoHorarios ? this.rangoHorarios.getLast() : null,
                 PageRequest.of(page, 10)
         );
     }

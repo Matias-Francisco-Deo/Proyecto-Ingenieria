@@ -949,9 +949,12 @@ public class InmuebleServiceImplTest {
         inm.setAvailableDays(Collections.emptyList());
         inmuebleService.create(inm, emptyImages);
 
-        // ta mal esto
-        for (int i=0; i < 8; i++) {
-            peticionService.create(new Peticion(juan, inm, LocalDate.now().plusDays(i), LocalTime.of(10, 0), LocalTime.of(12, 0), 1000D));
+        // Si falla es porque analiza que hay una chance para reservar "hoy"
+        for (int i=1; i < 8; i++) {
+            peticionService.create(new Peticion(juan, inm,
+                    LocalDate.now().plusDays(i),
+                    LocalTime.of(10, 0), LocalTime.of(12, 0),
+                    1000D));
         }
 
         int pageSize = 1;
@@ -967,7 +970,7 @@ public class InmuebleServiceImplTest {
         );
 
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
-
+        System.out.println(pagina1.getContent());
         assertTrue(pagina1.getContent().isEmpty());
     }
 
