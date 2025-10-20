@@ -2,6 +2,8 @@ package com.reservo.controller.exception;
 
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.NoExisteInmuebleExpcetion;
+import com.reservo.service.exception.TienePeticionVigenteException;
 import com.reservo.service.exception.user.UsuarioNoExiste;
 import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.service.exception.peticion.HorarioOcupado;
@@ -51,6 +53,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<DTOResponseError> peticionYaVigente(PeticionYaVigente ex) {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TienePeticionVigenteException.class)
+    public ResponseEntity<DTOResponseError> tienePeticionVigente(TienePeticionVigenteException ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoExisteInmuebleExpcetion.class)
+    public ResponseEntity<DTOResponseError> noExisteInmueble(NoExisteInmuebleExpcetion ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UsuarioNoPuedeSerEliminado.class)

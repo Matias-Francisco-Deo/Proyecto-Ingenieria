@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Carrusel from "../components/Carrusel";
 import { Link } from "wouter";
-import type { Inmueble } from "@/types/types";
+import type { ErrorResponse, Inmueble } from "@/types/types";
 import InmuebleEditable from "../components/InmuebleEditable";
 import InmuebleReadOnly from "../components/InmuebleReadOnly";
 import { useUser } from "@/hooks/useUser";
@@ -14,6 +14,8 @@ export default function Publicacion() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [editando, setEditando] = useState(false);
+
+  const [eliminando, setEliminando] = useState(false);
 
   // Imágenes
 
@@ -109,6 +111,74 @@ export default function Publicacion() {
     }
   };
 
+  function popUpDarDeBaja() {
+    return (
+      <div
+        className={
+          "absolute z-100 top-1/4 flex flex-col gap-6 p-14 bg-gray-800 rounded-2xl border-2 border-amber-400 transition duration-300 ease-in-out w-[500px] " +
+          `${
+            eliminando
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }`
+        }
+        style={{ left: "50%", transform: "translateX(-50%)" }}
+      >
+        <h2 className="text-3xl text-center ">
+          ¿Realmente desea dar de baja la propiedad?
+        </h2>
+        <form
+          className="flex flex-col gap-10"
+          onSubmit={(evt) => eliminarPublicacion(evt)}
+        >
+          <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-3 px-10 rounded-2xl text-xl cursor-pointer mx-auto">
+            Confirmar baja
+          </button>
+          {/* <p className="text-red-500">{cancelError}</p> */}
+        </form>
+        <div className="top-0 right-0 absolute">
+          <button
+            type="button"
+            onClick={() => setEliminando(false)}
+            className="hover:cursor-pointer absolute -top-3 -right-3 bg-black hover:bg-red-800 text-white rounded-full border-2 border-amber-400 w-10 h-10 flex items-center justify-center text-xs"
+          >
+            X
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  async function eliminarPublicacion(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
+    const response = await fetch(`${apiUrl}/property/${inmueble?.id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }).catch(() => {
+      toast.error("Hubo un error inesperado.");
+      return;
+    });
+
+    if (!response) return;
+
+    if (response.ok) {
+      toast.info(`Se ha dado de baja el inmueble: ${inmueble?.name}`);
+      setTimeout(() => {
+        location.href = "/mis-publicaciones";
+      }, 2500);
+      return;
+    }
+
+    const cancelErrorResponse = (await response.json()) as ErrorResponse;
+    if (cancelErrorResponse.error) {
+      toast.error(cancelErrorResponse.error);
+      setTimeout(() => {
+        location.href = "/mis-publicaciones";
+      }, 2500);
+      return;
+    }
+  }
+
   if (loading) return <p>Cargando...</p>;
   if (!inmueble) return <p>Inmueble no encontrado</p>;
 
@@ -144,6 +214,8 @@ export default function Publicacion() {
           </p>
         </div>
       </div>
+
+      {popUpDarDeBaja()}
 
       <div className="flex gap-6">
         {editando ? (
@@ -197,12 +269,15 @@ export default function Publicacion() {
                 inmueble={inmueble}
                 onCancelar={() => setEditando(false)}
                 onGuardar={async (data) => {
-                  await fetch(`${apiUrl}/property/${inmueble.id}`, {
+                  const response = await fetch(`${apiUrl}/property/${inmueble.id}`, {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data),
+                  }).catch(() => {
+                    toast.error("Hubo un error inesperado.");
+                    return;
                   });
 
                   if (selectedFiles.length > 0) {
@@ -217,10 +292,24 @@ export default function Publicacion() {
                     });
                   }
 
-                  setSelectedFiles([]);
-                  setPreviewImages([]);
-                  setEditando(false);
-                  location.href = `/publicacion?id=${inmueble.id}`;
+                  if (!response) return;
+
+                  if (response.ok) {
+                    setSelectedFiles([]);
+                    setPreviewImages([]);
+                    setEditando(false);
+                    location.href = `/publicacion?id=${inmueble.id}`;
+                  }
+
+                  const updateError = (await response.json()) as ErrorResponse;
+                  console.log(updateError.error);
+                  if (updateError.error) {
+                    toast.error(updateError.error);
+                    setTimeout(() => {
+                      location.href = "/mis-publicaciones";
+                    }, 2500);
+                    return;
+                  }
                 }}
               />
             </div>
@@ -242,23 +331,47 @@ export default function Publicacion() {
             <div className="w-2/5 bg-gray-800 rounded-xl p-4 flex flex-col justify-between">
               <InmuebleReadOnly inmueble={inmueble} />
               {isOwner && (
-                <button
-                  onClick={() => setEditando(true)}
-                  className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
-                  aria-label="Editar publicación"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="48"
-                    height="48"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M4 14v-2h7v2zm0-4V8h11v2zm0-4V4h11v2zm9 14v-3.075l5.525-5.5q.225-.225.5-.325t.55-.1q.3 0 .575.113t.5.337l.925.925q.2.225.313.5t.112.55t-.1.563t-.325.512l-5.5 5.5zm7.5-6.575l-.925-.925zm-6 5.075h.95l3.025-3.05l-.45-.475l-.475-.45l-3.05 3.025zm3.525-3.525l-.475-.45l.925.925z"
-                    />
-                  </svg>
-                </button>
+                <>
+                  {/* Botón para editar la publicación am */}
+                  <div className="flex">
+                    <button
+                      onClick={() => setEditando(true)}
+                      className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
+                      aria-label="Editar publicación"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M4 14v-2h7v2zm0-4V8h11v2zm0-4V4h11v2zm9 14v-3.075l5.525-5.5q.225-.225.5-.325t.55-.1q.3 0 .575.113t.5.337l.925.925q.2.225.313.5t.112.55t-.1.563t-.325.512l-5.5 5.5zm7.5-6.575l-.925-.925zm-6 5.075h.95l3.025-3.05l-.45-.475l-.475-.45l-3.05 3.025zm3.525-3.525l-.475-.45l.925.925z"
+                        />
+                      </svg>
+                    </button>
+
+                    {/* Botón para eliminar publiación pa */}
+                    <button
+                      onClick={() => setEliminando(true)}
+                      className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
+                      aria-label="Eliminar publicación"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </>
               )}
               <div className="flex justify-center mt-6 gap-4">
                 <Link href={`/hacer-reserva?id=${inmueble.id}`}>

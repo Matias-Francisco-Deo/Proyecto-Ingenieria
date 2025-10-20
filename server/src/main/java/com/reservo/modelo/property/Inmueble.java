@@ -39,7 +39,7 @@ public class Inmueble {
     @Column(nullable = false)
     private  String conditions;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario owner;
 
     @Column(nullable = false)
