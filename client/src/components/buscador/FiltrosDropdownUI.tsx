@@ -7,6 +7,7 @@ interface FiltrosDropdownUIProps {
   localidad: string;
   setLocalidad: (localidad: string) => void;
   setRangoPrecio: (rangoPrecio: number[]) => void;
+  setRangoHorario: (rangoHorario: string[]) => void;
   setCapacity: (capacity: number) => void;
   loading: boolean;
   isVisible: boolean;
@@ -17,6 +18,7 @@ export default function FiltrosDropdownUI({
   localidad,
   setLocalidad,
   setRangoPrecio,
+  setRangoHorario,
   setCapacity,
   loading,
   isVisible,
@@ -49,6 +51,8 @@ export default function FiltrosDropdownUI({
           </label>
         </div>
         <PriceSliderUI setRangoPrecio={setRangoPrecio}></PriceSliderUI>
+        <RatingAndCapacityUI></RatingAndCapacityUI>
+        <ScheduleInputUI setRangoHorario={setRangoHorario}></ScheduleInputUI>
         <CapacityUI setCapacity={setCapacity}></CapacityUI>
         <ScheduleInputUI></ScheduleInputUI>
         <DaySelectorUI></DaySelectorUI>

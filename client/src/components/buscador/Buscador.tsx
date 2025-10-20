@@ -15,6 +15,7 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
     localidad,
     setLocalidad,
     setRangoPrecio,
+    setRangoHorario,
     setCapacity,
     capacity,
     data,
@@ -54,6 +55,7 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
           localidad={localidad}
           setLocalidad={setLocalidad}
           setRangoPrecio={setRangoPrecio}
+          setRangoHorario={setRangoHorario}
           setCapacity={setCapacity}
           loading={loading}
           isVisible={isFiltrosDropdownOpen}
