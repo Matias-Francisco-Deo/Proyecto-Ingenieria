@@ -51,10 +51,8 @@ export default function FiltrosDropdownUI({
           </label>
         </div>
         <PriceSliderUI setRangoPrecio={setRangoPrecio}></PriceSliderUI>
-        <RatingAndCapacityUI></RatingAndCapacityUI>
-        <ScheduleInputUI setRangoHorario={setRangoHorario}></ScheduleInputUI>
         <CapacityUI setCapacity={setCapacity}></CapacityUI>
-        <ScheduleInputUI></ScheduleInputUI>
+        <ScheduleInputUI setRangoHorario={setRangoHorario}></ScheduleInputUI>
         <DaySelectorUI></DaySelectorUI>
 
         <div className="flex flex-col items-center justify-center mt-4">
