@@ -14,6 +14,8 @@ export interface UseBusquedaInmueblesResult {
   setLocalidad: (localidad: string) => void;
   rangoPrecio: number[];
   setRangoPrecio: (rangoPrecio: number[]) => void;
+  setCapacity: (capacity: number) => void;
+  capacity: number | null;
   data: InmueblesSummaryResponse | undefined | null;
   loading: boolean;
   hasResults: boolean;
@@ -26,6 +28,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
   const [nombre, setNombre] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [rangoPrecios, setRangoPrecio] = useState<number[]>([]);
+  const [capacity, setCapacity] = useState<number | null>(null);
   const [data, setData] = useState<InmueblesSummaryResponse | undefined | null>(
     undefined
   );
@@ -45,10 +48,11 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
         const body = {
           nombre: nombre.trim(),
           localidad: localidad.trim(),
-          rangoPrecios: rangoPrecios,
-          page: page,
+          rangoPrecios,
+          capacidad: capacity,
+          page,
         };
-
+        console.log(body);
         const res = await fetch(`${apiUrl}/property/buscar`, {
           method: "POST",
           headers: {
@@ -76,7 +80,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
         setLoading(false);
       }
     },
-    [nombre, localidad, rangoPrecios]
+    [nombre, localidad, rangoPrecios, capacity]
   );
 
   const clearResults = useCallback(() => {
@@ -95,6 +99,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     setNombre,
     localidad,
     setLocalidad,
+    setCapacity,
+    capacity,
     rangoPrecio: rangoPrecios,
     setRangoPrecio,
     data,
