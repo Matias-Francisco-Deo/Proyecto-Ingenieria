@@ -945,16 +945,17 @@ public class InmuebleServiceImplTest {
 
         Inmueble inm = new Inmueble(
                 "Quincho", "Es un lugar espacioso", 500d, "Morón", 100, "No romper nada",
-                LocalTime.of(9, 0), LocalTime.of(15, 0), jorge, new SinDevolucion(), "lavalle", 987);
+                LocalTime.of(15, 0), LocalTime.of(22, 0), jorge, new SinDevolucion(), "lavalle", 987);
         inm.setAvailableDays(Collections.emptyList());
         inmuebleService.create(inm, emptyImages);
 
-        // Si falla es porque analiza que hay una chance para reservar "hoy"
-        for (int i=1; i < 8; i++) {
-            peticionService.create(new Peticion(juan, inm,
+        for (int i=0; i < 8; i++) {
+            Peticion p = peticionService.create(new Peticion(juan, inm,
                     LocalDate.now().plusDays(i),
-                    LocalTime.of(10, 0), LocalTime.of(12, 0),
+                    LocalTime.of(16, 0), LocalTime.of(19, 0),
                     1000D));
+
+            peticionService.approve(p.getId());
         }
 
         int pageSize = 1;
@@ -964,13 +965,12 @@ public class InmuebleServiceImplTest {
                 "",
                 null,
                 null,
-                LocalTime.of(9, 0),
                 LocalTime.of(15, 0),
+                LocalTime.of(22, 0),
                 PageRequest.of(0, pageSize)
         );
 
         Page<Inmueble> pagina1 = inmuebleService.findByFiltro(filtroPagina1);
-        System.out.println(pagina1.getContent());
         assertTrue(pagina1.getContent().isEmpty());
     }
 

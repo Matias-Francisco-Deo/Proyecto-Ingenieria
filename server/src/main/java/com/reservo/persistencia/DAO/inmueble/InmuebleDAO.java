@@ -36,14 +36,7 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
                     "   JOIN estado_de_peticion e ON e.id = p.estado_id " +
                     "   WHERE p.inmueble_id = i.id " +
                     "   AND e.dtype = 'Vigente' " +
-                    "   AND (p.fecha_del_evento = CURRENT_DATE " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '1 days' " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '2 days' " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '3 days' " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '4 days' " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '5 days' " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '6 days' " +
-                    "        OR p.fecha_del_evento = CURRENT_DATE + INTERVAL '7 days') " +
+                    "   AND (p.fecha_del_evento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days') " +
                     "))" +
             ")";
 
