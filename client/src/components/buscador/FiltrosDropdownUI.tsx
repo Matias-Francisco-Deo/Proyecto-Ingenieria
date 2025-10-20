@@ -1,4 +1,4 @@
-import RatingAndCapacityUI from "./filtros/CalificacionCapacidad";
+import CapacityUI from "./filtros/CapacityUI";
 import DaySelectorUI from "./filtros/dia";
 import ScheduleInputUI from "./filtros/horario";
 import PriceSliderUI from "./filtros/PriceSliderUI";
@@ -7,6 +7,8 @@ interface FiltrosDropdownUIProps {
   localidad: string;
   setLocalidad: (localidad: string) => void;
   setRangoPrecio: (rangoPrecio: number[]) => void;
+  setRangoHorario: (rangoHorario: string[]) => void;
+  setCapacity: (capacity: number) => void;
   loading: boolean;
   isVisible: boolean;
   onAplicarFiltros: () => void;
@@ -16,6 +18,8 @@ export default function FiltrosDropdownUI({
   localidad,
   setLocalidad,
   setRangoPrecio,
+  setRangoHorario,
+  setCapacity,
   loading,
   isVisible,
   onAplicarFiltros,
@@ -47,8 +51,8 @@ export default function FiltrosDropdownUI({
           </label>
         </div>
         <PriceSliderUI setRangoPrecio={setRangoPrecio}></PriceSliderUI>
-        <RatingAndCapacityUI></RatingAndCapacityUI>
-        <ScheduleInputUI></ScheduleInputUI>
+        <CapacityUI setCapacity={setCapacity}></CapacityUI>
+        <ScheduleInputUI setRangoHorario={setRangoHorario}></ScheduleInputUI>
         <DaySelectorUI></DaySelectorUI>
 
         <div className="flex flex-col items-center justify-center mt-4">
