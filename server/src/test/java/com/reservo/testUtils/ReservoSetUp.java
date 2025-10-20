@@ -177,7 +177,6 @@ Inmueble inmuebleMatiasSevero = new Inmueble(
         return new Peticion(user, inmueble, LocalDate.now().plusDays(1 + masDias), LocalTime.of(12, 0), LocalTime.of(13, 30), 100D);
     }
 
-    //@AfterEach
     @Test
     @Disabled("Ejecutar con cuidado, borra TODO")
     void teardown() {

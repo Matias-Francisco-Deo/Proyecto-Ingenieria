@@ -2,17 +2,21 @@ package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Inmueble.InmuebleModifyRequestDTO;
 import com.reservo.controller.dto.Inmueble.InmuebleRemoveImagesDTO;
+import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.Filtro;
 import com.reservo.modelo.politicasDeCancelacion.Flexible;
 import com.reservo.modelo.property.*;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
+import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.EmailRepetido;
 import com.reservo.service.exception.InmuebleRepetidoException;
+import com.reservo.service.exception.TienePeticionVigenteException;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +29,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -36,13 +41,16 @@ public class InmuebleServiceImplTest {
 
 
     @Autowired
-    private TestService testService; // cambiar por uno para inmueble
+    private TestService testService;
 
     @Autowired
     private InmuebleService inmuebleService;
 
     @Autowired
     private UsuarioService userService;
+
+    @Autowired
+    private PeticionService peticionService;
 
     private Usuario jorge;
     private Usuario juan;
@@ -52,6 +60,7 @@ public class InmuebleServiceImplTest {
     private InmuebleModifyRequestDTO inmuebleDTO1;
     private MockMultipartFile mockImage;
     private InmuebleRemoveImagesDTO removeImagesDTO;
+    Peticion peticionDeJuanito;
 
     @BeforeEach
     public void setUp() throws EmailRepetido {
@@ -85,6 +94,10 @@ public class InmuebleServiceImplTest {
 
         userService.create(jorge);
         userService.create(juan);
+
+
+        peticionDeJuanito = new Peticion(juan, inmueble1, LocalDate.now().plusDays(10), LocalTime.of(13, 0), LocalTime.of(14, 0), 100D);
+
     }
 
     @Test
@@ -465,6 +478,74 @@ public class InmuebleServiceImplTest {
 
     }
 
+    @Test
+    void seEliminaUnInmueble() {
+        inmuebleService.create(inmueble1, emptyImages);
+        Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
+
+        assertTrue(in.isPresent());
+
+        inmuebleService.delete(inmueble1.getId());
+
+        in = inmuebleService.findById(inmueble1.getId());
+
+        assertFalse(in.isPresent());
+    }
+
+    @Test
+    void seIntentaEliminarUnInmuebleQueNoExiste() {
+        inmueble1.setId(-1L);
+        Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
+
+        assertFalse(in.isPresent());
+
+        assertThrows(NoSuchElementException.class, () -> inmuebleService.delete(in.get().getId()));
+    }
+
+    @Test
+    void seIntentaEliminarUnInmuebleQueTienePeticionesVigentes() {
+        inmuebleService.create(inmueble1, emptyImages);
+
+        peticionService.create(peticionDeJuanito);
+        peticionService.approve(peticionDeJuanito.getId());
+
+        assertThrows(TienePeticionVigenteException.class, () -> inmuebleService.delete(inmueble1.getId()));
+    }
+
+    @Test
+    void seEliminaUnInmuebleYSusPeticionesPendientes() {
+        inmuebleService.create(inmueble1, emptyImages);
+        Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
+        assertTrue(in.isPresent());
+
+        peticionService.create(peticionDeJuanito);
+        Optional<Peticion> pt = peticionService.findById(peticionDeJuanito.getId());
+        assertTrue(pt.isPresent());
+
+        inmuebleService.delete(inmueble1.getId());
+
+        in = inmuebleService.findById(inmueble1.getId());
+        assertFalse(in.isPresent());
+        pt = peticionService.findById(peticionDeJuanito.getId());
+        assertFalse(pt.isPresent());
+    }
+
+    @Test
+    void seEliminaUnInmuebleYSusPeticionesCanceladas() {
+        inmuebleService.create(inmueble1, emptyImages);
+        Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
+        assertTrue(in.isPresent());
+
+        peticionService.create(peticionDeJuanito);
+        peticionService.reject(new RechazoDTO(peticionDeJuanito.getInmueble().getOwner().getId(), peticionDeJuanito.getId(), "Por gil"));
+
+        inmuebleService.delete(inmueble1.getId());
+
+        in = inmuebleService.findById(inmueble1.getId());
+        assertFalse(in.isPresent());
+        Optional<Peticion> pt = peticionService.findById(peticionDeJuanito.getId());
+        assertFalse(pt.isPresent());
+    }
     @Test
     public void seBuscaUbicacionDeInmuebleConTildesYTraeResultadosComoSiNoTuviera() throws EmailRepetido {
         userService.create(jorge);
