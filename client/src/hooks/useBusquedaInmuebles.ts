@@ -1,5 +1,6 @@
 import type { Inmueble } from "@/types/types";
 import { useState, useCallback } from "react";
+import { toast } from "react-toastify";
 
 export interface InmueblesSummaryResponse {
   content: Inmueble[];
@@ -14,6 +15,8 @@ export interface UseBusquedaInmueblesResult {
   setLocalidad: (localidad: string) => void;
   rangoPrecio: number[];
   setRangoPrecio: (rangoPrecio: number[]) => void;
+  rangoHorario: string[];
+  setRangoHorario: (rangoHorario: string[]) => void;
   data: InmueblesSummaryResponse | undefined | null;
   loading: boolean;
   hasResults: boolean;
@@ -26,6 +29,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
   const [nombre, setNombre] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [rangoPrecios, setRangoPrecio] = useState<number[]>([]);
+  const [rango_Horarios, setRangoHorario] = useState<string[]>([]);
   const [data, setData] = useState<InmueblesSummaryResponse | undefined | null>(
     undefined
   );
@@ -33,10 +37,22 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
 
   const handleBuscar = useCallback(
     async (page: number = 0) => {
-      // Si no hay nombre ni localidad, resetea
-      if (!nombre.trim() && !localidad.trim() && rangoPrecios.length === 0) {
+      // Si no hay nada resetea
+      if (!nombre.trim() && !localidad.trim() && rangoPrecios.length === 0 && rango_Horarios.length === 0) {
         setData(undefined);
         return;
+      }
+
+      if (rango_Horarios.length > 0) {
+        if (rango_Horarios[0] === rango_Horarios[1]) {
+          toast.error("El horario de inicio y fin no puede ser igual");
+          return;
+        }
+        
+        if (rango_Horarios[0] > rango_Horarios[1]) {
+            toast.error("El horario de fin no puede menor al de inicio");
+            return;
+        }
       }
 
       setLoading(true);
@@ -46,6 +62,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
           nombre: nombre.trim(),
           localidad: localidad.trim(),
           rangoPrecios: rangoPrecios,
+          rangoHorarios: rango_Horarios,
           page: page,
         };
 
@@ -76,7 +93,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
         setLoading(false);
       }
     },
-    [nombre, localidad, rangoPrecios]
+    [nombre, localidad, rangoPrecios, rango_Horarios]
   );
 
   const clearResults = useCallback(() => {
@@ -84,6 +101,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     setNombre("");
     setLocalidad("");
     setRangoPrecio([]);
+    setRangoHorario([]);
   }, []);
 
   // Determina si hay resultados basado en la data
@@ -97,6 +115,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     setLocalidad,
     rangoPrecio: rangoPrecios,
     setRangoPrecio,
+    rangoHorario: rango_Horarios,
+    setRangoHorario,
     data,
     loading,
     hasResults,
