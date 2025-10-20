@@ -1,20 +1,30 @@
 package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Usuario.CredentialsDTO;
+import com.reservo.modelo.politicasDeCancelacion.Flexible;
+import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
+import com.reservo.modelo.property.enums.DiasDeLaSemana;
+import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
+import com.reservo.service.InmuebleService;
+import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +38,37 @@ public class UsuarioServiceImplTests {
     private TestService testService;
 
     @Autowired
+    private InmuebleService inmuebleService;
+
+    @Autowired
+    private PeticionService peticionService;
+
+    @Autowired
     private UsuarioService usuarioService;
+
     Usuario jorge;
     Usuario juanito;
+    Inmueble inmueble1;
+    Inmueble inmueble2;
+    Peticion peticionDeJorge;
+    Peticion peticionDeJuanito;
+
 
     @BeforeEach
     void crearInstancias() {
         jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
         juanito = new Usuario("juanito", "bb22", "juanito@yahoo.com.ar");
+
+        ReservoImage image1 = new ReservoImage("plaza2", "plaza2.jpg");
+        inmueble1 = new Inmueble(
+                "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
+                LocalTime.of(12, 0), LocalTime.of(20, 0), DiasDeLaSemana.getTodos(), new Flexible(), List.of(image1), juanito,"lavalle",987);
+        inmueble2 = new Inmueble(
+                "Plaza", "Es una plaza linda", 200d,"Berazategui", 100, "No romper nada",
+                LocalTime.of(12, 0), LocalTime.of(20, 0), DiasDeLaSemana.getTodos(), new Flexible(), List.of(image1), jorge,"lavalle",987);
+
+        peticionDeJorge = new Peticion(jorge, inmueble1, LocalDate.now().plusDays(1), LocalTime.of(12, 0), LocalTime.of(20, 0), 100D);
+        peticionDeJuanito = new Peticion(juanito, inmueble2, LocalDate.now().plusDays(1), LocalTime.of(12, 0), LocalTime.of(20, 0), 100D);
     }
 
     @Test
@@ -106,6 +139,77 @@ public class UsuarioServiceImplTests {
         assertEquals("jorge", credenciales2.username());
         assertFalse(credenciales2.key().isEmpty());
         assertNotEquals(credenciales1.key(), credenciales2.key());
+    }
+
+
+    @Test
+    void noSePuedeEliminarUserConReservasVigentes() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(juanito);
+        inmuebleService.create(inmueble1, new ArrayList<>());
+
+        peticionService.create(peticionDeJorge);
+        peticionService.approve(peticionDeJorge.getId());
+
+        assertThrows(UsuarioNoPuedeSerEliminado.class, () -> usuarioService.delete(jorge.getId()));
+    }
+
+    @Test
+    void noSePuedeEliminarUserConPeticionesVigentes() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(juanito);
+        inmuebleService.create(inmueble2, new ArrayList<>());
+
+        peticionService.create(peticionDeJuanito);
+        peticionService.approve(peticionDeJuanito.getId());
+
+        assertThrows(UsuarioNoPuedeSerEliminado.class, () -> usuarioService.delete(jorge.getId()));
+    }
+
+    @Test
+    void seEliminaUsuarioSinReservasNiPeticionesDeLaApp() throws EmailRepetido {
+        usuarioService.create(jorge);
+
+        usuarioService.delete(jorge.getId());
+
+        assertTrue(usuarioService.findAll().isEmpty());
+    }
+
+    @Test
+    void seEliminaUsuarioConReservas() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(juanito);
+        inmuebleService.create(inmueble1, new ArrayList<>());
+
+        peticionService.create(peticionDeJorge);
+
+        usuarioService.delete(jorge.getId());
+
+        assertEquals(1, usuarioService.findAll().size());
+    }
+
+    @Test
+    void seEliminaUsuarioConPeticionesPendientes() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(juanito);
+        inmuebleService.create(inmueble1, new ArrayList<>());
+
+        peticionService.create(peticionDeJorge);
+
+        usuarioService.delete(jorge.getId());
+
+        assertEquals(1, usuarioService.findAll().size());
+    }
+
+    @Test
+    void seEliminaUsuarioConReservasPendientes() throws EmailRepetido {
+        usuarioService.create(jorge);
+        usuarioService.create(juanito);
+        inmuebleService.create(inmueble2, new ArrayList<>());
+
+        peticionService.create(peticionDeJuanito);
+
+        usuarioService.delete(jorge.getId());
     }
 
 

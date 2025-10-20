@@ -1,99 +1,132 @@
 import type { Inmueble } from "@/types/types";
 import { useState, useCallback } from "react";
+import { toast } from "react-toastify";
 
 export interface InmueblesSummaryResponse {
-    content: Inmueble[];
-    totalPages: number;
-    number: number;
+  content: Inmueble[];
+  totalPages: number;
+  number: number;
 }
 
 export interface UseBusquedaInmueblesResult {
-    nombre: string;
-    setNombre: (nombre: string) => void;
-    localidad: string;
-    setLocalidad: (localidad: string) => void;
-    data: InmueblesSummaryResponse | undefined | null;
-    loading: boolean;
-    hasResults: boolean;
-    handleBuscar: (page?: number) => Promise<void>;
-    clearResults: () => void;
+  nombre: string;
+  setNombre: (nombre: string) => void;
+  localidad: string;
+  setLocalidad: (localidad: string) => void;
+  rangoPrecio: number[];
+  setRangoPrecio: (rangoPrecio: number[]) => void;
+  rangoHorario: string[];
+  setRangoHorario: (rangoHorario: string[]) => void;
+  setCapacity: (capacity: number) => void;
+  capacity: number | null;
+  data: InmueblesSummaryResponse | undefined | null;
+  loading: boolean;
+  hasResults: boolean;
+  handleBuscar: (page?: number) => Promise<void>;
+  clearResults: () => void;
 }
 
 export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const [nombre, setNombre] = useState("");
-    const [localidad, setLocalidad] = useState("");
-    const [data, setData] = useState<
-        InmueblesSummaryResponse | undefined | null
-    >(undefined);
-    const [loading, setLoading] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [nombre, setNombre] = useState("");
+  const [localidad, setLocalidad] = useState("");
+  const [rangoPrecios, setRangoPrecio] = useState<number[]>([]);
+  const [rango_Horarios, setRangoHorario] = useState<string[]>([]);
+  const [capacity, setCapacity] = useState<number | null>(null);
+  const [data, setData] = useState<InmueblesSummaryResponse | undefined | null>(
+    undefined
+  );
+  const [loading, setLoading] = useState(false);
 
-    const handleBuscar = useCallback(
-        async (page: number = 0) => {
-            // Si no hay nombre ni localidad, resetea
-            if (!nombre.trim() && !localidad.trim()) {
-                setData(undefined);
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                const body = {
-                    nombre: nombre.trim(),
-                    localidad: localidad.trim(),
-                    page: page,
-                };
-
-                const res = await fetch(`${apiUrl}/property/buscar`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(body),
-                });
-
-                if (!res.ok) {
-                    if (res.status === 404) {
-                        setData(null);
-                    } else {
-                        console.error(`Error HTTP: ${res.status}`);
-                        setData(null);
-                    }
-                    return;
-                }
-
-                const json: InmueblesSummaryResponse = await res.json();
-                setData(json);
-            } catch (error) {
-                console.error("Error al buscar inmuebles:", error);
-                setData(null);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [nombre, localidad]
-    );
-
-    const clearResults = useCallback(() => {
+  const handleBuscar = useCallback(
+    async (page: number = 0) => {
+      // Si no hay nada resetea
+      if (!nombre.trim() && !localidad.trim() && rangoPrecios.length === 0 && rango_Horarios.length === 0) {
         setData(undefined);
-        setNombre("");
-        setLocalidad("");
-    }, []);
+        return;
+      }
 
-    // Determina si hay resultados basado en la data
-    const hasResults =
-        data !== undefined && data !== null && data.content.length > 0;
+      if (rango_Horarios.length > 0) {
+        if (rango_Horarios[0] === rango_Horarios[1]) {
+          toast.error("El horario de inicio y fin no puede ser igual");
+          return;
+        }
 
-    return {
-        nombre,
-        setNombre,
-        localidad,
-        setLocalidad,
-        data,
-        loading,
-        hasResults,
-        handleBuscar,
-        clearResults,
-    };
+        if (rango_Horarios[0] > rango_Horarios[1]) {
+            toast.error("El horario de fin no puede menor al de inicio");
+            return;
+        }
+      }
+
+      setLoading(true);
+
+      try {
+        const body = {
+          nombre: nombre.trim(),
+          localidad: localidad.trim(),
+          rangoPrecios: rangoPrecios,
+          rangoHorarios: rango_Horarios,
+          capacidad: capacity,
+          page,
+        };
+
+        const res = await fetch(`${apiUrl}/property/buscar`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          if (res.status === 404) {
+            setData(null);
+          } else {
+            console.error(`Error HTTP: ${res.status}`);
+            setData(null);
+          }
+          return;
+        }
+
+        const json: InmueblesSummaryResponse = await res.json();
+        setData(json);
+      } catch (error) {
+        console.error("Error al buscar inmuebles:", error);
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [nombre, localidad, rangoPrecios, rango_Horarios, capacity]
+  );
+
+  const clearResults = useCallback(() => {
+    setData(undefined);
+    setNombre("");
+    setLocalidad("");
+    setRangoPrecio([]);
+    setRangoHorario([]);
+  }, []);
+
+  // Determina si hay resultados basado en la data
+  const hasResults =
+    data !== undefined && data !== null && data.content.length > 0;
+
+  return {
+    nombre,
+    setNombre,
+    localidad,
+    setLocalidad,
+    rangoPrecio: rangoPrecios,
+    setRangoPrecio,
+    rangoHorario: rango_Horarios,
+    setRangoHorario,
+    setCapacity,
+    capacity,
+    data,
+    loading,
+    hasResults,
+    handleBuscar,
+    clearResults,
+  };
 };

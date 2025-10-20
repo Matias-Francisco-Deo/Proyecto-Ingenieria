@@ -6,11 +6,16 @@ import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.AuthInfo;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
+import com.reservo.persistencia.DAO.PeticionDAO;
+import com.reservo.persistencia.DAO.inmueble.InmuebleDAO;
 import com.reservo.persistencia.DAO.user.AuthInfoDAO;
 import com.reservo.persistencia.DAO.user.UsuarioDAO;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.user.UsuarioNoExiste;
+import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,10 +30,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioDAO usuarioDAO;
     private final AuthInfoDAO authInfoDAO;
+    private final PeticionDAO peticionDAO;
+    private final InmuebleDAO inmuebleDAO;
 
-    public UsuarioServiceImpl(UsuarioDAO usuarioDAO, AuthInfoDAO authInfoDAO) {
+    public UsuarioServiceImpl(UsuarioDAO usuarioDAO, AuthInfoDAO authInfoDAO, PeticionDAO peticionDAO, InmuebleDAO inmuebleDAO) {
         this.usuarioDAO = usuarioDAO;
         this.authInfoDAO = authInfoDAO;
+        this.peticionDAO = peticionDAO;
+        this.inmuebleDAO = inmuebleDAO;
     }
 
     @Override
@@ -58,8 +67,22 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void delete(Usuario usuario) {
+    public void delete(Long userId) {
+        Optional<Usuario> usuario = usuarioDAO.findById(userId);
+        if (usuario.isEmpty()) throw new UsuarioNoExiste("No existe el usuario que quiere eliminar.");
 
+        boolean tieneReservasVigentes = usuarioDAO.tieneReservasVigentes(userId);
+        boolean peticionesVigentes = usuarioDAO.tienePeticionesVigentes(userId);
+
+        if (peticionesVigentes && tieneReservasVigentes) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas y peticiones en proceso.");
+        if (tieneReservasVigentes) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene reservas en proceso.");
+        if (peticionesVigentes) throw new UsuarioNoPuedeSerEliminado("No se puede eliminar la cuenta porque tiene peticiones de sus inmuebles, todavía en proceso.");
+
+        peticionDAO.deleteByClient(userId); // la cascada del papu >:V
+        peticionDAO.deleteByOwner(userId);
+        inmuebleDAO.deleteByOwner(userId);
+        authInfoDAO.deleteByUserId(userId);
+        usuarioDAO.deleteById(userId);
     }
 
     @Override

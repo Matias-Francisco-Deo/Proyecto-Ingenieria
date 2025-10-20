@@ -8,7 +8,7 @@ import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.property.enums.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
-import com.reservo.persistencia.DAO.InmuebleDAO;
+import com.reservo.persistencia.DAO.inmueble.InmuebleDAO;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.persistencia.DAO.user.UsuarioDAO;
 import com.reservo.testUtils.TestService;
@@ -185,10 +185,6 @@ public class PeticionDAOTests {
 
     @Test
     void laPeticionNoEsDeUnDueñoEspecifico() {
-
-
-
-
 
         peticionDAO.save(peticionDeJorge);
 

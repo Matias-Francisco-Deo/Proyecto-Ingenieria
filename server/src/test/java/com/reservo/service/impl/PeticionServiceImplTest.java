@@ -104,7 +104,7 @@ public class PeticionServiceImplTest {
     }
 
     @Test
-    public void solicitaLaPlazaElUsuarioJorge() throws EmailRepetido {
+    public void solicitaLaPlazaElUsuarioJorge() {
 
 
 
@@ -441,7 +441,7 @@ public class PeticionServiceImplTest {
     }
 
     @Test
-    public void jorgeSolicitaSuListadoDeReservasVigentes() throws EmailRepetido {
+    public void jorgeSolicitaSuListadoDeReservasVigentes() {
 
 
 

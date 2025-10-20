@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import CalendarioCarrusel from "../components/CalendarioCarrusel";
 import CarruselHorarios from "../components/CarruselHorarios";
 import { useUser } from "../hooks/useUser";
-import type { HorarioDTO, Inmueble, MappedHorarioDTO } from "@/types/types";
+import type { ErrorResponse, HorarioDTO, Inmueble, MappedHorarioDTO } from "@/types/types";
 import { useToast } from "@/hooks/useToast";
+import { toast } from "react-toastify";
 
 export default function PeticionForm() {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -16,7 +17,6 @@ export default function PeticionForm() {
         MappedHorarioDTO[]
     >([]);
     const [sending, setSending] = useState(false);
-    const [message, setMessage] = useState("");
 
     const horariosRef = useRef<HTMLDivElement>(null);
     const infoRef = useRef<HTMLDivElement>(null);
@@ -131,9 +131,8 @@ export default function PeticionForm() {
             inicioSeleccion === null ||
             finSeleccion === null
         ) {
-            setMessage("Seleccione un día y un rango de horarios válido");
+            toast.error("Seleccione un día y un rango de horarios válidos")
             resetComponents();
-            setTimeout(() => setMessage(""), 5000); // limpiar mensaje después de 4s
             return;
         }
 
@@ -165,21 +164,23 @@ export default function PeticionForm() {
                 body: JSON.stringify(payload),
             });
 
-            if (!res.ok) {
-                const errData = await res.json();
-                setMessage(errData?.message || "Error al enviar la petición");
+
+            const peticionError = (await res.json()) as ErrorResponse;
+            console.log(peticionError.error);
+            if (peticionError.error) {
+                toast.error(peticionError.error);
+                setTimeout(() => {
+                    location.href = "/home";
+                }, 2500);
                 return;
             }
 
-            setMessage("✅ Petición enviada exitosamente!");
+            toast.info("Su petición a sido enviada exitosamente!")
             resetComponents(); // reiniciamos componentes sin borrar mensaje
-            setTimeout(() => setMessage(""), 4000);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.error(err);
             toastError("Hubo un error inesperado.");
             resetComponents();
-            setTimeout(() => setMessage(""), 4000);
         } finally {
             setSending(false);
         }
@@ -285,17 +286,6 @@ export default function PeticionForm() {
                         >
                             {sending ? "Enviando..." : "Enviar"}
                         </button>
-                        {message && (
-                            <p
-                                className={`text-sm ${
-                                    message.includes("exitosamente")
-                                        ? "text-green-400"
-                                        : "text-red-500"
-                                }`}
-                            >
-                                {message}
-                            </p>
-                        )}
                     </div>
                 </div>
             </div>

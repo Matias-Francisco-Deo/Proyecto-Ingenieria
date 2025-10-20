@@ -9,23 +9,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        String deploy = "https://proyecto-ingenieria-git-deploy-matias-deos-projects.vercel.app";
         registry.addMapping("/public/**")
-                .allowedOrigins("http://localhost:5173", "https://proyecto-ingenieria-mu.vercel.app", "https://proyecto-ingenieria-git-dev-matias-deos-projects.vercel.app")
+                .allowedOrigins("http://localhost:5173", deploy, "https://proyecto-ingenieria-mu.vercel.app", "https://proyecto-ingenieria-git-dev-matias-deos-projects.vercel.app")
                 .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:5173","https://proyecto-ingenieria-mu.vercel.app", "https://proyecto-ingenieria-git-fix-auth-matias-deos-projects.vercel.app")
+                .allowedOrigins("http://localhost:5173","https://proyecto-ingenieria-mu.vercel.app", deploy, "https://proyecto-ingenieria-git-fix-auth-matias-deos-projects.vercel.app")
                 .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
         registry.addMapping("/auth/**")
-                .allowedOrigins("http://localhost:5173", "https://proyecto-ingenieria-mu.vercel.app", "https://proyecto-ingenieria-git-fix-auth-matias-deos-projects.vercel.app")
+                .allowedOrigins("http://localhost:5173", "https://proyecto-ingenieria-mu.vercel.app", deploy,"https://proyecto-ingenieria-git-fix-auth-matias-deos-projects.vercel.app")
                 .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "https://proyecto-ingenieria-mu.vercel.app", "https://proyecto-ingenieria-git-fix-auth-matias-deos-projects.vercel.app")
+                .allowedOrigins("http://localhost:5173", "https://proyecto-ingenieria-mu.vercel.app", deploy,"https://proyecto-ingenieria-git-fix-auth-matias-deos-projects.vercel.app")
                 .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

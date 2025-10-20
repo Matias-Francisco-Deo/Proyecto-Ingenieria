@@ -4,6 +4,7 @@ import com.reservo.controller.dto.Inmueble.*;
 import com.reservo.controller.exception.DTOResponseError;
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.UsuarioService;
@@ -82,14 +83,14 @@ public final class InmuebleControllerREST {
     @PostMapping("/buscar")
     public ResponseEntity<Page<InmuebleSummaryDTO>> buscarInmuebles(
             @RequestBody BusquedaInmueblesDTO filtros
-    ) {
-        Page<Inmueble> findByNameAndLocalidad = this.inmuebleService.findByFiltro(filtros.aModelo());
+    ) throws ParametroIncorrecto {
+        Page<Inmueble> findByFiltro = this.inmuebleService.findByFiltro(filtros.aModelo());
 
-        if (findByNameAndLocalidad.isEmpty()) {
+        if (findByFiltro.isEmpty()) {
             return ResponseEntity.status(404).body(null);
         }
 
-        Page<InmuebleSummaryDTO> inmuebles = findByNameAndLocalidad.map(InmuebleSummaryDTO::desdeModelo);
+        Page<InmuebleSummaryDTO> inmuebles = findByFiltro.map(InmuebleSummaryDTO::desdeModelo);
 
         return ResponseEntity.ok(inmuebles);
     }
@@ -97,10 +98,7 @@ public final class InmuebleControllerREST {
     public ResponseEntity<List<String>> getInmuebleImages(@PathVariable Long id) {
         return inmuebleService.findById(id)
                 .map(inmueble -> {
-                    List<String> imagePaths = inmueble.getImages()
-                            .stream()
-                            .map(filename -> "/uploads/" + filename)
-                            .toList();
+                    List<String> imagePaths = inmueble.getImages().stream().map(ReservoImage::getUrl).collect(Collectors.toList());
                     return ResponseEntity.ok(imagePaths);
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
@@ -118,5 +116,11 @@ public final class InmuebleControllerREST {
         Page<InmuebleResponseDTO> inmuebles = allPropertiesByOwner.map(InmuebleResponseDTO::desdeModelo);
 
         return ResponseEntity.ok(inmuebles);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DTOResponseError> deleteInmueble(@PathVariable Long id) {
+        this.inmuebleService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
