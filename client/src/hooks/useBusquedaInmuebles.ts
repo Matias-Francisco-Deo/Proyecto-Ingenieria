@@ -17,6 +17,8 @@ export interface UseBusquedaInmueblesResult {
   setRangoPrecio: (rangoPrecio: number[]) => void;
   rangoHorario: string[];
   setRangoHorario: (rangoHorario: string[]) => void;
+  setCapacity: (capacity: number) => void;
+  capacity: number | null;
   data: InmueblesSummaryResponse | undefined | null;
   loading: boolean;
   hasResults: boolean;
@@ -30,6 +32,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
   const [localidad, setLocalidad] = useState("");
   const [rangoPrecios, setRangoPrecio] = useState<number[]>([]);
   const [rango_Horarios, setRangoHorario] = useState<string[]>([]);
+  const [capacity, setCapacity] = useState<number | null>(null);
   const [data, setData] = useState<InmueblesSummaryResponse | undefined | null>(
     undefined
   );
@@ -48,7 +51,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
           toast.error("El horario de inicio y fin no puede ser igual");
           return;
         }
-        
+
         if (rango_Horarios[0] > rango_Horarios[1]) {
             toast.error("El horario de fin no puede menor al de inicio");
             return;
@@ -63,7 +66,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
           localidad: localidad.trim(),
           rangoPrecios: rangoPrecios,
           rangoHorarios: rango_Horarios,
-          page: page,
+          capacidad: capacity,
+          page,
         };
 
         const res = await fetch(`${apiUrl}/property/buscar`, {
@@ -93,7 +97,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
         setLoading(false);
       }
     },
-    [nombre, localidad, rangoPrecios, rango_Horarios]
+    [nombre, localidad, rangoPrecios, rango_Horarios, capacity]
   );
 
   const clearResults = useCallback(() => {
@@ -117,6 +121,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     setRangoPrecio,
     rangoHorario: rango_Horarios,
     setRangoHorario,
+    setCapacity,
+    capacity,
     data,
     loading,
     hasResults,

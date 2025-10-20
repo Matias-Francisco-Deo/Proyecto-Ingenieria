@@ -4,6 +4,7 @@ import FiltrosDropdownUI from "@/components/buscador/FiltrosDropdownUI";
 
 import type { UseBusquedaInmueblesResult } from "@/hooks/useBusquedaInmuebles";
 import { useState } from "react";
+import { useToast } from "@/hooks/useToast";
 
 type BuscadorDeInmueblesProps = UseBusquedaInmueblesResult;
 
@@ -15,12 +16,15 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
     setLocalidad,
     setRangoPrecio,
     setRangoHorario,
+    setCapacity,
+    capacity,
     data,
     loading,
     handleBuscar,
   } = props;
 
   const [isFiltrosDropdownOpen, setIsFiltrosDropdownOpen] = useState(false);
+  const { toastError } = useToast();
 
   const toggleFiltrosDropdown = () => setIsFiltrosDropdownOpen((prev) => !prev);
 
@@ -29,6 +33,10 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
   };
 
   const onAplicarFiltros = () => {
+    if (capacity == 0) {
+      toastError("La capacidad mínima es 1.");
+      return;
+    }
     toggleFiltrosDropdown();
     handleBuscar(0);
   };
@@ -48,6 +56,7 @@ export default function BuscadorDeInmuebles(props: BuscadorDeInmueblesProps) {
           setLocalidad={setLocalidad}
           setRangoPrecio={setRangoPrecio}
           setRangoHorario={setRangoHorario}
+          setCapacity={setCapacity}
           loading={loading}
           isVisible={isFiltrosDropdownOpen}
           onAplicarFiltros={onAplicarFiltros}

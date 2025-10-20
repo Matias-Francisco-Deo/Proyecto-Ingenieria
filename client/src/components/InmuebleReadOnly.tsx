@@ -6,7 +6,7 @@ export default function InmuebleReadOnly({ inmueble }: { inmueble: Inmueble }) {
       <p className="text-2xl font-bold text-amber-400">
         Precio Por Hora: ${inmueble.price}
       </p>
-      
+
       <p>
         <span className="font-semibold text-lg">Horario: </span>
         {inmueble.start} - {inmueble.end}
@@ -25,6 +25,11 @@ export default function InmuebleReadOnly({ inmueble }: { inmueble: Inmueble }) {
           <span>{inmueble.number}</span>
         </div>
       </div>
+      <div className="flex items-center gap-1">
+        <span className="font-semibold text-lg">Capacidad: </span>
+        <span>{inmueble.capacity}</span>
+      </div>
+
       <p>
         <span className="font-semibold text-lg">Condiciones: </span>
         {inmueble.condition}

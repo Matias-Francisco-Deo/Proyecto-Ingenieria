@@ -9,6 +9,7 @@ import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
 import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
+import com.reservo.service.exception.NoExisteInmuebleExpcetion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class PeticionControllerREST {
                 .orElseThrow(() -> new ParametroIncorrecto("Usuario no encontrado"));
 
         Inmueble inmueble = inmuebleService.findById(peticionDTO.inmuebleId())
-                .orElseThrow(() -> new ParametroIncorrecto("Inmueble no encontrado"));
+                .orElseThrow(() -> new NoExisteInmuebleExpcetion("No existe la publicación que quiere solicitar"));
         Peticion peticion = peticionDTO.aModelo(inmueble,user);
 
         Peticion saved = peticionService.create(peticion);

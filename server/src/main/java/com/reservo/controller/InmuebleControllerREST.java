@@ -119,4 +119,10 @@ public final class InmuebleControllerREST {
 
         return ResponseEntity.ok(inmuebles);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DTOResponseError> deleteInmueble(@PathVariable Long id) {
+        this.inmuebleService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

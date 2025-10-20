@@ -12,6 +12,7 @@ public record BusquedaInmueblesDTO(
         String nombre,
         List<Integer> rangoPrecios,
         List<LocalTime> rangoHorarios,
+        Integer capacidad,
         int page
 ) {
     public Filtro aModelo() throws ParametroIncorrecto {
@@ -21,6 +22,8 @@ public record BusquedaInmueblesDTO(
         verificarRango(tieneRangoDePrecios);
         verificarRangoHorario(tieneRangoHorarios);
 
+        verificarCapacidad();
+
         return new Filtro(
                 this.localidad,
                 this.nombre,
@@ -28,8 +31,13 @@ public record BusquedaInmueblesDTO(
                 tieneRangoDePrecios ? this.rangoPrecios.getLast() : null, // max
                 tieneRangoHorarios ? this.rangoHorarios.getFirst() : null,
                 tieneRangoHorarios ? this.rangoHorarios.getLast() : null,
+                this.capacidad,
                 PageRequest.of(page, 10)
         );
+    }
+
+    private void verificarCapacidad() throws ParametroIncorrecto {
+        if (this.capacidad != null && this.capacidad < 1) throw new ParametroIncorrecto("La capacidad debe ser mayor o igual a 1.");
     }
 
     private void verificarRango(boolean tieneRangoDePrecios) throws ParametroIncorrecto {

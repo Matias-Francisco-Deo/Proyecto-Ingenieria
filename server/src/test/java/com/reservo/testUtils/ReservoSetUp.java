@@ -36,8 +36,8 @@ public class ReservoSetUp {
     Usuario jorge = new Usuario("jorge", "aa21", "jorge@yahoo.com.ar");
     Usuario juanito = new Usuario("juanito", "bb22", "juanito@yahoo.com.ar");
     Usuario pepe = new Usuario("pepe", "cc33", "pepe@gmail.com");
-    Usuario dueño = new Usuario("Matias", "123", "reservoapptmmj@gmail.com");
-    Usuario cliente = new Usuario("Tomas", "123", "tm1453766@gmail.com");
+    Usuario matias = new Usuario("Matias", "123", "reservoapptmmj@gmail.com");
+    Usuario tomas = new Usuario("Tomas", "123", "tm1453766@gmail.com");
     List<DiasDeLaSemana> availableDays = List.of(DiasDeLaSemana.LUNES, DiasDeLaSemana.MIERCOLES, DiasDeLaSemana.SABADO);
 
     Inmueble inmueble1 = new Inmueble(
@@ -62,14 +62,14 @@ public class ReservoSetUp {
             "Casa de té", "Es un lugar con mucho té", 2000d,"Morón", 100, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café2.jpg"),juanito, "Balcarce",100);
     Inmueble inmueble7 = new Inmueble(
-            "Pizzería Espacial", "Es alta pizzería, mucho espacio y alta calidad", 200d,"Berazategui", 100, "No romper nada",
+            "Pizzería Espacial", "Es alta pizzería, mucho espacio y alta calidad", 200d,"Berazategui", 60, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("pizza.jpg"),jorge, "lavalle",987);
 
     Inmueble inmueble8 = new Inmueble(
             "Cafetería del mar", "Amo los caracoles, y acá puse todos los que tengo", 200d,"Varela", 100, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "San Martín",100);
     Inmueble inmueble9 = new Inmueble(
-            "Montaña privada del este", "Perfecto para acampados", 200d,"Moron", 100, "No romper nada",
+            "Montaña privada del este", "Perfecto para acampados", 200d,"Moron", 20, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("quincho-para-reuniones.jpg"),jorge, "Lavalle",100);
 
     Inmueble inmueble10 = new Inmueble(
@@ -80,10 +80,10 @@ public class ReservoSetUp {
             "Quincho para fiestas de 15", "Muchos árboles y un escenario grande", 200d,"Quilmes", 100, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("quincho.webp"),juanito, "pelegrini",123);
     Inmueble inmueble12 = new Inmueble(
-            "Bar Los Perdidos", "Tenemos equipo de música", 200d,"Avellaneda", 100, "No romper nada",
+            "Bar Los Perdidos", "Tenemos equipo de música", 200d,"Avellaneda", 1000, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "Mitre",1500);
     Inmueble inmueble13 = new Inmueble(
-            "Bar los piratas", "Espadas de verdad!", 150d,"Quilmes", 100, "No romper nada",
+            "Bar los piratas", "Espadas de verdad!", 150d,"Quilmes", 25, "No romper nada",
             LocalTime.of(12, 0), LocalTime.of(15, 0), availableDays, new Flexible(), List.of("café3.jpg"),juanito, "pelegrini",123);
     Inmueble inmueble14 = new Inmueble(
             "Cafetería Los alpes", "tenemos café", 200d,"Varela", 100, "No romper nada",
@@ -93,13 +93,13 @@ public class ReservoSetUp {
             LocalTime.of(12, 0), LocalTime.of(15, 0),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"), juanito, "pelegrini",123);
     Inmueble inmuebleMatiasFlexible = new Inmueble(
             "QuinchoFlexible", "Bola de disco, muchas luces.", 200d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Flexible(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
 Inmueble inmuebleMatiasSinDevolucion = new Inmueble(
-            "QuinchoSinDevolucion", "Bola de disco, muchas luces.", 350d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+            "QuinchoSinDevolucion", "Bola de disco, muchas luces.", 350d,"Quilmes", 1, "No romper nada",
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new SinDevolucion(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
 Inmueble inmuebleMatiasSevero = new Inmueble(
             "QuinchoSevero", "Bola de disco, muchas luces.", 10000d,"Quilmes", 100, "No romper nada",
-            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Severo(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),dueño, "pelegrini",123);
+            LocalTime.of(12, 0), LocalTime.of(23, 30),availableDays, new Severo(), List.of("boliche.jpg", "boliche2.webp", "boliche3.png"),matias, "pelegrini",123);
 
 
 
@@ -118,8 +118,8 @@ Inmueble inmuebleMatiasSevero = new Inmueble(
         usuarioService.create(jorge);
         usuarioService.create(juanito);
         usuarioService.create(pepe);
-        usuarioService.create(dueño);
-        usuarioService.create(cliente);
+        usuarioService.create(matias);
+        usuarioService.create(tomas);
 
         for (Inmueble inmueble : inmuebles) {
             inmuebleService.create(inmueble, List.of());
@@ -144,12 +144,12 @@ Inmueble inmuebleMatiasSevero = new Inmueble(
         Long ownerId5 = peticiones.get(5).getInmueble().getOwner().getId();
         peticionService.reject(new RechazoDTO(ownerId5, peticiones.get(5).getId(), "Se me complicó") );
 
-        Peticion peticionClienteADueño = getPeticionNueva(cliente, inmuebleMatiasFlexible, 2);
+        Peticion peticionClienteADueño = getPeticionNueva(tomas, inmuebleMatiasFlexible, 2);
         peticionService.create(peticionClienteADueño);
 
-        Peticion peticionClienteADueñoSevero = getPeticionNueva(cliente, inmuebleMatiasSevero, 3);
+        Peticion peticionClienteADueñoSevero = getPeticionNueva(tomas, inmuebleMatiasSevero, 3);
         peticionService.create(peticionClienteADueñoSevero);
-        Peticion peticionClienteADueñoSinDevolucion = getPeticionNueva(cliente, inmuebleMatiasSinDevolucion, 3);
+        Peticion peticionClienteADueñoSinDevolucion = getPeticionNueva(tomas, inmuebleMatiasSinDevolucion, 3);
         peticionService.create(peticionClienteADueñoSinDevolucion);
 
     }
@@ -158,7 +158,6 @@ Inmueble inmuebleMatiasSevero = new Inmueble(
         return new Peticion(user, inmueble, LocalDate.now().plusDays(1 + masDias), LocalTime.of(12, 0), LocalTime.of(13, 30), 100D);
     }
 
-    //@AfterEach
     @Test
     @Disabled("Ejecutar con cuidado, borra TODO")
     void teardown() {
