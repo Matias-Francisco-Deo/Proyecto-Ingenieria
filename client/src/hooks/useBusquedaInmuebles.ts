@@ -17,8 +17,8 @@ export interface UseBusquedaInmueblesResult {
   setRangoPrecio: (rangoPrecio: number[]) => void;
   rangoHorario: string[];
   setRangoHorario: (rangoHorario: string[]) => void;
-  setCapacity: (capacity: number) => void;
   capacity: number | null;
+  setCapacity: (capacity: number) => void;
   data: InmueblesSummaryResponse | undefined | null;
   loading: boolean;
   hasResults: boolean;
@@ -41,7 +41,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
   const handleBuscar = useCallback(
     async (page: number = 0) => {
       // Si no hay nada resetea
-      if (!nombre.trim() && !localidad.trim() && rangoPrecios.length === 0 && rango_Horarios.length === 0) {
+      if (!nombre.trim() && !localidad.trim() && rangoPrecios.length === 0 && rango_Horarios.length === 0 && capacity === 0) {
         setData(undefined);
         return;
       }
@@ -106,6 +106,7 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     setLocalidad("");
     setRangoPrecio([]);
     setRangoHorario([]);
+    setCapacity(1);
   }, []);
 
   // Determina si hay resultados basado en la data
@@ -121,8 +122,8 @@ export const useBusquedaInmuebles = (): UseBusquedaInmueblesResult => {
     setRangoPrecio,
     rangoHorario: rango_Horarios,
     setRangoHorario,
-    setCapacity,
     capacity,
+    setCapacity,
     data,
     loading,
     hasResults,
