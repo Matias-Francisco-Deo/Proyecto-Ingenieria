@@ -31,21 +31,15 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     String FIND_BY_HORARIO_QUERY_PART =
             "(CAST(:horarioMin AS TIME) IS NULL OR CAST(:horarioMax AS TIME) IS NULL OR " +
                     "((i.hora_inicio >= :horarioMin AND i.hora_fin <= :horarioMax) " +
-                    "AND NOT EXISTS (" +
-                    "   SELECT 1 FROM peticion p " +
+                    "AND i.id NOT IN (" +
+                    "   SELECT p.inmueble_id " +
+                    "   FROM peticion p " +
                     "   JOIN estado_de_peticion e ON e.id = p.estado_id " +
-                    "   WHERE p.inmueble_id = i.id " +
-                    "   AND e.dtype = 'Vigente' " +
-                    "   AND (p.fecha_del_evento = CURRENT_DATE " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '1 days' " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '2 days' " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '3 days' " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '4 days' " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '5 days' " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '6 days' " +
-                    "        AND p.fecha_del_evento = CURRENT_DATE + INTERVAL '7 days') " +
-                    "))" +
-            ")";
+                    "   WHERE e.dtype = 'Vigente' " +
+                    "     AND p.fecha_del_evento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days' " +
+                    "   GROUP BY p.inmueble_id " +
+                    "   HAVING COUNT(DISTINCT p.fecha_del_evento) = 8" + // ← si tiene peticiones en todos los días
+                    ")))";
 
     String FIND_BY_FILTRO_QUERY =
             "FROM inmueble i " +
