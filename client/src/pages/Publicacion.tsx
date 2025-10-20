@@ -7,7 +7,6 @@ import InmuebleReadOnly from "../components/InmuebleReadOnly";
 import { useUser } from "@/hooks/useUser";
 import CarruselEditable from "@/components/CarruselEditable";
 import { toast } from "react-toastify";
-// import EditNoteIcon from '@mui/icons-material';
 
 export default function Publicacion() {
   const [inmueble, setInmueble] = useState<Inmueble | null>(null);
@@ -40,8 +39,6 @@ export default function Publicacion() {
     setPreviewImages((prev) => prev.filter((_, i) => i !== index));
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
-
-  // terminá imágenes
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id"); // id de la publicación
@@ -190,7 +187,26 @@ export default function Publicacion() {
   return (
     <div className="p-6 text-white border border-gray-700 rounded-xl">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-extrabold">{inmueble.name}</h1>
+        {editando ? (
+            <div className="flex items-center gap-1 text-amber-400">
+                <label htmlFor="name">Nombre:</label>
+                <input
+                id="name"
+                type="text"
+                name="name"
+                value={inmueble.name ?? ""}
+                onChange={(e) =>
+                    setInmueble((prev) =>
+                    prev ? { ...prev, name: e.target.value } : prev
+                    )
+                }
+                placeholder="Nombre"
+                className="rounded-md bg-gray-600 px-3 py-1.5 text-base text-white outline-none focus:ring-2"
+                />
+            </div>
+            ) : (
+            <h1 className="text-3xl font-extrabold">{inmueble.name}</h1>
+        )}
         <div className="border border-gray-600 rounded-lg px-4 py-2 ml-4 flex items-center gap-3">
           <p className="text-base text-white">{inmueble.ownerEmail}</p>
           <p className="text-lg font-semibold text-gray-200">
@@ -277,14 +293,14 @@ export default function Publicacion() {
                   }
 
                   if (!response) return;
-                  
+
                   if (response.ok) {
                     setSelectedFiles([]);
                     setPreviewImages([]);
                     setEditando(false);
                     location.href = `/publicacion?id=${inmueble.id}`;
                   }
-                  
+
                   const updateError = (await response.json()) as ErrorResponse;
                   console.log(updateError.error);
                   if (updateError.error) {

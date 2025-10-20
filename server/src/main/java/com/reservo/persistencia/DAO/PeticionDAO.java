@@ -66,6 +66,14 @@ public interface PeticionDAO extends JpaRepository<Peticion, Long> {
     Page<Peticion> findAllReservasByEstado(@Param("userId") Long userId, Pageable page, @Param("estado") Class<?> estado);
 
     @Modifying
+    @Query("DELETE FROM Peticion p WHERE p.cliente.id = :userId")
+    void deleteByClient(@Param("userId") Long userId);
+
+    @Modifying
+    @Query("DELETE FROM Peticion p WHERE p.inmueble.owner.id = :userId")
+    void deleteByOwner(@Param("userId") Long userId);
+
+    @Modifying
     @Query("DELETE FROM Peticion p WHERE p.inmueble.id = :inmuebleId")
     void deleteByInmueble(@Param("inmuebleId")Long inmuebleId);
 

@@ -25,7 +25,7 @@ public class Peticion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Usuario cliente;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Inmueble } from "@/types/types";
 import Dias from "./Dias";
 import { toast } from "react-toastify";
@@ -18,6 +18,12 @@ export default function InmuebleEditable({
   const [selectedDays, setSelectedDays] = useState<Set<string>>(days);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [showPopup, setShowPopup] = useState(false);
+
+
+  useEffect(() => {
+    setFormData(inmueble);
+    setSelectedDays(new Set(inmueble.availableDays));
+  }, [inmueble]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -79,7 +85,7 @@ export default function InmuebleEditable({
     <div className="space-y-3">
       <div className="space-y-4 p-4 bg-gray-800 rounded-lg">
         {/* Nombre */}
-        <div className="flex flex-col gap-1 text-amber-400">
+        {/* <div className="flex flex-col gap-1 text-amber-400">
           <label htmlFor="name">Nombre:</label>
           <input
             id="name"
@@ -90,7 +96,7 @@ export default function InmuebleEditable({
             placeholder="Nombre"
             className={inputClass("name")}
           />
-        </div>
+        </div> */}
 
         {/* Precio */}
         <div className="flex flex-col gap-1 text-amber-400">
