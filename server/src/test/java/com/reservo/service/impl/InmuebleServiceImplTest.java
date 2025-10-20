@@ -16,6 +16,7 @@ import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.EmailRepetido;
 import com.reservo.service.exception.InmuebleRepetidoException;
+import com.reservo.service.exception.NoExisteInmuebleExpcetion;
 import com.reservo.service.exception.TienePeticionVigenteException;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -502,11 +503,8 @@ public class InmuebleServiceImplTest {
     @Test
     void seIntentaEliminarUnInmuebleQueNoExiste() {
         inmueble1.setId(-1L);
-        Optional<Inmueble> in = inmuebleService.findById(inmueble1.getId());
 
-        assertFalse(in.isPresent());
-
-        assertThrows(NoSuchElementException.class, () -> inmuebleService.delete(in.get().getId()));
+        assertThrows(NoExisteInmuebleExpcetion.class, () -> inmuebleService.delete(inmueble1.getId()));
     }
 
     @Test
@@ -1045,7 +1043,7 @@ public class InmuebleServiceImplTest {
         for (int i=0; i < 8; i++) {
             Peticion p = peticionService.create(new Peticion(juan, inm,
                     LocalDate.now().plusDays(i),
-                    LocalTime.of(16, 0), LocalTime.of(19, 0),
+                    LocalTime.of(17, 0), LocalTime.of(19, 0),
                     1000D));
 
             peticionService.approve(p.getId());
