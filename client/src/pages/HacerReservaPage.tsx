@@ -86,7 +86,6 @@ export default function PeticionForm() {
                 );
                 setHorariosOcupados(ocupados);
             } catch (err) {
-                console.log(err);
                 setHorariosOcupados([]);
             }
         };

@@ -19,7 +19,6 @@ export default function InmuebleEditable({
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [showPopup, setShowPopup] = useState(false);
 
-
   useEffect(() => {
     setFormData(inmueble);
     setSelectedDays(new Set(inmueble.availableDays));
@@ -50,7 +49,8 @@ export default function InmuebleEditable({
       "street",
       "number",
       "condition",
-      "description"
+      "capacity",
+      "description",
     ];
 
     requiredFields.forEach((field) => {
@@ -61,7 +61,7 @@ export default function InmuebleEditable({
     });
 
     setErrors(newErrors);
-    
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -84,20 +84,6 @@ export default function InmuebleEditable({
   return (
     <div className="space-y-3">
       <div className="space-y-4 p-4 bg-gray-800 rounded-lg">
-        {/* Nombre */}
-        {/* <div className="flex flex-col gap-1 text-amber-400">
-          <label htmlFor="name">Nombre:</label>
-          <input
-            id="name"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Nombre"
-            className={inputClass("name")}
-          />
-        </div> */}
-
         {/* Precio */}
         <div className="flex flex-col gap-1 text-amber-400">
           <label htmlFor="price">Precio Por Hora:</label>
@@ -178,13 +164,21 @@ export default function InmuebleEditable({
                   e.preventDefault();
                 }
               }}
-              className={`no-spin flex-[1] min-w-[90px] ${inputClass("number")}`}
+              className={`no-spin flex-[1] min-w-[90px] ${inputClass(
+                "number"
+              )}`}
             />
           </div>
         </div>
 
         {/* Días */}
-        <div className={errors["availableDays"] ? "border-2 border-red-500 p-2 rounded-md" : ""}>
+        <div
+          className={
+            errors["availableDays"]
+              ? "border-2 border-red-500 p-2 rounded-md"
+              : ""
+          }
+        >
           <Dias selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
         </div>
 
@@ -203,32 +197,47 @@ export default function InmuebleEditable({
         </div>
 
         {/* Cancelación */}
-        <div className="flex flex-col gap-1 text-amber-400 relative">
-          <label htmlFor="cancellation">Política de cancelación:</label>
-          <div className="flex items-center gap-2">
-            <select
-              name="cancellation"
-              id="cancellation"
-              value={formData.cancellation}
-              onChange={handleChange}
-              className={inputClass("cancellation")}
-            >
-              <option value="Sin_Devolucion">Sin devolución</option>
-              <option value="Flexible">Flexible</option>
-              <option value="Severo">Severo</option>
-            </select>
-            <button
-              type="button"
-              onClick={() => setShowPopup(true)}
-              className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 text-white hover:bg-amber-500 transition cursor-pointer"
-              aria-label="Información sobre políticas de cancelación"
-            >
-              ?
-            </button>
+        <div className="flex flex-row gap-1 text-amber-400 relative">
+          <div className="flex-[1]">
+            <label htmlFor="cancellation">Política de cancelación:</label>
+            <div className="flex items-center gap-2">
+              <select
+                name="cancellation"
+                id="cancellation"
+                value={formData.cancellation}
+                onChange={handleChange}
+                className={inputClass("cancellation")}
+              >
+                <option value="Sin_Devolucion">Sin devolución</option>
+                <option value="Flexible">Flexible</option>
+                <option value="Severo">Severo</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => setShowPopup(true)}
+                className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 text-white hover:bg-amber-500 transition cursor-pointer"
+                aria-label="Información sobre políticas de cancelación"
+              >
+                ?
+              </button>
+            </div>
+            <PoliticasPopup show={showPopup} setShow={setShowPopup} />
           </div>
 
-          
-          <PoliticasPopup show={showPopup} setShow={setShowPopup} />
+          <div className="flex-[1]">
+            <label htmlFor="capacity">Capacidad</label>
+            <input
+              id="capacity"
+              type="number"
+              name="capacity"
+              value={formData.capacity}
+              onChange={handleChange}
+              onKeyDown={(e) => {
+                if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+              }}
+              className={`no-spin ${inputClass("capacity")}`}
+            />
+          </div>
         </div>
 
         {/* Descripción */}
@@ -243,7 +252,6 @@ export default function InmuebleEditable({
             className={`w-full h-25 ${inputClass("description")}`}
           />
         </div>
-
 
         <div className="flex gap-2 mt-4">
           <button

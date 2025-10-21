@@ -3,6 +3,7 @@ import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
 import type { ErrorResponse, PendingPetition } from "@/types/types";
 import { useToast } from "@/hooks/useToast";
+import { toast } from "react-toastify";
 
 export default function PetitionPage() {
     const [petition, setPetition] = useState<PendingPetition | null>(null);
@@ -210,8 +211,7 @@ export default function PetitionPage() {
                 peticionId: id,
             }),
         }).catch((err) => {
-            console.log(err);
-            toastError("Hubo un error inesperado.");
+            toast.error("Hubo un error inesperado.");
             return;
         });
 
@@ -244,14 +244,11 @@ export default function PetitionPage() {
                 motivoDeRechazo: rejectionMotive.current?.value,
             }),
         }).catch((err) => {
-            console.log(err);
             toastError("Hubo un error inesperado.");
             return;
         });
 
         if (!response) return;
-
-        console.log(response);
 
         if (response.ok) {
             setApprovalMessage("Rechazo exitoso.");
@@ -260,8 +257,6 @@ export default function PetitionPage() {
         }
 
         const rejectErrorResponse = (await response.json()) as ErrorResponse;
-
-        console.log(rejectErrorResponse);
 
         if (rejectErrorResponse.error) {
             setRejError(rejectErrorResponse.error);

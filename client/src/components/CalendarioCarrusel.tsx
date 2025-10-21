@@ -208,12 +208,10 @@ export default function CalendarioCarrusel({ onDaySelect, availableDays }: Props
 
   function getDayOfMonthSelection(monthIndex: number) {
     // Filtrar todos los días disponibles del mes seleccionado y año
-    // console.log(days[0])
     const availableDaysInMonth = days.filter(
       (d) => d.getFullYear() === selectedYear && d.getMonth() + 1 === monthIndex
     );
     
-    console.log(availableDaysInMonth[0].getDate());
     // Retornar el primer día disponible del mes
     return availableDaysInMonth[0].getDate();
   }

@@ -30,7 +30,6 @@ export default function DatosUsuarioPage() {
 
   const fetchUsuario = async (cancelled: boolean) => {
     try {
-      console.log("Fetching usuario for id:", userId);
       const res = await fetch(`${API_URL}/auth/datos-usuario/${userId}`);
       if (!res.ok) throw new Error("Hubo un error inesperado.");
       const data = await res.json();
@@ -105,7 +104,6 @@ export default function DatosUsuarioPage() {
         setUsername(valor);
       }
     } catch (error) {
-      console.log(error);
       toastError("Hubo un error inesperado");
     }
   };

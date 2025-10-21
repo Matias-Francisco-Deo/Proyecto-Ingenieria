@@ -18,7 +18,6 @@ export default function ListaDePublicaciones() {
     const { getId } = useUser();
     const apiUrl = import.meta.env.VITE_API_URL;
     const handleListProperties = async (page: number = 0) => {
-        // console.log(getId());
         setLoading(true);
         try {
             const res = await fetch(
@@ -35,7 +34,6 @@ export default function ListaDePublicaciones() {
             }
 
             const json: InmueblesSummaryResponse = await res.json();
-            // console.log(json.content[0]);
             setData(json);
         } catch {
             setData(null);

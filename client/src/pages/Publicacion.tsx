@@ -162,7 +162,7 @@ export default function Publicacion() {
     if (!response) return;
 
     if (response.ok) {
-      toast.info(`Se ha dado de baja el inmueble: ${inmueble?.name}`);
+      toast.success(`Se ha dado de baja el inmueble: ${inmueble?.name}`);
       setTimeout(() => {
         location.href = "/mis-publicaciones";
       }, 2500);
@@ -302,12 +302,14 @@ export default function Publicacion() {
                   }
 
                   const updateError = (await response.json()) as ErrorResponse;
-                  console.log(updateError.error);
                   if (updateError.error) {
                     toast.error(updateError.error);
-                    setTimeout(() => {
-                      location.href = "/mis-publicaciones";
-                    }, 2500);
+                    
+                    if (updateError.error === "No existe la publicación que quiere modificar") {
+                      setTimeout(() => {
+                        location.href = "/mis-publicaciones";
+                      }, 2500);
+                    }
                     return;
                   }
                 }}
@@ -333,12 +335,13 @@ export default function Publicacion() {
               {isOwner && (
                 <>
                   {/* Botón para editar la publicación am */}
-                  <div className="flex">
+                  <div className="flex justify-center mt-6 gap-4 content-center">
                     <button
                       onClick={() => setEditando(true)}
-                      className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
+                      className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-1 px-4 rounded-xl cursor-pointer flex items-center"
                       aria-label="Editar publicación"
                     >
+                      Editar
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="48"
@@ -355,9 +358,10 @@ export default function Publicacion() {
                     {/* Botón para eliminar publiación pa */}
                     <button
                       onClick={() => setEliminando(true)}
-                      className="text-white hover:text-amber-500 transition duration-150 ease-in-out p-1 rounded-full"
+                      className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-1 px-4 rounded-xl cursor-pointer flex items-center"
                       aria-label="Eliminar publicación"
                     >
+                      Eliminar
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="48"
@@ -374,11 +378,13 @@ export default function Publicacion() {
                 </>
               )}
               <div className="flex justify-center mt-6 gap-4">
-                <Link href={`/hacer-reserva?id=${inmueble.id}`}>
-                  <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
-                    Reservar
-                  </button>
-                </Link>
+                {!isOwner && (
+                  <Link href={`/hacer-reserva?id=${inmueble.id}`}>
+                    <button className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-xl cursor-pointer">
+                      Reservar
+                    </button>
+                  </Link>
+                )}
               </div>
             </div>
           </>
