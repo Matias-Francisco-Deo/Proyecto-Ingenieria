@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!resp.ok) {
-        throw new Error("Credenciales incorrectas");
+        // toastError("Credenciales incorrectas.");
       }
 
       const data: UserInfo = await resp.json();

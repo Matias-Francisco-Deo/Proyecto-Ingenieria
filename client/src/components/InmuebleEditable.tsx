@@ -235,7 +235,7 @@ export default function InmuebleEditable({
               onKeyDown={(e) => {
                 if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
               }}
-              className={`no-spin ${inputClass("capacity")}`}
+              className={`no-spin  ${inputClass("capacity")}`}
             />
           </div>
         </div>
