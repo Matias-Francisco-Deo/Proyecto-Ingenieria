@@ -59,6 +59,25 @@ export default function InmuebleEditable({
         toast.error("Faltan campos por llenar");
       }
     });
+    
+    const capacity = Number(formData["capacity"]);
+    const number = Number(formData["number"]);
+    
+    if (capacity < 1) {
+      newErrors["capacity"] = true;
+      toast.error("La capacidad no puede ser menor a 1");
+    } else if (!Number.isInteger(capacity)) {
+      newErrors["capacity"] = true;
+      toast.error("La capacidad no puede ser decimal");
+    }
+
+    if (number < 0) {
+      newErrors["number"] = true;
+      toast.error("La altura no puede ser menor 0");
+    } else if (!Number.isInteger(number)) {
+      newErrors["number"] = true;
+      toast.error("La altura no puede ser decimal");
+    }
 
     setErrors(newErrors);
 
@@ -91,6 +110,7 @@ export default function InmuebleEditable({
             id="price"
             type="number"
             name="price"
+            min="0"
             value={formData.price}
             onChange={handleChange}
             placeholder="Precio"
@@ -151,6 +171,7 @@ export default function InmuebleEditable({
             <input
               type="number"
               name="number"
+              min="0"
               value={formData.number}
               onChange={handleChange}
               placeholder="Altura"
@@ -230,6 +251,7 @@ export default function InmuebleEditable({
               id="capacity"
               type="number"
               name="capacity"
+              min="1"
               value={formData.capacity}
               onChange={handleChange}
               onKeyDown={(e) => {

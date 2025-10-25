@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
   selectedDays: Set<string>;
@@ -16,7 +17,6 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
     "Sábado",
   ];
 
-  const [generalErrorMessage, setGeneralErrorMessage] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (selectedDay: string) => {
@@ -28,8 +28,7 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
     } else if (!newSet.has(upperEngDay)) {
       newSet.add(upperEngDay);
     } else {
-      setGeneralErrorMessage("Debe seleccionar al menos un día.");
-      resetErrorMessage();
+      toast.warning("Debe seleccionar al menos un día");
     }
 
     setSelectedDays(newSet);
@@ -46,9 +45,6 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
     <div className="w-full text-white rounded-xl p-4 relative">
       <div className="text-center mb-3">
         <h2 className="text-xl">Seleccione los días disponibles:</h2>
-        {generalErrorMessage && (
-          <p className="mt-2 text-sm text-red-600">{generalErrorMessage}</p>
-        )}
       </div>
 
       {/* Layout de 4 días arriba y 3 abajo centrados */}
@@ -90,11 +86,5 @@ export default function Dias({ selectedDays, setSelectedDays }: Props) {
         {day}
       </button>
     );
-  }
-
-  function resetErrorMessage() {
-    setTimeout(() => {
-      setGeneralErrorMessage("");
-    }, 3000);
   }
 }

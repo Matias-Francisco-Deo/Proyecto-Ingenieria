@@ -150,32 +150,45 @@ export default function createPropertyPage() {
       propertyConditionsIsBlank ||
       propertyCancellationIsBlank
     ) {
-      setGeneralErrorMessage("Complete los campos faltantes.");
+      toast.error("Complete los campos faltantes");
+      // setGeneralErrorMessage("Complete los campos faltantes.");
       resetBlankError();
       return;
     }
 
-    let hasNumberErrorFlag = false;
+    // let hasNumberErrorFlag = false;
+    const capacity_asNum = Number(propertyCapacity.value);
+    const altura_asNum = Number(propertyNumber.value);
 
     if (+propertyPrice.value <= 0) {
       setHasPriceError(true);
-      hasNumberErrorFlag = true;
+      toast.error("El precio no puede ser menor a 0");
+      resetBlankError();
     }
+    
     if (+propertyCapacity.value <= 0) {
       setHasCapacityError(true);
-      hasNumberErrorFlag = true;
+      toast.error("La capacidad no puede ser menor a 1");
+      resetBlankError();
     }
+    
+    if (!Number.isInteger(capacity_asNum)) {
+      setHasCapacityError(true);
+      toast.error("La capacidad no puede ser decimal");
+      resetBlankError();
+    }
+    
     if (+propertyNumber.value <= 0) {
       setHasNumberError(true);
-      hasNumberErrorFlag = true;
+      toast.error("La altura no puede ser menor a 0");
+      resetBlankError();
     }
-
-    if (hasNumberErrorFlag) {
-      setGeneralErrorMessage(
-        "La altura, el precio y la capacidad deben ser valores mayores a 0"
-      );
-
-      return;
+    
+    
+    if (!Number.isInteger(altura_asNum)) {
+      setHasNumberError(true);
+      toast.error("La altura no puede ser decimal");
+      resetBlankError();
     }
 
     const formData = new FormData();
@@ -210,12 +223,17 @@ export default function createPropertyPage() {
     });
 
     try {
-      await fetch(`${apiUrl}/property`, {
+      const res = await fetch(`${apiUrl}/property`, {
         method: "POST",
         body: formData,
       });
 
-      location.href = "/home";
+      if (res.ok) {
+        toast.success("Inmueble creado con éxito");
+        setTimeout(() => {
+          location.href = "/home";
+        }, 2500);
+      }
     } catch (error: unknown) {
       toast.error("Hubo un error inesperado.");
     }
@@ -280,9 +298,6 @@ export default function createPropertyPage() {
               <label htmlFor="nombre" className="block font-medium text-sm/6">
                 Nombre
               </label>
-              {/* {hasNameError && (
-                <p className="mt-2 text-sm text-red-600">{emailErrorMessage}</p> // acá podría cambiar el mensaje de error
-              )} */}
               <div className="mt-2">
                 <input
                   id="nombre"
@@ -366,6 +381,7 @@ export default function createPropertyPage() {
                   name="number"
                   type="number"
                   required
+                  min="0"
                   autoComplete="number"
                   onKeyDown={(e) => {
                     if (
@@ -434,6 +450,7 @@ export default function createPropertyPage() {
                   name="price"
                   type="number"
                   required
+                  min="0"
                   autoComplete="price"
                   onKeyDown={(e) => {
                     if (
@@ -523,6 +540,7 @@ export default function createPropertyPage() {
                   type="number"
                   required
                   autoComplete="capacity"
+                  min="1"
                   onKeyDown={(e) => {
                     if (
                       e.key === "e" ||
@@ -606,7 +624,7 @@ export default function createPropertyPage() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2 cursor-pointer"
               >
                 Dar de Alta
               </button>
@@ -635,3 +653,7 @@ export default function createPropertyPage() {
     }, 3000);
   }
 }
+function isInteger(capacity_asNum: number) {
+  throw new Error("Function not implemented.");
+}
+
