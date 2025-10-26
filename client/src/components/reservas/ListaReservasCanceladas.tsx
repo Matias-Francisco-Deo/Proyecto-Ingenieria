@@ -20,9 +20,13 @@ export default function ListaReservasCanceladas({
         setReservaExpandida(reservaExpandida === id ? null : id);
     };
 
+    const capitalize = (str: string) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     return (
         <ul className="mt-4 w-full md:w-3/4 bg-gray-900 rounded-2xl p-4 md:p-10 mx-auto">
-            <h1 className="text-3xl mb-4">Reservas {state}</h1>
+            <h1 className="text-3xl mb-4">Reservas {capitalize(state)}:</h1>
 
             {reservas.length === 0 && (
                 <p className="text-gray-400">

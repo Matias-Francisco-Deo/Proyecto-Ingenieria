@@ -8,7 +8,6 @@ import com.reservo.modelo.reserva.estadosReservas.Cancelado;
 import com.reservo.modelo.reserva.estadosReservas.Pendiente;
 import com.reservo.modelo.reserva.estadosReservas.Vigente;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.enums.PoliticasDeCancelacion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.persistencia.DAO.PeticionDAO;
 import com.reservo.service.InmuebleService;
@@ -60,7 +59,6 @@ public class PeticionServiceImplTest {
     private Usuario jorge;
     private Usuario alan;
     private Usuario raul;
-    private PoliticasDeCancelacion cancellation;
     private Inmueble inmueble;
     private List<MultipartFile> emptyImages;
     private Peticion peticionDeJorge;

@@ -1,4 +1,4 @@
-import ListaDePeticionesPendientes from "@/components/peticiones/ListaDePeticionesPendientes";
+import ListaDePeticionesPendientes from "@/components/peticiones/listas/ListaDePeticionesPendientes";
 import Paginacion from "@/components/Paginacion";
 import { useUser } from "@/hooks/useUser";
 import type { PendingPetitionDraft } from "@/types/types";

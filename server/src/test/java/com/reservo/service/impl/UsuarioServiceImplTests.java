@@ -13,6 +13,7 @@ import com.reservo.service.PeticionService;
 import com.reservo.service.UsuarioService;
 import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
+import com.reservo.service.exception.user.UsuarioNoExiste;
 import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.testUtils.TestService;
 import org.junit.jupiter.api.AfterEach;
@@ -210,6 +211,12 @@ public class UsuarioServiceImplTests {
         peticionService.create(peticionDeJuanito);
 
         usuarioService.delete(jorge.getId());
+    }
+
+    @Test
+    void noSeEliminaUnUsuarioSiNoExiste() {
+        jorge.setId(-1L);
+        assertThrows(UsuarioNoExiste.class, () -> usuarioService.delete(jorge.getId()));
     }
 
 

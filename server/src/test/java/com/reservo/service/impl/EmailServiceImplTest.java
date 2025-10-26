@@ -4,7 +4,6 @@ import com.reservo.controller.CancelacionDTO;
 import com.reservo.controller.dto.Peticion.RechazoDTO;
 import com.reservo.modelo.property.enums.DiasDeLaSemana;
 import com.reservo.modelo.property.Inmueble;
-import com.reservo.modelo.property.enums.PoliticasDeCancelacion;
 import com.reservo.modelo.politicasDeCancelacion.SinDevolucion;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
@@ -50,7 +49,6 @@ public class EmailServiceImplTest {
     private Usuario matias;
     private Usuario alan;
     private Usuario raul;
-    private PoliticasDeCancelacion cancellation;
     private Inmueble inmueble;
     private List<MultipartFile> emptyImages;
     private Peticion peticionDeMatias;

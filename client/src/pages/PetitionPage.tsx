@@ -3,6 +3,7 @@ import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
 import type { ErrorResponse, PendingPetition } from "@/types/types";
 import { useToast } from "@/hooks/useToast";
+import { toast } from "react-toastify";
 
 export default function PetitionPage() {
     const [petition, setPetition] = useState<PendingPetition | null>(null);
@@ -11,8 +12,6 @@ export default function PetitionPage() {
     const [loading, setLoading] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
     const [rejError, setRejError] = useState("");
-    const [generalError, setGeneralError] = useState("");
-    const [approvalMessage, setApprovalMessage] = useState("");
     const rejectionMotive = useRef<HTMLTextAreaElement>(null);
     const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -148,8 +147,6 @@ export default function PetitionPage() {
                             </button>
                         </div>
                     </div>
-                    <p className="text-green-500">{approvalMessage}</p>
-                    <p className="text-red-500">{generalError}</p>
                 </div>
             </div>
         </div>
@@ -159,14 +156,16 @@ export default function PetitionPage() {
         return (
             <div
                 className={
-                    " w-1/3 flex absolute z-100 justify-self-center top-1/4 flex-col gap-20 p-14 bg-gray-800/60 min-w-96 transition duration-300 ease-in-out " +
+                    "absolute z-100 top-1/4 flex flex-col gap-6 p-14 bg-gray-800 rounded-2xl border-2 border-amber-400 transition duration-300 ease-in-out w-[500px] " +
                     `${
                         isRejecting
-                            ? "opacity-100 pointer-events-auto "
-                            : "opacity-0 pointer-events-none "
+                            ? "opacity-100 pointer-events-auto"
+                            : "opacity-0 pointer-events-none"
                     }`
                 }
+                style={{ left: "50%", transform: "translateX(-50%)" }}
             >
+                <h2 className="text-3xl text-center ">Rechazar petición</h2>
                 <p className="text-2xl">Motivo del rechazo:</p>
                 <form
                     className="flex flex-col gap-10"
@@ -174,7 +173,7 @@ export default function PetitionPage() {
                 >
                     <textarea
                         placeholder="Ingrese el motivo..."
-                        className="p-2 w-full resize-none h-20 bg-gray-800 placeholder-white rounded-xl"
+                        className="p-2 w-full resize-none h-20 bg-gray-900 placeholder-white rounded-xl"
                         ref={rejectionMotive}
                     ></textarea>
                     <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-2 px-7 rounded-xl cursor-pointer">
@@ -185,10 +184,8 @@ export default function PetitionPage() {
                 <div className="top-0 right-0 absolute ">
                     <button
                         type="button"
-                        onClick={() => {
-                            setIsRejecting(false);
-                        }}
-                        className="hover:cursor-pointer absolute top-0 right-0 bg-red-950 hover:bg-red-800 text-white rounded-full w-10 h-10 flex items-center justify-center text-xs"
+                        onClick={() => setIsRejecting(false)}
+                        className="hover:cursor-pointer absolute -top-3 -right-3 bg-black hover:bg-red-800 text-white rounded-full border-2 border-amber-400 w-10 h-10 flex items-center justify-center text-xs"
                     >
                         X
                     </button>
@@ -210,23 +207,23 @@ export default function PetitionPage() {
                 peticionId: id,
             }),
         }).catch((err) => {
-            console.log(err);
-            toastError("Hubo un error inesperado.");
+            toast.error("Hubo un error inesperado.");
             return;
         });
 
         if (!response) return;
 
         if (response.ok) {
-            setApprovalMessage("Petición aceptada.");
-
-            location.href = "/mis-peticiones/pendientes";
+            toast.success("Petición aceptada");
+            setTimeout(() => {
+                location.href = "/mis-peticiones/pendientes";
+            }, 3000);
         }
 
         const approveResponse = (await response.json()) as ErrorResponse;
 
         if (approveResponse.error) {
-            setGeneralError(approveResponse.error);
+            toast.error(approveResponse.error);
             return;
         }
     }
@@ -244,24 +241,20 @@ export default function PetitionPage() {
                 motivoDeRechazo: rejectionMotive.current?.value,
             }),
         }).catch((err) => {
-            console.log(err);
             toastError("Hubo un error inesperado.");
             return;
         });
 
         if (!response) return;
 
-        console.log(response);
-
         if (response.ok) {
-            setApprovalMessage("Rechazo exitoso.");
-
-            location.href = "/mis-peticiones/pendientes";
+            toast.success("Rechazo exitoso");
+            setTimeout(() => {
+                location.href = "/mis-peticiones/pendientes";
+            }, 2500);
         }
 
         const rejectErrorResponse = (await response.json()) as ErrorResponse;
-
-        console.log(rejectErrorResponse);
 
         if (rejectErrorResponse.error) {
             setRejError(rejectErrorResponse.error);
