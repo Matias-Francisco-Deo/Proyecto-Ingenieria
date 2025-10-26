@@ -1,5 +1,5 @@
 import Carrusel from "@/components/Carrusel";
-import InmuebleReadOnly from "@/components/InmuebleReadOnly";
+import InmuebleReadOnly from "@/components/inmueble/InmuebleReadOnly";
 import { Link } from "wouter";
 import type { Inmueble } from "@/types/types";
 

@@ -1,659 +1,212 @@
-// import type { RegisterError } from "../types/types";
-import { useState, type FormEvent } from "react";
-import { useUser } from "@/hooks/useUser";
-import { useAuth } from "@/hooks/useAuth";
-import Dias from "@/components/Dias";
-import PoliticasPopup from "@/components/PoliticasPopup";
+import { type FormEvent } from "react";
 import { toast } from "react-toastify";
+import { usePropertyForm } from "@/hooks/usePropertyForm";
+import { validatePropertyForm } from "@/utils/propertyValidation";
+import FormInput from "@/components/property-form/FormInput";
+import ImageUploadSection from "@/components/property-form/ImageUploadSection";
+import TimeRangeInput from "@/components/property-form/TimeRangeInput";
+import AddressInputs from "@/components/property-form/AddressInputs";
+import CancellationPolicySelect from "@/components/property-form/CancellationPolicySelect";
+import Dias from "@/components/Dias";
 
-export default function createPropertyPage() {
-  const { isAuthenticated } = useAuth();
-  const { getId } = useUser();
-  const [showPopup, setShowPopup] = useState(false);
-
-  /*
-  Constante para usar directamente sobre el <p> definido arriba del input de email
-  */
-  // const [emailErrorMessage, setEmailErrorMessage] = useState("");
-
-  /* Se usa para poner en rojo aquellos campos con errores */
-  const [hasNameError, setHasNameError] = useState(false);
-  const [hasDescriptionError, setHasDescriptionError] = useState(false);
-  const [hasUbicationError, setHasUbicationError] = useState(false);
-  const [hasStreetError, setHasStreetError] = useState(false);
-  const [hasNumberError, setHasNumberError] = useState(false);
-  const [hasPriceError, setHasPriceError] = useState(false);
-  const [hasCapacityError, setHasCapacityError] = useState(false);
-  const [hasConditionsError, setHasConditionsError] = useState(false);
-  const [hasStartTimeError, setHasStartTimeError] = useState(false);
-  const [hasEndTimeError, setHasEndTimeError] = useState(false);
-  const [hasImageError, setHasImageError] = useState(false);
-  const [hasCancellationError, sethasCancellationError] = useState(false);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-
-  /* Se usa para poner el mensaje de error abajo del último input */
-  const [generalErrorMessage, setGeneralErrorMessage] = useState("");
-
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
-  const days = new Set([
-    "DOMINGO",
-    "LUNES",
-    "MARTES",
-    "MIERCOLES",
-    "JUEVES",
-    "VIERNES",
-    "SABADO",
-  ]);
-
-  const [selectedDays, setSelectedDays] = useState<Set<string>>(days);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const newFiles = Array.from(files);
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
-
-    const urls = newFiles.map((file) => URL.createObjectURL(file));
-    setPreviewImages((prev) => [...prev, ...urls]);
-
-    e.target.value = "";
-  };
-
-  const removeImage = (index: number) => {
-    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  async function handleProperty(
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> {
-    event.preventDefault();
-
-    if (!isAuthenticated || !getId()) {
-      setGeneralErrorMessage(
-        "Debes iniciar sesión para dar de alta un inmueble."
-      );
-      return;
-    }
-
-    /*
-    Toma los datos de los input y los envía al backend a /auth
-    También si algo falla muestra el error (en este caso encima del campo de email)
-    */
-
-    const form = event.target as HTMLFormElement;
-
-    const propertyName = form.elements.namedItem("nombre") as HTMLInputElement;
-    const propertyDesc = form.elements.namedItem(
-      "description"
-    ) as HTMLInputElement;
-    const propertyUbication = form.elements.namedItem(
-      "ubication"
-    ) as HTMLInputElement;
-    const propertyStreet = form.elements.namedItem(
-      "street"
-    ) as HTMLInputElement;
-    const propertyNumber = form.elements.namedItem(
-      "number"
-    ) as HTMLInputElement;
-    // const propertyImage = form.elements.namedItem("images") as HTMLInputElement;
-    const propertyPrice = form.elements.namedItem("price") as HTMLInputElement;
-    const propertyStartTime = form.elements.namedItem(
-      "start-event"
-    ) as HTMLInputElement;
-    const propertyEndTime = form.elements.namedItem(
-      "end-event"
-    ) as HTMLInputElement;
-    const propertyCapacity = form.elements.namedItem(
-      "capacity"
-    ) as HTMLInputElement;
-    const propertyConditions = form.elements.namedItem(
-      "conditions"
-    ) as HTMLInputElement;
-    const propertyCancellation = form.elements.namedItem(
-      "cancellation-policy"
-    ) as HTMLSelectElement;
-
-    const propertyNameIsBlank = propertyName.value == "";
-    const propertyDescIsBlank = propertyDesc.value == "";
-    const propertyUbicationIsBlank = propertyUbication.value == "";
-    const propertyStreetIsBlank = propertyStreet.value == "";
-    const propertyNumberIsBlank = propertyNumber.value == "";
-    const propertyImageIsBlank = selectedFiles.length === 0;
-    const propertyPriceIsBlank = propertyPrice.value == "";
-    const propertyStartTimeIsBlank = propertyStartTime.value == "";
-    const propertyEndTimeIsBlank = propertyEndTime.value == "";
-    const propertyCapacityIsBlank = propertyCapacity.value == "";
-    const propertyConditionsIsBlank = propertyConditions.value == "";
-    const propertyCancellationIsBlank = propertyCancellation.value == "";
+export default function CreatePropertyPage() {
+    const {
+        isAuthenticated,
+        getId,
+        errors,
+        generalErrorMessage,
+        selectedFiles,
+        previewImages,
+        handleImageChange,
+        removeImage,
+        selectedDays,
+        setSelectedDays,
+        resetErrors,
+    } = usePropertyForm();
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const userId = getId();
 
-    /* Pone en rojo a los campos que falten  */
-    checkHasNoBlanks();
+    async function handleProperty(
+        event: FormEvent<HTMLFormElement>
+    ): Promise<void> {
+        event.preventDefault();
 
-    /* Si faltan campos, tira error */
-    if (
-      propertyNameIsBlank ||
-      propertyDescIsBlank ||
-      propertyUbicationIsBlank ||
-      propertyStreetIsBlank ||
-      propertyNumberIsBlank ||
-      propertyImageIsBlank ||
-      propertyPriceIsBlank ||
-      propertyStartTimeIsBlank ||
-      propertyEndTimeIsBlank ||
-      propertyCapacityIsBlank ||
-      propertyConditionsIsBlank ||
-      propertyCancellationIsBlank
-    ) {
-      toast.error("Complete los campos faltantes");
-      // setGeneralErrorMessage("Complete los campos faltantes.");
-      resetBlankError();
-      return;
+        if (!isAuthenticated || !getId()) {
+            toast.error("Debes iniciar sesión para dar de alta un inmueble.");
+            return;
+        }
+
+        const form = event.target as HTMLFormElement;
+        const formData = new FormData(form);
+
+        // Validar imágenes
+        if (selectedFiles.length === 0) {
+            toast.error("Debe agregar al menos una imagen");
+            resetErrors();
+            return;
+        }
+
+        // Validar formulario
+        const validation = validatePropertyForm(formData);
+        if (!validation.isValid) {
+            resetErrors();
+            return;
+        }
+
+        // Preparar datos para envío
+        const propertyJson = {
+            name: formData.get("nombre"),
+            description: formData.get("description"),
+            price: formData.get("price"),
+            start: formData.get("start-event"),
+            end: formData.get("end-event"),
+            days: Array.from(selectedDays),
+            ubication: formData.get("ubication"),
+            capacity: formData.get("capacity"),
+            condition: formData.get("conditions"),
+            cancellation: formData.get("cancellation-policy"),
+            userId: getId(),
+            street: formData.get("street"),
+            number: formData.get("number"),
+        };
+
+        const submitFormData = new FormData();
+        submitFormData.append(
+            "property",
+            new Blob([JSON.stringify(propertyJson)], {
+                type: "application/json",
+            })
+        );
+
+        selectedFiles.forEach((file) => {
+            submitFormData.append("images", file);
+        });
+
+        try {
+            const res = await fetch(`${apiUrl}/property`, {
+                method: "POST",
+                body: submitFormData,
+            });
+
+            if (res.ok) {
+                toast.success("Inmueble creado con éxito");
+                setTimeout(() => {
+                    location.href = "/home";
+                }, 2500);
+            } else {
+                toast.error("Error al crear el inmueble");
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toast.error("Hubo un error inesperado.");
+        }
     }
 
-    // let hasNumberErrorFlag = false;
-    const capacity_asNum = Number(propertyCapacity.value);
-    const altura_asNum = Number(propertyNumber.value);
+    return (
+        <div className="text-white">
+            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+                <title>RESERVO - Create property</title>
 
-    if (+propertyPrice.value <= 0) {
-      setHasPriceError(true);
-      toast.error("El precio no puede ser menor a 0");
-      resetBlankError();
-    }
-    
-    if (+propertyCapacity.value <= 0) {
-      setHasCapacityError(true);
-      toast.error("La capacidad no puede ser menor a 1");
-      resetBlankError();
-    }
-    
-    if (!Number.isInteger(capacity_asNum)) {
-      setHasCapacityError(true);
-      toast.error("La capacidad no puede ser decimal");
-      resetBlankError();
-    }
-    
-    if (+propertyNumber.value <= 0) {
-      setHasNumberError(true);
-      toast.error("La altura no puede ser menor a 0");
-      resetBlankError();
-    }
-    
-    
-    if (!Number.isInteger(altura_asNum)) {
-      setHasNumberError(true);
-      toast.error("La altura no puede ser decimal");
-      resetBlankError();
-    }
-
-    const formData = new FormData();
-
-    // Adjuntamos JSON con los datos del inmueble
-    const propertyJson = {
-      name: propertyName.value,
-      description: propertyDesc.value,
-      price: propertyPrice.value,
-      start: propertyStartTime.value,
-      end: propertyEndTime.value,
-      days: Array.from(selectedDays),
-      ubication: propertyUbication.value,
-      capacity: propertyCapacity.value,
-      condition: propertyConditions.value,
-      cancellation: propertyCancellation.value,
-      userId: userId,
-      street: propertyStreet.value,
-      number: propertyNumber.value,
-    };
-
-    formData.append(
-      "property",
-      new Blob([JSON.stringify(propertyJson)], {
-        type: "application/json",
-      })
-    );
-
-    // Adjuntamos todas las imágenes
-    selectedFiles.forEach((file) => {
-      formData.append("images", file);
-    });
-
-    try {
-      const res = await fetch(`${apiUrl}/property`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (res.ok) {
-        toast.success("Inmueble creado con éxito");
-        setTimeout(() => {
-          location.href = "/home";
-        }, 2500);
-      }
-    } catch (error: unknown) {
-      toast.error("Hubo un error inesperado.");
-    }
-
-    function checkHasNoBlanks() {
-      if (propertyNameIsBlank) {
-        setHasNameError(true);
-      }
-      if (propertyDescIsBlank) {
-        setHasDescriptionError(true);
-      }
-      if (propertyUbicationIsBlank) {
-        setHasUbicationError(true);
-      }
-      if (propertyStreetIsBlank) {
-        setHasStreetError(true);
-      }
-      if (propertyNumberIsBlank) {
-        setHasNumberError(true);
-      }
-      if (propertyImageIsBlank) {
-        setHasImageError(true);
-      }
-      if (propertyPriceIsBlank) {
-        setHasPriceError(true);
-      }
-      if (propertyStartTimeIsBlank) {
-        setHasStartTimeError(true);
-      }
-      if (propertyEndTimeIsBlank) {
-        setHasEndTimeError(true);
-      }
-      if (propertyCapacityIsBlank) {
-        setHasCapacityError(true);
-      }
-      if (propertyConditionsIsBlank) {
-        setHasConditionsError(true);
-      }
-      if (propertyCancellationIsBlank) {
-        sethasCancellationError(true);
-      }
-    }
-  }
-
-  return (
-    <div className="text-white">
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <div className="relative flex justify-center">
-            <title>RESERVO - Create property</title>
-          </div>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form
-            method="POST"
-            className="space-y-6"
-            onSubmit={handleProperty}
-            noValidate
-          >
-            <div>
-              <label htmlFor="nombre" className="block font-medium text-sm/6">
-                Nombre
-              </label>
-              <div className="mt-2">
-                <input
-                  id="nombre"
-                  name="nombre"
-                  type="text"
-                  required
-                  autoComplete="nombre"
-                  className={`${
-                    hasNameError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="description"
-                className="block font-medium text-sm/6"
-              >
-                Descripción
-              </label>
-              <div className="mt-2">
-                <input
-                  id="description"
-                  name="description"
-                  type="text"
-                  required
-                  autoComplete="description"
-                  className={`${
-                    hasDescriptionError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="ubication"
-                  className="block font-medium text-sm/6"
-                >
-                  Localidad
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="ubication"
-                  name="ubication"
-                  type="text"
-                  required
-                  autoComplete="ubication"
-                  className={`${
-                    hasUbicationError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div className="mt-2 flex gap-2">
-              <div className="flex-[0.7]">
-                <label htmlFor="street" className="block font-medium text-sm/6">
-                  Calle
-                </label>
-                <input
-                  id="street"
-                  name="street"
-                  type="text"
-                  required
-                  autoComplete="street"
-                  className={`${
-                    hasStreetError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-              <div className="flex-[0.3]">
-                <label htmlFor="number" className="block font-medium text-sm/6">
-                  Altura
-                </label>
-                <input
-                  id="number"
-                  name="number"
-                  type="number"
-                  required
-                  min="0"
-                  autoComplete="number"
-                  onKeyDown={(e) => {
-                    if (
-                      e.key === "e" ||
-                      e.key === "E" ||
-                      e.key === "+" ||
-                      e.key === "-"
-                    ) {
-                      e.preventDefault();
-                    }
-                  }}
-                  className={`no-spin ${
-                    hasNumberError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1 focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="images" className="block font-medium text-sm/6">
-                  Subir imagenes
-                </label>
-              </div>
-              <div className="mt-2 flex gap-2 flex-wrap">
-                <input
-                  id="images"
-                  name="images"
-                  type="file"
-                  multiple
-                  required
-                  autoComplete="images"
-                  onChange={handleImageChange}
-                  className={`${
-                    hasImageError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-                {previewImages.map((img, idx) => (
-                  <div key={idx} className="relative">
-                    <img
-                      src={img}
-                      alt={`Preview ${idx}`}
-                      className="w-32 h-32 object-contain border rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <form
+                        method="POST"
+                        className="space-y-6"
+                        onSubmit={handleProperty}
+                        noValidate
                     >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+                        <FormInput
+                            id="nombre"
+                            name="nombre"
+                            type="text"
+                            label="Nombre"
+                            error={errors.nombre}
+                        />
 
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="price" className="block font-medium text-sm/6">
-                  Precio
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="price"
-                  name="price"
-                  type="number"
-                  required
-                  min="0"
-                  autoComplete="price"
-                  onKeyDown={(e) => {
-                    if (
-                      e.key === "e" ||
-                      e.key === "E" ||
-                      e.key === "+" ||
-                      e.key === "-"
-                    ) {
-                      e.preventDefault();
-                    }
-                  }}
-                  className={`no-spin ${
-                    hasPriceError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
+                        <FormInput
+                            id="description"
+                            name="description"
+                            type="text"
+                            label="Descripción"
+                            error={errors.description}
+                        />
 
-            <div>
-              <div className="flex items-center justify-between">
-                <label className="block font-medium text-sm/6">
-                  Ingresar horarios
-                </label>
-              </div>
-              <div className="mt-2 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="start-event"
-                    className="block font-medium text-sm/6"
-                  >
-                    Inicio
-                  </label>
-                  <input
-                    id="start-event"
-                    name="start-event"
-                    type="time"
-                    step="3600"
-                    required
-                    autoComplete="start-event"
-                    className={`no-time-picker ${
-                      //clase que quita el picker de horario del input
-                      hasStartTimeError ? "inputError" : ""
-                    } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                  />
+                        <FormInput
+                            id="ubication"
+                            name="ubication"
+                            type="text"
+                            label="Localidad"
+                            error={errors.ubication}
+                        />
+
+                        <AddressInputs
+                            streetError={errors.street}
+                            numberError={errors.number}
+                        />
+
+                        <ImageUploadSection
+                            error={errors.images}
+                            previewImages={previewImages}
+                            onImageChange={handleImageChange}
+                            onRemoveImage={removeImage}
+                        />
+
+                        <FormInput
+                            id="price"
+                            name="price"
+                            type="number"
+                            label="Precio"
+                            min="0"
+                            error={errors.price}
+                        />
+
+                        <TimeRangeInput
+                            startError={errors["start-event"]}
+                            endError={errors["end-event"]}
+                        />
+
+                        <Dias
+                            selectedDays={selectedDays}
+                            setSelectedDays={setSelectedDays}
+                        />
+
+                        <FormInput
+                            id="capacity"
+                            name="capacity"
+                            type="number"
+                            label="Capacidad"
+                            min="1"
+                            error={errors.capacity}
+                        />
+
+                        <FormInput
+                            id="conditions"
+                            name="conditions"
+                            type="text"
+                            label="Condiciones de la propiedad"
+                            error={errors.conditions}
+                        />
+
+                        <CancellationPolicySelect
+                            error={errors["cancellation-policy"]}
+                        />
+
+                        {generalErrorMessage && (
+                            <p className="mt-2 text-sm text-red-600">
+                                {generalErrorMessage}
+                            </p>
+                        )}
+
+                        <div>
+                            <button
+                                type="submit"
+                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2 cursor-pointer"
+                            >
+                                Dar de Alta
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="end-event"
-                    className="block font-medium text-sm/6"
-                  >
-                    Fin
-                  </label>
-                  <input
-                    id="end-event"
-                    name="end-event"
-                    type="time"
-                    step="3600"
-                    required
-                    autoComplete="end-event"
-                    className={`no-time-picker ${
-                      //clase que quita el picker de horario del input
-                      hasEndTimeError ? "inputError" : ""
-                    } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                  />
-                </div>
-              </div>
             </div>
-
-            <Dias
-              selectedDays={selectedDays}
-              setSelectedDays={setSelectedDays}
-            ></Dias>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="capacity"
-                  className="block font-medium text-sm/6"
-                >
-                  Capacidad
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="capacity"
-                  name="capacity"
-                  type="number"
-                  required
-                  autoComplete="capacity"
-                  min="1"
-                  onKeyDown={(e) => {
-                    if (
-                      e.key === "e" ||
-                      e.key === "E" ||
-                      e.key === "+" ||
-                      e.key === "-"
-                    ) {
-                      e.preventDefault();
-                    }
-                  }}
-                  className={`no-spin ${
-                    hasCapacityError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="conditions"
-                  className="block font-medium text-sm/6"
-                >
-                  Condiciones de la propiedad
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="conditions"
-                  name="conditions"
-                  type="text"
-                  required
-                  autoComplete="conditions"
-                  className={`${
-                    hasConditionsError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="cancellation-policy"
-                  className="block font-medium text-sm/6"
-                >
-                  Políticas de cancelación
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowPopup(true)}
-                  className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 text-white hover:bg-amber-500 transition cursor-pointer"
-                  aria-label="Información sobre políticas de cancelación"
-                >
-                  ?
-                </button>
-
-                <PoliticasPopup show={showPopup} setShow={setShowPopup} />
-              </div>
-              <div className="mt-2">
-                <select
-                  name="cancellation-policy"
-                  id="cancellation-policy"
-                  required
-                  className={`${
-                    hasCancellationError ? "inputError" : ""
-                  } loginInput -outline-offset-1 focus:-outline-offset-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-black outline-1  focus:outline-2 focus:outline-indigo-600 sm:text-sm/6`}
-                >
-                  <option value="non-restriction">Sin devolución</option>
-                  <option value="Flexible">Flexible</option>
-                  <option value="Severo">Severo</option>
-                </select>
-                {generalErrorMessage && (
-                  <p className="mt-2 text-sm text-red-600">
-                    {generalErrorMessage}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold text-sm/6 text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-indigo-600 focus-visible:outline-offset-2 cursor-pointer"
-              >
-                Dar de Alta
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
-  );
-
-  function resetBlankError() {
-    setTimeout(() => {
-      setHasNameError(false);
-      setHasDescriptionError(false);
-      setHasUbicationError(false);
-      setHasStreetError(false);
-      setHasNumberError(false);
-      setHasImageError(false);
-      setHasPriceError(false);
-      setHasStartTimeError(false);
-      setHasEndTimeError(false);
-      setHasCapacityError(false);
-      setHasConditionsError(false);
-      sethasCancellationError(false);
-      setGeneralErrorMessage("");
-    }, 3000);
-  }
+    );
 }
-function isInteger(capacity_asNum: number) {
-  throw new Error("Function not implemented.");
-}
-
