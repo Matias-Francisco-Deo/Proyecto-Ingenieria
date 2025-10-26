@@ -9,18 +9,18 @@ export default function ReservasPage() {
             component: <Reservas state="pendientes" />,
         },
         {
-            name: "Vigentes",
-            route: "vigentes",
-            component: <Reservas state="vigentes" />,
+            name: "Aceptadas",
+            route: "aceptadas",
+            component: <Reservas state="aceptadas" />,
         },
         {
             name: "Deprecadas",
             route: "deprecadas",
-            component: <div>No hay reservas</div>,
+            component: <div>No hay reservas deprecadas</div>,
         },
         {
-            name: "Canceladas/Rechazadas",
-            route: "canceladas-rechazadas",
+            name: "Canceladas",
+            route: "canceladas",
             component: <Reservas state="canceladas" />,
         },
     ];

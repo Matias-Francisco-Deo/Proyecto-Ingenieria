@@ -12,9 +12,13 @@ export default function ListaReservas({
     reservas,
     detalleLink = (reserva) => `/reserva/${state}?id=${reserva.id}`,
 }: ListaReservasProps) {
+    const capitalize = (str: string) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     return (
         <ul className="mt-4 w-3/4 bg-gray-900 rounded-2xl p-10 min-w-max">
-            <h1 className="text-3xl mb-4">Reservas {state}</h1>
+            <h1 className="text-3xl mb-4">Reservas {capitalize(state)}:</h1>
             {reservas.map((reserva) => (
                 <Link
                     key={reserva.id}
@@ -45,7 +49,6 @@ export default function ListaReservas({
                                 {reserva.dateEmision}
                             </p>
 
-                            
                             {reserva.pagado !== undefined && (
                                 <p className="text-orange-400 text-lg font-bold mt-1">
                                     {reserva.pagado ? "Pagado" : "No pagado"}

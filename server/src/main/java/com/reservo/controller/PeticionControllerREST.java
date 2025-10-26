@@ -78,7 +78,7 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(peticiones);
     }
 
-    @GetMapping("/owner/vigente/{id}")
+    @GetMapping("/owner/aceptadas/{id}")
     public ResponseEntity<Page<PeticionSummaryDTO>> findAllApproveByOwnerId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page
@@ -92,7 +92,7 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(peticiones);
     }
 
-    @GetMapping("/owner/cancelado/{id}")
+    @GetMapping("/owner/canceladas/{id}")
     public ResponseEntity<Page<PeticionSummaryDTO>> findAllRejectByOwnerId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page

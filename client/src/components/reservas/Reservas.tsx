@@ -6,7 +6,7 @@ import { usePagedFetch } from "@/hooks/usePagedFetch";
 import type { ReservaDTO, ReservaCanceladasDTO } from "@/types/types";
 
 interface ReservasProps {
-    state: "pendientes" | "vigentes" | "deprecadas" | "canceladas";
+    state: "pendientes" | "aceptadas" | "deprecadas" | "canceladas";
 }
 
 export default function Reservas({ state }: ReservasProps) {
