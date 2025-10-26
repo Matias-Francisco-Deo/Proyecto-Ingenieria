@@ -206,7 +206,7 @@ export default function PetitionPage() {
             body: JSON.stringify({
                 peticionId: id,
             }),
-        }).catch((err) => {
+        }).catch(() => {
             toast.error("Hubo un error inesperado.");
             return;
         });
@@ -240,7 +240,7 @@ export default function PetitionPage() {
                 peticionId: id,
                 motivoDeRechazo: rejectionMotive.current?.value,
             }),
-        }).catch((err) => {
+        }).catch(() => {
             toastError("Hubo un error inesperado.");
             return;
         });
