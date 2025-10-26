@@ -3,6 +3,7 @@ import Carrusel from "../components/Carrusel";
 import { useUser } from "@/hooks/useUser";
 import type { ErrorResponse, PendingPetition } from "@/types/types";
 import { useToast } from "@/hooks/useToast";
+import { toast } from "react-toastify";
 
 export default function CancelarReservaPage() {
     const [petition, setPetition] = useState<PendingPetition | null>(null);
@@ -10,9 +11,7 @@ export default function CancelarReservaPage() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
-    const [cancelError, setCancelError] = useState("");
     const [generalError, setGeneralError] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
     const cancellationMotive = useRef<HTMLTextAreaElement>(null);
     const { getId } = useUser();
     const { toastError } = useToast();
@@ -192,10 +191,6 @@ export default function CancelarReservaPage() {
                     <button className="bg-red-950 hover:bg-red-800 text-white font-bold py-3 px-10 rounded-2xl text-xl cursor-pointer mx-auto">
                         Cancelar mi reserva
                     </button>
-                    <p className="text-red-500">{cancelError}</p>
-                    {successMessage && (
-                        <p className="text-green-500">{successMessage}</p>
-                    )}
                 </form>
                 <div className="top-0 right-0 absolute">
                     <button
@@ -229,7 +224,7 @@ export default function CancelarReservaPage() {
 
         if (response.ok) {
             setGeneralError("");
-            setSuccessMessage("La reserva se canceló correctamente");
+            toast.success("La reserva se canceló correctamente");
             setTimeout(() => {
                 location.href = "/reservas/pendientes";
             }, 2000);
@@ -238,7 +233,8 @@ export default function CancelarReservaPage() {
 
         const cancelErrorResponse = (await response.json()) as ErrorResponse;
         if (cancelErrorResponse.error) {
-            setCancelError(cancelErrorResponse.error);
+            // setCancelError(cancelErrorResponse.error);
+            toast.error(cancelErrorResponse.error);
             return;
         }
     }

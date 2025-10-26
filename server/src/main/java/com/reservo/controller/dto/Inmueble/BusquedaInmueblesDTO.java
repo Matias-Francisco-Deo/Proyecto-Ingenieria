@@ -37,7 +37,7 @@ public record BusquedaInmueblesDTO(
     }
 
     private void verificarCapacidad() throws ParametroIncorrecto {
-        if (this.capacidad != null && this.capacidad < 0) throw new ParametroIncorrecto("La capacidad debe ser mayor o igual a 1.");
+        if (this.capacidad != null && this.capacidad < 0) throw new ParametroIncorrecto("La capacidad debe ser mayor o igual a 0.");
     }
 
     private void verificarRango(boolean tieneRangoDePrecios) throws ParametroIncorrecto {

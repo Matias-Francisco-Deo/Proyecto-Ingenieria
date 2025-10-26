@@ -19,39 +19,72 @@ const DatosUsuarioPage = lazy(() => import("../pages/DatosUsuarioPage"));
 const Page404 = () => <div>Página no encontrada</div>;
 
 export function AppRoutes() {
-  return (
-    <MainLayout>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/home" component={HomePage} />
-          <Route path="/signin" component={AuthPage} />
-          <ProtectedRoute path="/alta-inmueble" component={PropertyPage} />
-          <Route path="/publicacion" component={Publicacion} />
-          <ProtectedRoute path="/hacer-reserva" component={PeticionForm} />
-          <ProtectedRoute path="/peticion/pendiente" component={PetitionPage} />
-          <ProtectedRoute
-            path="/mis-peticiones/:estado"
-            component={PetitionsPage}
-          />
-          <ProtectedRoute path="/mis-peticiones" component={PetitionsPage} />
-          <ProtectedRoute path="/reservas/:estado" component={ReservasPage} />
-          <ProtectedRoute path="/reservas" component={ReservasPage} />
-          <ProtectedRoute
-            path="/reserva/:estado"
-            component={CancelarReservaPage}
-          />
+    return (
+        <MainLayout>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                    <Route
+                        path="/"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/home"
+                        component={HomePage}
+                    />
+                    <Route
+                        path="/signin"
+                        component={AuthPage}
+                    />
+                    <ProtectedRoute
+                        path="/alta-inmueble"
+                        component={PropertyPage}
+                    />
+                    <Route
+                        path="/publicacion"
+                        component={Publicacion}
+                    />
+                    <ProtectedRoute
+                        path="/hacer-reserva"
+                        component={PeticionForm}
+                    />
+                    <ProtectedRoute
+                        path="/peticion/pendiente"
+                        component={PetitionPage}
+                    />
+                    <ProtectedRoute
+                        path="/mis-peticiones/:estado"
+                        component={PetitionsPage}
+                    />
+                    <ProtectedRoute
+                        path="/mis-peticiones"
+                        component={PetitionsPage}
+                    />
+                    <ProtectedRoute
+                        path="/reservas/:estado"
+                        component={ReservasPage}
+                    />
+                    <ProtectedRoute
+                        path="/reservas"
+                        component={ReservasPage}
+                    />
+                    <ProtectedRoute
+                        path="/reserva/:estado"
+                        component={CancelarReservaPage}
+                    />
 
-          <ProtectedRoute
-            path="/mis-publicaciones"
-            component={PublicacionesPage}
-          />
+                    <ProtectedRoute
+                        path="/mis-publicaciones"
+                        component={PublicacionesPage}
+                    />
 
-          <ProtectedRoute path="/mis-datos" component={DatosUsuarioPage} />
+                    <ProtectedRoute
+                        path="/mis-datos"
+                        component={DatosUsuarioPage}
+                    />
 
-          <Route component={Page404} />
-        </Switch>
-      </Suspense>
-    </MainLayout>
-  );
+                    <Route component={Page404} />
+                </Switch>
+            </Suspense>
+        </MainLayout>
+    );
 }

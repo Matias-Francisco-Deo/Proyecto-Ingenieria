@@ -4,6 +4,7 @@ import com.reservo.controller.dto.Peticion.*;
 
 import com.reservo.controller.exception.ParametroIncorrecto;
 import com.reservo.modelo.property.Inmueble;
+import com.reservo.modelo.property.ReservoImage;
 import com.reservo.modelo.reserva.Peticion;
 import com.reservo.modelo.user.Usuario;
 import com.reservo.service.InmuebleService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -78,7 +80,7 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(peticiones);
     }
 
-    @GetMapping("/owner/vigente/{id}")
+    @GetMapping("/owner/aceptadas/{id}")
     public ResponseEntity<Page<PeticionSummaryDTO>> findAllApproveByOwnerId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page
@@ -92,7 +94,7 @@ public class PeticionControllerREST {
         return ResponseEntity.ok(peticiones);
     }
 
-    @GetMapping("/owner/cancelado/{id}")
+    @GetMapping("/owner/canceladas/{id}")
     public ResponseEntity<Page<PeticionSummaryDTO>> findAllRejectByOwnerId(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page
@@ -133,18 +135,10 @@ public class PeticionControllerREST {
 
         return inmuebleService.findById(pt.getInmueble().getId())
                 .map(inmueble -> {
-                    System.out.println("Inmueble encontrado: " + inmueble.getId());
-                    List<String> imagePaths = inmueble.getImages() == null
-                            ? List.of()
-                            : inmueble.getImages().stream()
-                            .map(filename -> "/uploads/" + filename)
-                            .toList();
+                    List<String> imagePaths = inmueble.getImages().stream().map(ReservoImage::getUrl).collect(Collectors.toList());
                     return ResponseEntity.ok(imagePaths);
                 })
-                .orElseGet(() -> {
-                    System.out.println("Inmueble no encontrado en DB");
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-                });
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PatchMapping("/aprobar")

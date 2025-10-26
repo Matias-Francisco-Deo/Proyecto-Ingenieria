@@ -4,6 +4,8 @@ import com.reservo.service.exception.CredencialesIncorrectas;
 import com.reservo.service.exception.EmailRepetido;
 import com.reservo.service.exception.NoExisteInmuebleExpcetion;
 import com.reservo.service.exception.TienePeticionVigenteException;
+import com.reservo.service.exception.peticion.EsDueñoDeLaPropiedadSolicitada;
+import com.reservo.service.exception.peticion.RealizoUnaPeticionSobreElInmuebleEnElMismoDia;
 import com.reservo.service.exception.user.UsuarioNoExiste;
 import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import com.reservo.service.exception.peticion.HorarioOcupado;
@@ -80,8 +82,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EsDueñoDeLaPropiedadSolicitada.class)
+    public ResponseEntity<DTOResponseError> esDueñoDeLaPropiedad(EsDueñoDeLaPropiedadSolicitada ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 
-
-
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RealizoUnaPeticionSobreElInmuebleEnElMismoDia.class)
+    public ResponseEntity<DTOResponseError> esDueñoDeLaPropiedad(RealizoUnaPeticionSobreElInmuebleEnElMismoDia ex) {
+        return new ResponseEntity<>(new DTOResponseError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

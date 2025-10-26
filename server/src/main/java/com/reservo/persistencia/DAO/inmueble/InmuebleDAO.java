@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @Repository
 public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
     @Query("select count(i) > 0 from Inmueble i where i.id = :unId")
-    boolean existeInmueble(@Param("unId") Long unId);//no es necesario validar id
+    boolean existeInmueble(@Param("unId") Long unId);
 
     @Query("FROM Inmueble i WHERE LOWER(i.name) LIKE CONCAT(LOWER(:unName), '%')")
     Page<Inmueble> findByNameContainingIgnoreCase(String unName, Pageable pageable);
@@ -42,7 +42,7 @@ public interface InmuebleDAO extends JpaRepository<Inmueble, Long> {
                     "   WHERE e.dtype = 'Vigente' " +
                     "     AND p.fecha_del_evento BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '7 days' " +
                     "   GROUP BY p.inmueble_id " +
-                    "   HAVING COUNT(DISTINCT p.fecha_del_evento) = 8" + // ← si tiene peticiones en todos los días
+                    "   HAVING COUNT(DISTINCT p.fecha_del_evento) = 8" +
                     ")))";
 
     String FIND_BY_CAPACIDAD_QUERY_PART = "(:capacidad IS NULL OR (i.capacity >= :capacidad))";

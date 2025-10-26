@@ -2,7 +2,7 @@ import Paginacion from "@/components/Paginacion";
 import { useUser } from "@/hooks/useUser";
 import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
-import ListaDePeticionesCanceladasRechazadas from "./ListaDePeticionesCanceladasRechazadas";
+import ListaDePeticionesCanceladasRechazadas from "./listas/ListaDePeticionesCanceladasRechazadas";
 
 export default function PeticionesCanceladas() {
     interface PetitionsSummaryResponse {

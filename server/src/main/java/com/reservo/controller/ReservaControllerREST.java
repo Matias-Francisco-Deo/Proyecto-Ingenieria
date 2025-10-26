@@ -32,7 +32,7 @@ public final class ReservaControllerREST {
 
         return ResponseEntity.ok(reservas);
     }
-    @GetMapping("/vigentes/{id}")
+    @GetMapping("/aceptadas/{id}")
     public ResponseEntity<Page<ReservaVigenteDTO>> findAllReservasVigentesByUserId
             (@PathVariable Long id,
              @RequestParam(defaultValue = "0") int page){
@@ -45,7 +45,7 @@ public final class ReservaControllerREST {
         return ResponseEntity.ok(reservas);
     }
 
-    @GetMapping("/canceladas-rechazadas/{id}")
+    @GetMapping("/canceladas/{id}")
     public ResponseEntity<Page<ReservaCanceladasRechazadasDTO>> findAllReservasCanceladasByUserId
             (@PathVariable Long id,
              @RequestParam(defaultValue = "0") int page){

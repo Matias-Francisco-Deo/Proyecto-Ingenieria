@@ -1,94 +1,90 @@
-import { useRef, useState } from "react";
-// import BotonesCarrusel from "./BotonesCarrusel";
+import { useRef } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
-  selectedDays: Set<string>;
-  setSelectedDays: React.Dispatch<React.SetStateAction<Set<string>>>;
+    selectedDays: Set<string>;
+    setSelectedDays: React.Dispatch<React.SetStateAction<Set<string>>>;
 };
 
 export default function Dias({ selectedDays, setSelectedDays }: Props) {
-  const days = new Set([
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-  ]);
+    const days = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+    ];
 
-  const [generalErrorMessage, setGeneralErrorMessage] = useState("");
+    const containerRef = useRef<HTMLDivElement>(null);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+    const handleSelect = (selectedDay: string) => {
+        const newSet = new Set(selectedDays);
+        const upperEngDay = convertToUppercaseEng(selectedDay);
 
-  const handleSelect = (selectedDay: string) => {
-    const newSet = new Set(selectedDays);
-    const upperEngDay = convertToUppercaseEng(selectedDay);
+        if (newSet.has(upperEngDay) && newSet.size > 1) {
+            newSet.delete(upperEngDay);
+        } else if (!newSet.has(upperEngDay)) {
+            newSet.add(upperEngDay);
+        } else {
+            toast.warning("Debe seleccionar al menos un día");
+        }
 
-    if (newSet.has(upperEngDay) && newSet.size > 1) {
-      newSet.delete(upperEngDay);
-    } else if (!newSet.has(upperEngDay)) {
-      newSet.add(upperEngDay);
-    } else {
-      setGeneralErrorMessage("Debe seleccionar al menos un día.");
-      resetErrorMessage();
+        setSelectedDays(newSet);
+    };
+
+    function convertToUppercaseEng(day: string): string {
+        return day
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase();
     }
 
-    setSelectedDays(newSet);
-  };
+    return (
+        <div className="w-full text-white rounded-xl p-4 relative">
+            <div className="text-center mb-3">
+                <h2 className="text-xl">Seleccione los días disponibles:</h2>
+            </div>
 
-  function convertToUppercaseEng(day: string): string {
-    return day
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toUpperCase();
-  }
+            {/* Layout de 4 días arriba y 3 abajo centrados */}
+            <div
+                ref={containerRef}
+                className="flex flex-col items-center gap-4"
+            >
+                {/* Fila 1: 4 días */}
+                <div className="flex justify-center gap-4">
+                    {days.slice(0, 4).map((day) => renderButton(day))}
+                </div>
 
-  return (
-    <div className="w-full text-white rounded-xl p-4 relative">
-      <div className="text-center mb-3">
-        {/* <h2 className="text-xl font-bold">{selectedDays}</h2> */}
-        <h2 className="text-xl">Seleccione los días disponibles:</h2>
-        {generalErrorMessage && (
-          <p className="mt-2 text-sm text-red-600">{generalErrorMessage}</p>
-        )}
-      </div>
+                {/* Fila 2: 3 días */}
+                <div className="flex justify-center gap-4">
+                    {days.slice(4).map((day) => renderButton(day))}
+                </div>
+            </div>
+        </div>
+    );
 
-      <div className="flex justify-center overflow-hidden">
-        <div
-          ref={containerRef}
-          className="flex gap-6 overflow-x-auto py-4 w-[100%]"
-        >
-          {Array.from(days).map((day) => {
-            const uppercaseDay = convertToUppercaseEng(day);
-            const isSelected = selectedDays.has(uppercaseDay);
+    function renderButton(day: string) {
+        const uppercaseDay = convertToUppercaseEng(day);
+        const isSelected = selectedDays.has(uppercaseDay);
 
-            return (
-              <button
+        return (
+            <button
                 key={day}
                 onClick={(evt) => {
-                  evt.preventDefault();
-                  handleSelect(day);
+                    evt.preventDefault();
+                    handleSelect(day);
                 }}
-                className={`flex flex-col items-center min-w-[70px] px-4 py-3 rounded-lg transition-colors ${
-                  isSelected
-                    ? "bg-amber-500 text-black font-bold"
-                    : "bg-gray-800 hover:bg-gray-700"
+                className={`w-28 px-4 py-3 rounded-lg transition-colors text-sm ${
+                    isSelected
+                        ? "bg-amber-500 text-black font-bold"
+                        : "bg-gray-900 hover:bg-gray-700"
                 }`}
-                style={{ cursor: "pointer", scrollSnapAlign: "center" }}
-              >
-                <span className="text-sm">{day}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-
-  function resetErrorMessage() {
-    setTimeout(() => {
-      setGeneralErrorMessage("");
-    }, 3000);
-  }
+                style={{ cursor: "pointer" }}
+            >
+                {day}
+            </button>
+        );
+    }
 }

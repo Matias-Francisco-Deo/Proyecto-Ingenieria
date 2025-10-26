@@ -3,7 +3,6 @@ import CalendarioCarrusel from "../components/CalendarioCarrusel";
 import CarruselHorarios from "../components/CarruselHorarios";
 import { useUser } from "../hooks/useUser";
 import type { ErrorResponse, HorarioDTO, Inmueble, MappedHorarioDTO } from "@/types/types";
-import { useToast } from "@/hooks/useToast";
 import { toast } from "react-toastify";
 
 export default function PeticionForm() {
@@ -23,7 +22,6 @@ export default function PeticionForm() {
     const [altoHorarios, setAltoHorarios] = useState<number>(0);
 
     const { getId } = useUser();
-    const { toastError } = useToast();
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const searchParams = new URLSearchParams(window.location.search);
@@ -88,7 +86,6 @@ export default function PeticionForm() {
                 );
                 setHorariosOcupados(ocupados);
             } catch (err) {
-                console.log(err);
                 setHorariosOcupados([]);
             }
         };
@@ -166,20 +163,22 @@ export default function PeticionForm() {
 
 
             const peticionError = (await res.json()) as ErrorResponse;
-            console.log(peticionError.error);
             if (peticionError.error) {
                 toast.error(peticionError.error);
-                setTimeout(() => {
-                    location.href = "/home";
-                }, 2500);
+
+                if (peticionError.error === "No existe la publicación que quiere solicitar") {
+                    setTimeout(() => {
+                        location.href = "/home";
+                    }, 2500);
+                }
                 return;
             }
 
-            toast.info("Su petición a sido enviada exitosamente!")
+            toast.success("Su petición a sido enviada exitosamente!")
             resetComponents(); // reiniciamos componentes sin borrar mensaje
         } catch (err: any) {
             console.error(err);
-            toastError("Hubo un error inesperado.");
+            toast.error("Hubo un error inesperado.");
             resetComponents();
         } finally {
             setSending(false);

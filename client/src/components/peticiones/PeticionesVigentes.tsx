@@ -2,7 +2,7 @@ import Paginacion from "@/components/Paginacion";
 import { useUser } from "@/hooks/useUser";
 import type { PendingPetitionDraft } from "@/types/types";
 import { useEffect, useState } from "react";
-import ListaDePeticionesVigentes from "@/components/peticiones/ListaDePeticionesVigentes";
+import ListaDePeticionesVigentes from "@/components/peticiones/listas/ListaDePeticionesVigentes";
 
 export default function PeticionesVigentes() {
     interface PetitionsSummaryResponse {
@@ -21,7 +21,7 @@ export default function PeticionesVigentes() {
         setLoading(true);
         try {
             const res = await fetch(
-                `${apiUrl}/peticion/owner/vigente/${getId()}?page=${page}`
+                `${apiUrl}/peticion/owner/aceptadas/${getId()}?page=${page}`
             );
 
             if (!res.ok) {
