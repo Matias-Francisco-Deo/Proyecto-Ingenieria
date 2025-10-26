@@ -55,6 +55,7 @@ jobs:
                     -e DB_USER=postgres \
                     -e DB_PASSWORD=root \
                     -e SPRING_MAIL_USERNAME=reservoapptmmj@gmail.com \
+                    -e CLOUDINARY_URL=cloudinary://716617315811692:JoIhSKeWrCf_mfmt9PJ0trsXYN4@dm5rzwoa3 \
                     -e "SPRING_MAIL_PASSWORD=bmfj mmkz sgaw jnbv" \
                     reservo-backend:latest test
 

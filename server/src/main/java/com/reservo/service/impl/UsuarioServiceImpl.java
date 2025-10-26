@@ -1,6 +1,8 @@
 package com.reservo.service.impl;
 
 import com.reservo.controller.dto.Usuario.CredentialsDTO;
+import com.reservo.controller.exception.ParametroIncorrecto;
+import com.reservo.modelo.property.Inmueble;
 import com.reservo.modelo.user.AuthInfo;
 import com.reservo.modelo.user.Credentials;
 import com.reservo.modelo.user.Usuario;
@@ -14,6 +16,8 @@ import com.reservo.service.exception.EmailRepetido;
 import com.reservo.service.exception.user.UsuarioNoExiste;
 import com.reservo.service.exception.user.UsuarioNoPuedeSerEliminado;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
