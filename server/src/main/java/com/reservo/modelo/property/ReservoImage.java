@@ -25,4 +25,9 @@ public class ReservoImage {
         this.publicId = publicId;
         this.url = url;
     }
+
+    public ReservoImage(String url) {
+        this.publicId = publicId;
+        this.url = url;
+    }
 }
