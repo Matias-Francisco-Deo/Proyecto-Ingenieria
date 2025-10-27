@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendHTMLEmail(String to, String subject, String html) {
-        if (!KNOWN_EMAILS.contains(to)) return; // para que nos manden a nosotros nada más
+//        if (!KNOWN_EMAILS.contains(to)) return; // para que nos manden a nosotros nada más
 
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
